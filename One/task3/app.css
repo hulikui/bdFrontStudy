@@ -1,0 +1,74 @@
+body {
+
+}
+div {
+
+}
+#content {
+  height: 460px;
+  background-color: #ccc;
+  display: inline-block;
+}
+
+.left_content {
+  width: 200px;
+  height: 120px;
+  border-color:#999;
+  border: 1px solid;
+  float: left;
+  margin-top: 20px;
+  margin-left: 20px;
+  background-color: white;
+}
+
+.right_content {
+  background-color: white;
+  float: right;
+  width: 120px;
+  height: 422px;
+  border: 1px solid;
+  border-color: #999;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+.main_content {
+  background-color: white;
+  border: 1px solid;
+  border-color: #999;
+  margin-top: 20px;
+  margin-left:240px;
+  margin-right: 160px;
+  padding: 20px;
+  text-indent:20px;
+  max-height: 380px;
+  overflow: hidden;
+
+}
+.logo {
+  float: left;
+  background-color: #eee;
+  margin-left: 20px;
+  margin-top: 20px;
+  border:1px solid;
+  border-color: #999;
+  width: 80px;
+  height: 80px;
+
+}
+.person_logo {
+  background-color: #eee;
+  margin-left: 20px;
+  margin-top: 20px;
+  border:1px solid;
+  border-color: #999;
+  width: 80px;
+  height: 80px;
+}
+.logo_name {
+  float: left;
+  margin-left: 20px;
+  margin-top: 20px;
+}
+p {
+  text-align: center;
+}

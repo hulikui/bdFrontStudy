@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>HTML+CSS实现图片下半部分遮罩文字效果(仿微信推送信息的图片文字效果)</title>
+
+    <style>
+        .class_outer {
+            display: block;
+            width: 550px;
+            height: 276px;
+            margin: 10px auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .class_cover {
+            width: 100%;
+            height: 50px;
+            line-height: 50px;
+            padding-left: 5px;
+            background-color: rgba(0, 0, 0, .50);
+            color: #FFFFFF;
+            font-size: 26px;
+            position: absolute;
+            left: 0px;
+            bottom: 0px;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <a href="#" class="class_outer">
+        <img src="img3.jpg" width="550px" height="276px" border="0" />
+        <span class="class_cover">大鱼海棠，不止关于爱情。</span>
+    </a>
+
+</body>
+
+</html>

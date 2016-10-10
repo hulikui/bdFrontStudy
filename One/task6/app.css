@@ -1,0 +1,366 @@
+body {
+background-color: #eee;
+}
+#main {
+  width: 980px;
+  height: 1386px;
+  margin: auto;
+  background-color: white;
+}
+.center {
+  margin-left: 44px;
+  margin-bottom: 30px;
+}
+header {
+  border-bottom: 2px solid;
+  border-color: black;
+  height: 61px;
+  display: inline-block;
+  width: 892px;
+  overflow: hidden;
+}
+.head_left {
+  width: 110px;
+  height: 61px;
+  background-color: #dc6b6b;
+  float: left;
+  color:#ffffff;
+  font-size: 12px;
+  padding-top: 48px;
+  font-family:SimHei;
+
+}
+
+article {
+  clear: both;
+  display: inline-block;
+}
+.head_right {
+  color: #d45d5c;
+  float: right;
+  padding-top: 48px;
+  font-size: 12px;
+  font-family:SimHei;
+}
+.art1_left {
+  float: left;
+  width: 680px;
+
+}
+#img1 {
+  width: 641px;
+  height: 301px;
+}
+.art1_fiter {
+  width: 641px;
+  height: 301px;
+  position: relative;
+}
+.art1_span {
+  position: absolute;
+  height: 301px;
+  width: 191px;
+  opacity: 0.3;
+
+}
+.art1_span1 {
+  background-color: #77e6aa;
+  left:0;
+  top:0;
+}
+.art1_span2 {
+  background-color: #dd8080;
+  right: 0px;
+  top:0px;
+}
+.art1_right {
+  float: right;
+  width: 203px;
+  height: 301px;
+  border-top: 2px solid;
+  border-color: #cc8091;
+  margin-right: 44px;
+}
+
+.table_head {
+  font-size: 16px;
+  font-family: "Microsoft YaHei";
+}
+.table_head1 {
+  color:#418c59;
+}
+.table_head2 {
+  color:#d2994f;
+}
+.table_head3 {
+  color:#cc7680;
+}
+.art1_lt {
+
+}
+.art1_lb {
+  margin-top: 15px;
+}
+.art1_left table {
+  width: 640px;
+
+}
+.art1_left table td{
+  width: 30%;
+  align:left;
+}
+.art1_lb_content {
+  font-size: 12px;
+  color: #767777;
+  font-family: "SimSun";
+  padding-right: 10px;
+  padding-top: 0px;
+
+}
+.percent {
+  padding-top: 16px;
+}
+.percent b {
+  color: #cd4a48;
+  opacity:0.7;
+}
+
+.big {
+  font-variant: small-caps;
+  color: #000000;
+  font-family: "Microsoft YaHei";
+  padding: 10px ,0;
+  font-size:24px;
+}
+.tech {
+  color:#676767;
+  font-family: "KaiTi";
+  font-size:12px;
+}
+.num {
+  color:#75b86b;
+  font-family: "Microsoft YaHei";
+  font-size:116px;
+}
+.css {
+  color: #cc8091;
+  font-family: "Microsoft YaHei";
+}
+.css_left {
+  float: left;
+  font-size: 55px;
+
+}
+.css_right {
+  float: left;
+  padding-top: 16px;
+}
+.css_right_top {
+  font-size:21px;
+
+}
+.css_right_bottom {
+  font-size:12px;
+}
+.last_art {
+  margin-top: 60px;
+}
+.art2_left {
+  float: left;
+  width: 415px;
+}
+.art2_right {
+  margin-left: 20px;
+  float: left;
+  width: 458px;
+}
+.art2_lt {
+  text-transform:uppercase;
+  font-family: "SimHei";
+  padding-bottom: 16px;
+}
+.e_font {
+  font-size: 42px;
+  color:#11456b;
+}
+.art2_lt p: first-letter {
+  font-size:72px;
+  color:#f5e327;
+}
+
+.c_font {
+  font-size:33px;
+  color:#11456b;
+}
+.art2_lt hr {
+  border-width:2px;
+  border-color:#11456b;
+}
+.art2_lb {
+  font-size: 12px;
+  font-family: "SimSun";
+  text-indent: 20px;
+}
+.art2_lb: first-letter {
+  font-size:33px;
+  font-weight: bold !important;
+}
+.img3 {
+  width: 100px;
+  height: 275px;
+  float:right;
+  margin: 20px;
+}
+.art2_rt {
+  width: 458px;
+  height: 275px;
+  position: relative;
+}
+.art2_rt img{
+  width: 458px;
+  height: 275px;
+}
+.art2_span {
+  position: absolute;
+  left: 0px;
+  bottom: 0px;
+  width: 100%;
+  height: 61px;
+  background-color: rgba(0, 0, 0, .50);
+
+}
+.span_center {
+  position:relative;
+  height:  61px;
+  color: white;
+  font-weight: bold;
+
+}
+.fiter {
+  position: absolute;
+  margin: auto;
+  left:0px;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 80%;
+  height: 50px;
+
+}
+.fiter_l {
+  height: 44px;
+  float: left;
+  line-height: 44px;
+  border-left: 3px solid;
+  border-color: #72b16a;
+  padding-left: 20px;
+  font-size: 26px;
+  width: 30%;
+}
+.fiter_r {
+  float: left;
+  width: 30%;
+  height: 35px;
+  padding-left: 20px;
+  font-size: 12px;
+  position:relative;
+}
+.fiter_r em {
+
+ position:absolute;
+  bottom: 0px;
+}
+footer {
+  width: 892px;
+  border-top: 1px solid;
+  border-color: #938e8c;
+  text-align: right;
+  font-family: "SimHei";
+  font-size: 12px;
+  color:#d45d5c;
+}
+.art2_rb {
+  width: 459px;
+  height: 318px;
+  margin-top: 30px;
+  background-color: #FFFFCC;
+  position: relative;
+}
+.art2_rb table {
+  width: 100%;
+  margin-top: 22px;
+}
+.art2_rb table td{
+  font-family: "SimSun";
+  color: #5a5b5b;
+  font-size: 16px;
+}
+.art2_rb table tr td em {
+  font-size: 12px;
+}
+.art2_rb_b {
+  width: 100%;
+  height: 160px;
+  position: absolute;
+  bottom: 0px;
+}
+.art2_rb_bl {
+  width: 260px;
+  height: 160px;
+  background-color: #f88e8b;
+  float: left;
+  position: relative;
+}
+.art2_rb_num {
+  width: 85%;
+  height: 88px;
+  position: absolute;
+  margin: auto;
+  left: 0px;
+  top: 0px;
+  bottom: 0px;
+  right: 0px;
+  color: white;
+
+}
+.art2_rb_bl_l {
+  float: left;
+  font-size: 110px;
+  font-family: "Microsoft YaHei";
+  line-height: 87px;
+
+}
+.art2_rb_bl_r {
+  float: left;
+  border-left: 2px solid;
+  height: 87px;
+  width: 150px;
+  font-family: "SimHei";
+  padding-left: 2px;
+}
+.art2_rb_bl_r em {
+  font-size: 21px;
+  text-transform: uppercase;
+  line-height: 24px;
+
+}
+
+.art2_rb_bl_r small {
+  font-size: 12px;
+  line-height: 6px;
+
+}
+
+.art2_rb_br {
+  height: 160px;
+  width: 198px;
+  float: left;
+  font-size: 14px;
+  font-family: "SimHei";
+  color:#5a5b5b;
+  line-height: 16px;
+}
+p: first-letter {
+  font-weight: bold;
+  color: yellow;
+}

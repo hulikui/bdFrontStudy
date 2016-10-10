@@ -1,0 +1,157 @@
+body {
+
+
+}
+#main {
+  background-color: #C0C0C0;
+  width: 70%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+header {
+  background-color: black;
+  height: 80px;
+  overflow: hidden;
+  position:relative;
+}
+.head_left {
+  width: 100px;
+  float: left;
+  position:absolute;
+  top:15px;
+  left:50px;
+}
+
+.head_right {
+  float: right;
+  position:absolute;
+  right:60px;
+  top:30px;
+}
+
+h3 ,small {
+  color: #787878;
+}
+nav a {
+  color:white;
+  text-decoration: none;
+  padding:5px;
+
+}
+#nav_3 {
+  color: #C0C0C0;
+}
+
+article {
+  clear:both;
+  background-color: #FFFFFF;
+  width: 95%;
+  margin-top: 30px;
+  margin-left: 20px;
+
+  box-shadow: 3px 3px 3px;
+}
+.content {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  padding-left: 10px;
+}
+#p1 {
+ width: 98%;
+ white-space:normal;
+}
+ul {
+  list-style:none;
+}
+dl {
+  width: 20%;
+}
+dd {
+  text-align:center;
+  border-color:#0000FF;
+  border: 1px solid;
+  width: 150px;
+}
+.img_list {
+  padding-top:10px;
+
+}
+.img2 {
+  width: 80px;
+  height: 80px;
+}
+#table1 {
+  width: 98%;
+  border-width:1px;
+  border-collapse: collapse;
+}
+
+#table1 th {
+  width: 30%;
+  background-color: black;
+  color: white;
+  border-width: 1px;
+  border:solid #D0D0D0;
+}
+#table1 td {
+  border:solid #D0D0D0;
+  border-width:1px;
+}
+
+#table2 {
+  margin-left: auto;
+  margin-right: auto;
+}
+#table2 tr td:first-child{
+  text-align:right;
+}
+
+
+.option {
+  width: 20%;
+}
+
+.total {
+  background: #989898;;
+}
+.blank td{
+  padding-bottom: 10px;
+}
+.art3 {
+  width: 93%;
+}
+#index {
+  border-left: 3px solid #D9D9D9;
+  margin-left: -1px;
+  padding-left: 5px;
+}
+
+#submit {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+
+button {
+  width: 100%;
+  background-color: blue;
+  color: white;
+  text-align:center;
+  font-size: 20px;
+}
+
+textarea {
+  height: 80px;
+  width: 400px;
+}
+
+footer {
+  margin-top: 30px;
+  background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px;
+}

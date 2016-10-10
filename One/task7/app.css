@@ -1,0 +1,379 @@
+body {
+  min-width: 1000px;
+}
+a {
+  text-decoration: none;
+}
+nav {
+  height: 60px;
+  line-height: 60px;
+  padding-left: 20px;
+}
+.logo a {
+  float: left;
+  height: 60px;
+  color: black;
+  font-weight: bold;
+  font-family: "Microsoft YaHei";
+}
+
+.nav {
+  float: right;
+  height: 60px;
+
+}
+.nav a {
+  margin-right: 40px;
+  display: block;
+  float: left;
+  height: 50px;
+  color: black;
+  font-family: "SimHei";
+}
+
+nav a:hover {
+  border-bottom: 2px solid;
+  border-color: red;
+  color: red;
+}
+
+article {
+  float: none;
+}
+.article1_img1 {
+  width: 1000px;
+  height: 600px;
+}
+.article1 {
+  max-width:1000px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.article1_p1 {
+
+  position: relative;
+}
+
+.art1_span {
+  position: absolute;
+  width: 50%;
+  left:5%;
+  top:30%;
+  font-family: "SimHei";
+}
+.art1_span b {
+
+  font-size: 42px;
+  color: #d76565;
+}
+.art1_span p {
+  font-size: 18px;
+  width: 50%;
+}
+.art1_span button {
+  margin-top: 20px;
+  background-color: #d76565;
+  width: 60%;
+  height: 50px;
+  font-size: 40px;
+  font-weight: bold;
+  color: white;
+  border: 0;
+}
+.article_p2 table {
+  border-spacing: 30px;
+}
+.article_p2 .tr2 td{
+  padding-left: 20px;
+  padding-right: 20px;
+  font-size: 15px;
+  font-family: "SimHei";
+}
+.td_border {
+  border-left: 2px solid;
+}
+.article_p3 {
+  background-color: #F0F0F0;
+}
+.article_p3_q {
+  color: #999;
+  font-size: 48px;
+  font-family: "Microsoft YaHei";
+}
+.article_p3_p1 {
+  text-align: center;
+}
+.article_p3_img1 {
+  margin-top:30px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100px;
+  height: 100px;
+}
+.art3_form {
+  background-color: #f6b1b1;
+  height: 200px;
+}
+.art3_form p:first-child {
+  font-size: 26px;
+  padding-top: 30px;
+}
+.art3_form p {
+  color: white;
+  font-size: 12px;
+}
+.article_p3_p1 table {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+
+}
+.article_p3_p1 table td {
+  width: 200px;
+}
+.article_p3_p1 table button{
+  background-color:  #d76565;
+  width: 180px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  border: 0px;
+}
+.phlist {
+  margin-top: 40px;
+  margin-bottom: 40px;
+
+}
+.ph_border {
+
+}
+.phlist img {
+  width: 180px;
+  height: 350px;
+  border: 3px solid;
+  border-color: white;
+}
+.phlist {
+  padding-bottom: 50px;
+}
+.article_p4 {
+  background-color: white;
+  height: 466px;
+}
+.article_p4 img {
+  width: 700px;
+  height: 465px;
+}
+.article_p4_left {
+  width: 700px;
+  float: left;
+}
+.article_p4_right {
+  width: 300px;
+  float: left;
+}
+.article_p4_right article{
+  width: 200px;
+  margin-top: 150px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.article_p4_right p {
+  font-size: 12px;
+
+}
+.article_p4_right p:first-child {
+  text-align: center;
+
+}
+.article_p4_right b {
+  text-align: center;
+  font-size: 20px;
+}
+.article_p4_b {
+  text-align: center;
+}
+.article_p4_b button{
+  margin-top:40px;
+  border: 2px solid;
+  border-color: red;
+  color: red;
+  font-family: "SimHei";
+  background-color: white;
+  width: 50%;
+  height: 30px;
+}
+.article_p5 article{
+  margin-top: 150px;
+
+}
+.article_p5 {
+    height: 400px;
+}
+.article_p5_left {
+  width: 350px;
+  float: left;
+  height: 400px;
+  text-align: center;
+
+}
+.article_p5_left:first-child {
+  background-color: #d76565;
+    color: white;
+}
+.article_p5 button{
+  margin-top:40px;
+  border: 2px solid;
+
+  font-family: "SimHei";
+
+  width: 50%;
+  height: 30px;
+}
+.article_p5_b1 button {
+  border-color: white;
+  color: white;
+  background-color: #d76565;
+}
+
+.article_p5_b2 button {
+  border-color: #d76565;
+  color: #d76565;
+  background-color: white;
+}
+.article_p5 hr {
+  margin-top:40px;
+  width: 30px;
+  border: 1px solid;
+
+}
+.article_p5 hr:first-child {
+border-color: white;
+
+}
+.article_p5_c {
+  width: 350px;
+  float: left;
+}
+.article_p5_right {
+  width: 300px;
+  float: left;
+}
+.article_p5_right img {
+  width: 300px;
+  height: 400px;
+
+}
+.article_p6 {
+  margin-top: 60px;
+  height: 460px;
+}
+.article_p6 header {
+  width: 40%;
+  margin: auto;
+  text-align: center;
+}
+.article_p6 header hr{
+  border: 2px solid;
+  border-color: red;
+  width: 30px;
+}
+.article_p6 header p{
+  font-size: 12px;
+  color: #999;
+
+}
+.art6_left {
+  float: left;
+  width: 40%;
+}
+.art6_left td h3{
+  font-size: 14px;
+  font-weight: bold;
+  font-family: "Microsoft YaHei";
+}
+.art6_left td p{
+  font-size: 10px;
+  font-family: "SimHi";
+}
+.art6_left td p{
+  font-size: 12px;
+  font-family: "SimHi";
+}
+.art6_left label {
+  padding-left: 220px;
+  font-size: 12px;
+}
+.art6_right {
+  width: 60%;
+  float: right;
+  font-size: 12px;
+  font-weight: bold;
+  font-weight: "SimHi";
+}
+.art6_right td {
+background-color: #F0F0F0;
+}
+.art6_right_td {
+  padding: 10px;
+}
+.art6_right_text {
+  height: 80px;
+  padding-left: 10px;
+
+}
+.art6_right_text div {
+  height: 80px;
+
+}
+.art6_right_button {
+  text-align: center;
+  height: 40px;
+
+}
+.article_p7 {
+  clear: both;
+  text-align: center;
+  background-color: #33363f;
+  color: white;
+
+}
+.article_p7 p {
+  width: 600px;
+  margin: auto;
+  padding-bottom: 20px;
+}
+.article_p7 form {
+  padding-top: 50px;
+}
+.art_p7_text {
+  width: 500px;
+  height: 38px;
+  font-size: 20px;
+}
+.art_p7_button {
+  width: 100px;
+  height: 44px;
+  border: none;
+  background-color: #999;
+  font-size: 16px;
+  padding: 10px;
+}
+footer {
+  min-width: 800px;
+  background: black;
+  color: white;
+  font-size: 20px;
+  height: 50px;
+  line-height: 50px;
+}
+.footer_left {
+  float: left;
+  height: 50px;
+  padding-left: 50px;
+}
+.footer_right {
+  float: right;
+  height: 50px;
+  padding-right: 50px;
+}
