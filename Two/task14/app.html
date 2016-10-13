@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 01</title>
+</head>
+<body>
+
+<h3>污染城市列表</h3>
+<ul id="aqi-list">
+    <!--
+        <li>第一名：福州（样例），10</li>
+          <li>第二名：福州（样例），10</li> -->
+</ul>
+
+<script type="text/javascript">
+
+    var aqiData = [
+        ["北京", 90],
+        ["上海", 50],
+        ["福州", 10],
+        ["广州", 50],
+        ["成都", 90],
+        ["西安", 100],
+        ["al", 60],
+        ["bl", 70],
+        ["cl", 80]
+    ];
+    //写快排算法
+    //边比较边排序
+//    function  quick_sort(array, start, end) {
+//        if(start === end ) break;
+//        if(start < end){
+//            var i = start;
+//            var j = end;
+//            var x = array[start];
+//            while(i<j){
+//                while(i<j && array[j][1] >=x[1]){
+//                    j--;
+//                }
+//                if(i<j){
+//                    array[i++]=array[j];
+//                }
+//            }
+//            while(i<j){
+//                while(i<j && array[i][1]<=x[1]){
+//                    i++;
+//                }
+//                if(i<j){
+//                    array[j--]=array[i];
+//                }
+//            }
+//
+//            array[i]=x;
+//            quick_sort(array, start, i-1);
+//            quick_sort(array, i, end);
+//        }
+//    }
+//    quick_sort(aqiData, 0, aqiData.length-1);
+    (function () {
+
+        /*
+         在注释下方编写代码
+         遍历读取aqiData中各个城市的数据
+         将空气质量指数大于60的城市显示到aqi-list的列表中
+         */
+        aqiData.sort(function (a, b) {
+            return a[1] < b[1];
+        });
+        var res = [];
+        aqiData.forEach(function (item) {
+            if(item[1] > 60) {
+                res.push(item);
+            }
+        });
+        var html = '';
+        res.forEach(function (item, n) {
+           html += ('<li> 排名第'+(n+1)+'为: '+item[0]+', '+item[1]+' </li>');
+        });
+        console.log(html);
+        document.getElementById('aqi-list').innerHTML = html;
+
+    })();
+
+</script>
+</body>
+</html>

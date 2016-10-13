@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 01</title>
+    <style>
+        .template {
+            text-align: center;
+            background-color: brown;
+            color: azure;
+        }
+        #seq {
+            height: 500px;
+            width: 500px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-around;
+        }
+    </style>
+</head>
+<body>
+
+<input id="num" type="text" value="">
+<button id="left_insert">左侧人</button>
+<button id="right_insert">右侧入</button>
+<button id="left_out">左侧出</button>
+<button id="right_out">右侧出</button>
+<button onclick="sort()">排序</button>
+<div id="seq">
+
+</div>
+<script type="text/javascript">
+    var input = document.getElementById('num');
+    var seq = document.getElementById('seq');
+    // parentNode.inserBefore(new, parentNode.firstChild);
+    function isNum(value) {
+        if(/^\d{2,3}$/.test(value) && (value>=10 && value <=100)){
+            return true;
+        }
+        return false;
+    }
+    function sort() {
+        var nodes = seq.children;
+        var length = seq.childElementCount;
+        for(var i = 0; i< length;i++){
+            for(var j=0; j < length-i-1; j++)
+            {
+                if (parseInt(nodes[j].title) > parseInt(nodes[j+1].title)) {
+                    seq.insertBefore(nodes[j+1], nodes[j]);
+                }
+            }
+
+        }
+
+    }
+    function leftInsert() {
+        if(!isNum(input.value)){
+            return;
+        }
+        if(seq.childElementCount > 10) {
+            alert('数量已满');
+            return;
+        }
+        var a = document.createElement('div');
+        a.className='template';
+        a.innerText = input.value;
+        a.style.height = ''+ input.value+'%';
+        a.style.width = ''+(400 / 10 )+'px';
+        a.title = input.value;
+        seq.insertBefore(a, seq.firstElementChild);
+
+    }
+
+    function rightInsert() {
+        if(!isNum(input.value)){
+            return;
+        }
+        if(seq.childElementCount > 10) {
+            alert('数量已满');
+            return;
+        }
+        var a = document.createElement('div');
+        a.className='template';
+        a.innerText = input.value;
+        a.style.height = ''+ input.value+'%';
+        a.style.width = ''+(400 / 10 )+'px';
+        a.title = input.value;
+        console.log(a);
+        seq.appendChild(a);
+
+    }
+    function leftOut() {
+        seq.firstChild.remove();
+
+    }
+    function rightOut() {
+        seq.lastChild.remove();
+    }
+
+    (function() {
+        document.getElementById('left_insert').onclick = leftInsert;
+        document.getElementById('right_insert').onclick = rightInsert;
+        document.getElementById('left_out').onclick = leftOut;
+        document.getElementById('right_out').onclick = rightOut;
+
+    })();
+
+</script>
+</body>
+</html>

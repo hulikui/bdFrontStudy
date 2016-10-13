@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 01</title>
+    <style>
+        .template {
+            margin-left: 10px;
+            text-align: center;
+            background-color: brown;
+            color: azure;
+        }
+    </style>
+</head>
+<body>
+
+<textarea id="num" type="text" value=""></textarea>
+<button id="left_insert">左侧人</button>
+<button id="right_insert">右侧入</button>
+<button id="left_out">左侧出</button>
+<button id="right_out">右侧出</button>
+<nav id="seq">
+
+</nav>
+<input id="target" type="text" value=""><button id ="search">模糊匹配搜索</button>
+<script type="text/javascript">
+    var input = document.getElementById('num');
+    var seq = document.getElementById('seq');
+    var data = [];
+    // parentNode.inserBefore(new, parentNode.firstChild);
+    function leftInsert() {
+        var a = document.createElement('a');
+        a.className='template';
+        a.innerText = input.value;
+        seq.insertBefore(a, seq.firstElementChild);
+
+    }
+    function filter(s) {
+        var pattern = /^[\u4E00-\u9FA5\uF900-\uFA2D\da-zA-Z]+$/; //匹配任意中文简繁 数字 字母
+        var rs = [];
+        var item = '';
+        for (var i = 0; i < s.length; i++) {
+
+            var a = s.substring(i, i+1);
+            if(pattern.test(a)){
+                item += a;
+            } else {
+                if(item !== ''){
+                    rs.push(item);
+                }
+                item = '';
+
+            }
+            if(i === s.length-1 && item!==''){
+                rs.push(item);
+            }
+        }
+        data = rs;
+        return rs;
+    }
+
+    function rightInsert() {
+        var s = filter(input.value);
+        s.forEach(function (item) {
+            var a = document.createElement('a');
+            a.className='template';
+            a.innerText = item;
+            console.log(a);
+            seq.appendChild(a);
+        })
+
+
+    }
+    function leftOut() {
+        seq.firstChild.remove();
+
+    }
+    function rightOut() {
+        seq.lastChild.remove();
+    }
+    
+    function setStyle() {
+        var indexs = searchIndex();
+        const nodes = seq.children;
+        Array.prototype.forEach.call(nodes, function (item, index) {
+            if(indexs[index] === 1 ){
+                item.style.backgroundColor = 'blue';
+            } else {
+                item.style.backgroundColor = 'red';
+            }
+
+        })
+    }
+    function searchIndex() {
+        if(data.length === 0){
+        rightInsert();
+        } 
+        console.log(data);
+        var target = document.getElementById('target').value;
+        console.log(target)
+        var indexs = [];
+        data.forEach(function (item, index) {
+            if(item.indexOf(target) >= 0){
+                //匹配到
+                indexs.push(1);
+            } else {
+                indexs.push(0);
+            }
+        });
+        return indexs;
+    }
+
+    (function() {
+        document.getElementById('left_insert').onclick = leftInsert;
+        document.getElementById('right_insert').onclick = rightInsert;
+        document.getElementById('left_out').onclick = leftOut;
+        document.getElementById('right_out').onclick = rightOut;
+        document.getElementById('search').onclick = setStyle;
+    })();
+
+</script>
+</body>
+</html>
