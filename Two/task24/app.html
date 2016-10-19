@@ -1,0 +1,192 @@
+<!DOCTYPE>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>IFE JavaScript Task 21</title>
+</head>
+<style>
+    body {
+        height: 700px;
+        width: 250px;
+    }
+    div {
+        /*height: 40px;*/
+        width: 85%;
+        padding-left: 20px;
+        padding-top: 5px;
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        font-size: 20px;
+        background-color: #eeeeee;
+    }
+    label {
+        background-color: #787878;
+        text-align: center;
+    }
+    header {
+        margin-top: 50px;
+        background-color: #cc7680;
+        color: #333333;
+        font-style: inherit;
+        font-size: 15px;
+        border:1px solid;
+        padding-left: 2px;
+    }
+    hr {
+        border: 1px solid black;
+        width: 100%;
+    }
+</style>
+<body>
+
+<div id="1"> <a><label for="1" > + </label>计算机书目</a>
+    <div id="2"><a><label for="2" > + </label>办公类</a>
+        <div id="5">windows
+
+        </div>
+        <div id="6">office</div>
+    </div>
+    <div id="3"><a><label for="2" > + </label>编程类</a>
+        <div id="7">C
+        </div>
+        <div id="8">C++
+        </div>
+        <div id="9">java
+        </div>
+        <div id="10">Node.js
+        </div>
+    </div>
+    <div id="4"><a><label for="2" > + </label>网络类</a>
+        <div id="11">IPV6
+        </div>
+    </div>
+</div>
+
+<header id="menu">
+    <a id="del">删除该节点</a>
+    <hr>
+    <a id="add">增加节点</a>
+</header>
+
+</body>
+<script>
+    // 顺序存储结构
+    var res = []; //!!!!!需要把节点先存在数组后再取值，实时取 dom 节点 刷新不了 null
+
+
+    var roots = document.getElementById('1');
+    var choiceNode = [];
+    var menu = document.getElementById('menu');
+    menu.style.display = 'none';
+    function showOrHide(obj) {
+        if(obj.target.nodeName === 'DIV' || obj.target.nodeName === 'A') return;
+        var label = obj.target;
+        var a = obj.target.parentNode;
+        var childNodes = label.parentNode.parentNode.children;
+        if(a.className === 'isChoice'){//展开
+            a.className='';
+            console.log(a);
+            label.innerText = '+';
+            Array.prototype.forEach.call(childNodes, function(item) {
+                item.style.display = 'flex';
+            });
+
+        } else {//折叠
+            a.className='isChoice';
+            console.log(a);
+            label.innerText = '-';
+            console.log(childNodes);
+            Array.prototype.forEach.call(childNodes, function(item) {
+                item.style.display = 'none';
+            });
+            a.style.display = 'flex';
+        }
+    }
+
+    function choice(obj) {
+        console.log(obj);
+        //if(obj.target.nodeName !== 'LABEL' || obj.target.nodeName !== 'DIV' || obj.target.nodeName !== 'A') return;
+        if(obj.button === 0 ) {
+            showOrHide(obj);
+        }
+        if(obj.button === 2 ) {
+            delNodes(obj);
+        }
+//        if(obj.target.nodeName === 'DIV'){//属于上级目录 直接添加即可
+//
+//        }
+//        if(obj.target.nodeName === 'A') { //属于底层目录，需要改变添加属性
+//
+//        }
+
+
+    }
+
+    function delNodes(obj) {
+        if(obj.target.nodeName === "A") return;
+        var result = confirm('是否删除！');
+        if(!result) return;
+        if(!obj.path[0].getAttributeNode("for")) {
+            obj.path[0].remove();
+        } else {
+            obj.path[2].remove();
+        }
+
+    }
+
+    function addChild(obj) {
+        var value = prompt('请输入你要添加的文件夹：', '');
+        if(value === null){
+            alert('你取消了输入！');
+        }else if(value === ''){
+            alert('姓名输入为空，请重新输入！');
+            addChild();
+        }else {
+            var newNode = document.createElement('div');
+            newNode.innerText = value;
+            if(!obj.path[0].getAttributeNode("for")) {
+                obj.path[0].appendChild(newNode);
+            } else {
+                node.appendChild(newNode);
+            }
+        }
+    }
+
+//    function preOrderTraverse() {
+//        var sequence = [roots];
+//        var i =0;
+//        for(;i < sequence.length;i++){
+//            res.push(sequence[i]);//push 到 res 中
+//            console.log(sequence[i]);
+//            var nodes = sequence[i].children;
+//            for(var j=0;j<nodes.length;j++) {
+//                sequence.push(nodes[j]);
+//            }
+//            sequence.shift();
+//            i = -1;
+//        }
+//    }
+//
+//    function setHeight() {
+//        var i = 0;
+//        res.forEach(function(item){
+//            var height = item.childElementCount*30;
+//            item.style.height = ''+height+'px';
+//        })
+//    }
+//    function preTraverse() {
+//        preOrderTraverse();
+//        setHeight();
+//    }
+//    preTraverse();
+    (function (){
+        document.getElementById('1').onmousedown = choice;
+        document.getElementById('1').ondblclick = addChild;
+        document.getElementById('del').onclick = delNodes;
+        //document.getElementById('add').onclick = addChild;
+
+    })();
+
+</script>
+</html>

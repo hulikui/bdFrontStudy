@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<style type="text/css">
+    .test {
+        background: red;
+        width: 100px;
+        height: 100px;
+        transition: all 1s;
+        -moz-transition: all 1s;
+        -webkit-transition: all 1s;
+        -o-transition:all 1s;
+    }
+
+</style>
+<body>
+<div id="div" class="test"></div>
+<script type="text/javascript">
+    document.getElementById("div").onclick=function(){
+        document.getElementById("div").style.width="200px"
+        document.getElementById("div").style.height="200px"
+    }
+</script>
+</body>
+</html>
