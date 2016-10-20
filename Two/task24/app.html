@@ -23,6 +23,8 @@
     label {
         background-color: #787878;
         text-align: center;
+        width: 20px;
+        height: 20px;
     }
     header {
         margin-top: 50px;
@@ -37,37 +39,37 @@
         border: 1px solid black;
         width: 100%;
     }
+    a:hover {
+        border: 1px dashed;
+    }
+    .leave:hover {
+        background: #d2994f;
+    }
 </style>
 <body>
 
 <div id="1"> <a><label for="1" > + </label>计算机书目</a>
     <div id="2"><a><label for="2" > + </label>办公类</a>
-        <div id="5">windows
+        <div class="leave" id="5">windows
 
         </div>
-        <div id="6">office</div>
+        <div class="leave" id="6">office</div>
     </div>
     <div id="3"><a><label for="2" > + </label>编程类</a>
-        <div id="7">C
+        <div class="leave" id="7">C
         </div>
-        <div id="8">C++
+        <div class="leave" id="8">C++
         </div>
-        <div id="9">java
+        <div class="leave" id="9">java
         </div>
-        <div id="10">Node.js
+        <div class="leave" id="10">Node.js
         </div>
     </div>
     <div id="4"><a><label for="2" > + </label>网络类</a>
-        <div id="11">IPV6
+        <div class="leave" id="11">IPV6
         </div>
     </div>
 </div>
-
-<header id="menu">
-    <a id="del">删除该节点</a>
-    <hr>
-    <a id="add">增加节点</a>
-</header>
 
 </body>
 <script>
@@ -77,8 +79,6 @@
 
     var roots = document.getElementById('1');
     var choiceNode = [];
-    var menu = document.getElementById('menu');
-    menu.style.display = 'none';
     function showOrHide(obj) {
         if(obj.target.nodeName === 'DIV' || obj.target.nodeName === 'A') return;
         var label = obj.target;
@@ -106,19 +106,43 @@
 
     function choice(obj) {
         console.log(obj);
-        //if(obj.target.nodeName !== 'LABEL' || obj.target.nodeName !== 'DIV' || obj.target.nodeName !== 'A') return;
         if(obj.button === 0 ) {
             showOrHide(obj);
         }
         if(obj.button === 2 ) {
             delNodes(obj);
         }
-//        if(obj.target.nodeName === 'DIV'){//属于上级目录 直接添加即可
-//
-//        }
-//        if(obj.target.nodeName === 'A') { //属于底层目录，需要改变添加属性
-//
-//        }
+        if(obj.button === 0 && obj.target.nodeName === 'A') {
+            var value = prompt('请输入你要添加的文件夹：', '');
+            if(value === null){
+                alert('你取消了输入！');
+            }else if(value === ''){
+                alert('姓名输入为空，请重新输入！');
+            }else {
+                var parent = obj.target.parentNode;
+                var newNode = document.createElement('div');
+                newNode.className="leave";
+                newNode.innerText = value;
+                parent.appendChild(newNode);
+            }
+
+        }
+
+        if(obj.button === 0 && obj.target.nodeName === 'DIV') { //属于底层目录，需要改变添加属性
+            var value = prompt('请输入你要添加的文件夹：', '').trim();
+            if(value === null){
+                alert('你取消了输入！');
+            }else if(value === ''){
+                alert('姓名输入为空，请重新输入！');
+            }else {
+                var title = obj.target.innerText;
+                obj.target.className="";
+                var html = '<a><label> + </label>'+ title +'</a>';
+                var newNode = '<div class="leave">'+ value +'</div>';
+                var inhtml = html + newNode;
+                obj.target.innerHTML = inhtml;
+            }
+        }
 
 
     }
@@ -127,64 +151,17 @@
         if(obj.target.nodeName === "A") return;
         var result = confirm('是否删除！');
         if(!result) return;
-        if(!obj.path[0].getAttributeNode("for")) {
-            obj.path[0].remove();
+        if(!obj.target.getAttributeNode("for")) {
+            obj.target.remove();
         } else {
-            obj.path[2].remove();
+            obj.target.remove();
         }
 
     }
 
-    function addChild(obj) {
-        var value = prompt('请输入你要添加的文件夹：', '');
-        if(value === null){
-            alert('你取消了输入！');
-        }else if(value === ''){
-            alert('姓名输入为空，请重新输入！');
-            addChild();
-        }else {
-            var newNode = document.createElement('div');
-            newNode.innerText = value;
-            if(!obj.path[0].getAttributeNode("for")) {
-                obj.path[0].appendChild(newNode);
-            } else {
-                node.appendChild(newNode);
-            }
-        }
-    }
 
-//    function preOrderTraverse() {
-//        var sequence = [roots];
-//        var i =0;
-//        for(;i < sequence.length;i++){
-//            res.push(sequence[i]);//push 到 res 中
-//            console.log(sequence[i]);
-//            var nodes = sequence[i].children;
-//            for(var j=0;j<nodes.length;j++) {
-//                sequence.push(nodes[j]);
-//            }
-//            sequence.shift();
-//            i = -1;
-//        }
-//    }
-//
-//    function setHeight() {
-//        var i = 0;
-//        res.forEach(function(item){
-//            var height = item.childElementCount*30;
-//            item.style.height = ''+height+'px';
-//        })
-//    }
-//    function preTraverse() {
-//        preOrderTraverse();
-//        setHeight();
-//    }
-//    preTraverse();
     (function (){
         document.getElementById('1').onmousedown = choice;
-        document.getElementById('1').ondblclick = addChild;
-        document.getElementById('del').onclick = delNodes;
-        //document.getElementById('add').onclick = addChild;
 
     })();
 

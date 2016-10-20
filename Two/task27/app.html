@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+        <html>
+<head>
+    <meta charset="utf-8">
+    <title>飞机</title>
+    <style>
+        #space {
+            background-color: #000000;
+            width: 60%;
+            height: 1000px;
+            position: relative;
+       }
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            width: 500px;
+            height: 500px;
+            background-color: #0000FF;
+            left: 0px;
+            right: 0px;
+            top:0px;
+            bottom: 0px;
+            margin: auto;
+            /* 宽度和高度需要相等 */
+        }
+        .airship {
+            position: absolute;
+            background-color: #eeeeee;
+            border-radius: 40%;
+            height: 60px;
+            width: 160px;
+            text-align: center;
+            line-height: 60px;
+
+        }
+        footer {
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <div id="space">
+        <div class="circle"></div>
+        <div class="airship" id="a1">X号飞船-X%</div>
+    </div>
+
+<footer>
+    <table id="table"></table>
+    <div>动力能源系统：
+        <input type="radio" name="power" value="1" checked >速率30px/s,能耗5%/s
+        <input type="radio" name="power" value="2">速率50px/s,能耗7%/s
+        <input type="radio" name="power" value="3">速率80px/s,能耗9%/s
+    </div>
+    <br>
+    <button id="add">加入新的飞船</button>
+</footer>
+</body>
+<script>
+//    options = {
+//        id : '1',
+//        commond: 'fly/stop/destroy/create'
+//    }
+    var airShip = function (id, type) {
+        var context = this;
+        context.self = document.getElementById(id);
+        context.id = id;
+        context.state = 'stop';
+        context.health = 1;
+        context.isSupplement = false;
+        context.speed = 0 || type.speed;
+        context.isDestory = false;
+        context.step = 0;
+        context.cum = type.cum;
+        context.operate = function(options) {
+            if(!options) return;
+            if(options.id !== context.id) return;
+            if(context.isDestory === true && options.commond === 'create') {//创建
+                context.isDestory = false;
+                context.state = 'stop';
+                context.health = 1;
+                context.isSupplement = false;
+                context.speed = 0;
+                context.step = 0;
+                context.self.style.display = 'block';
+                context.self.style.left = '1020px'; //left: 1020px; top: 470px;
+                context.self.style.top = '470px';
+            } else if (context.isDestory === false && options.commond === 'fly' &&　context.state==='stop' ){//假设还没有补充设置
+                context.powerSystem.fly();
+                context.consume();
+            } else if (context.isDestory === false && options.commond === 'stop' && context.state === 'fly') {
+                context.powerSystem.stop();
+
+            } else if (context.isDestory === false && options.commond === 'destroy') {
+                context.destroySelf();
+            }
+        }
+        context.css = function (ele, styles) {
+            for(var attr in styles){
+                ele['style'][attr] = styles[attr];
+            }
+        }
+        context.round = function (ele, x, y, r, speed) {
+            var deg = context.step;
+            var timer = null;
+            var w = ele.offsetWidth;
+            var h = ele.offsetHeight;
+            var a,b;
+            clearInterval(timer);
+            timer = setInterval(function () {
+                if(context.state === 'stop'){
+                    clearInterval(timer);
+                }
+
+                deg += speed;
+                context.step = deg; //记录暂停位置 要记录deg
+                a = Math.sin(deg * Math.PI/180) * r;
+                b = Math.cos(deg * Math.PI/180) * r;
+
+                context.css(ele, {// 初始 left: 1020px; top: 470px;"
+                    left: (x - w/2) + b + 'px',
+                    top: (y - h/2) + a + 'px'
+                })
+            }, 1000);
+        },
+        context.consume = function() {
+            var cum = context.cum;
+            var con = setInterval(function(){
+                if(context.state === 'stop'){
+                    clearInterval(con);
+                }
+                if(context.isSupplement) cum = 0.03;
+                if(context.health - cum <= 0){
+                    context.health = 0;
+                    context.state = 'stop';
+                    context.speed = 0;
+                } else {
+                    context.health =  context.health - cum;
+                }
+                context.self.innerText = ''+id+'号 '+(Math.round(context.health* 100))+'%';
+               console.log(context.self.innerText);
+            }, 1000)
+        }
+        context.supplement = function () {
+            var sup = setInterval(function(){
+                if(context.state === 'fly'){
+                    clearInterval(sup)
+                }
+                if(context.health + 0.02 >= 1){
+                    context.health = 1;
+                } else {
+                    context.health =  context.health + 0.02;
+                }
+
+            }, 1000)
+        }
+        context.powerSystem = {//动力系统 只关注状态位置速度
+            fly: function () {
+                context.state = 'fly';
+                context.speed = type.speed;
+                context.round(context.self, 700, 500, 400, context.speed);
+
+            },
+            stop: function() {
+                context.state = 'stop';
+                context.speed = 0;
+                context.step = 0;
+            },
+        }
+        context.energySystem = function () {//能源系统 只关注燃料
+            if (context.state === 'fly'){
+                context.consume();
+            } else if (this.state === 'stop') {
+                context.supplement();
+            }
+        }
+        context.destroySelf = function() {
+            context.isDestory = true;
+            context.self.style.display = 'none';
+            context.state = 'stop';
+
+        }
+    }
+    var airShips = [];
+    var table = document.getElementById('table');
+    var space = document.getElementById('space');
+
+    function getShipType() {
+        var type;
+        var objs = document.getElementsByName("power");
+        for(var i=0; i<objs.length; i++){
+
+            if(objs[i].checked){
+
+                if(objs[i].value === '1'){
+                    type = {
+                        speed: 30,
+                        cum: 0.05
+                    }
+                } else if(objs[i].value === '2'){
+                    type = {
+                        speed: 50,
+                        cum: 0.07
+                    }
+                } else if(objs[i].value === '3'){
+                    type = {
+                        speed: 70,
+                        cum: 0.09
+                    }
+                }
+            }
+        }
+        console.log(type);
+        return type;
+    }
+    function addShip() {
+        var shipType = getShipType();
+        console.log(shipType);
+        if(airShips.length===4){
+            airShips.every(function(ship){
+               if(ship.isDestory){//显示已隐藏
+                    var airship = document.getElementById(ship.id.toString());
+                   airship.style.display = 'block';
+                   ship.operate({
+                      id: ship.id,
+                       commond: 'create',
+                   });
+                   return false;
+               }
+                return true;
+            });
+            return;
+        }
+        var ship = document.createElement('div');
+        var tr = document.createElement('tr');
+        var index = airShips.length;
+        ship.className='airship';
+        ship.id = index.toString();
+        tr.id = index + 'opts';
+        space.appendChild(ship);
+        var shipData = new airShip(index, shipType);
+        airShips.push(shipData);
+        console.log(airShips.length, index);
+        var fly = 'fly';
+        var inner = '<td>第'+index+'号飞船下达指令</td><td><button onclick="Mediator(\'fly\', '+index+')" >开始飞行</button></td>' +
+                '<td><button onclick="Mediator(\'stop\','+index+')">停止飞行</button></td>' +
+                '<td><button onclick="Mediator(\'destroy\','+index+')">销毁</button></td>';
+        tr.innerHTML = inner;
+        table.appendChild(tr);
+    }
+    function Mediator (type, index) {
+        var num = Math.random();
+        function action(act, id) {
+            var ship = airShips[index];
+            var opt = {
+                id: id,
+                commond: act
+            };
+            ship.operate(opt);
+        }
+        if(0.3 < num && num <=1) { //模拟丢包
+            action(type, index);
+        }
+    }
+
+    (function(){
+        document.getElementById('add').onclick = addShip;// left 600 top 500
+    })();
+</script>
+</html>
