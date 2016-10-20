@@ -71,8 +71,28 @@
         context.isDestory = false;
         context.step = 0;
         context.cum = type.cum;
-        context.operate = function(options) {
-            if(!options) return;
+        context.Adapter = function (psw) {
+
+            var opt = parseInt(psw.substring(4,8),10);
+            var id = parseInt(psw.substring(0,4),10);
+            var commond;
+            if(opt === 1){
+                commond = 'fly';
+            }else if(opt === 2){
+                commond = 'stop'
+            }else if(opt === 3){
+                commond = 'destroy';
+            }
+            return {
+                id:id,
+                commond: commond
+            }
+
+
+        }
+        context.operate = function(psw) {
+            if(!psw) return;
+            var options = context.Adapter(psw);
             if(options.id !== context.id) return;
             if(context.isDestory === true && options.commond === 'create') {//创建
                 context.isDestory = false;
@@ -241,24 +261,43 @@
         airShips.push(shipData);
         console.log(airShips.length, index);
         var fly = 'fly';
-        var inner = '<td>第'+index+'号飞船下达指令</td><td><button onclick="Mediator(\'fly\', '+index+')" >开始飞行</button></td>' +
-                '<td><button onclick="Mediator(\'stop\','+index+')">停止飞行</button></td>' +
-                '<td><button onclick="Mediator(\'destroy\','+index+')">销毁</button></td>';
+        var inner = '<td>第'+index+'号飞船下达指令</td><td><button onclick="BUS(\'fly\', '+index+')" >开始飞行</button></td>' +
+                '<td><button onclick="BUS(\'stop\','+index+')">停止飞行</button></td>' +
+                '<td><button onclick="BUS(\'destroy\','+index+')">销毁</button></td>';
         tr.innerHTML = inner;
         table.appendChild(tr);
     }
-    function Mediator (type, index) {
-        var num = Math.random();
-        function action(act, id) {
-            var ship = airShips[index];
-            var opt = {
-                id: id,
-                commond: act
-            };
-            ship.operate(opt);
+    function Adapter(type, index) {
+
+        var opt;
+        var id = parseInt(index).toString(2);
+        var l = id.length;
+        for(var i=0;i<4-l;i++){
+            id = '0'+id;
         }
-        if(0.3 < num && num <=1) { //模拟丢包
-            action(type, index);
+        console.log(l);
+        if(type === 'fly') {
+            opt = '0001';
+        } else if(type ==='stop'){
+            opt = '0010';
+        } else if(type === 'destroy'){
+            opt = '0100';
+        }
+        return id + opt;
+        
+    }
+console.log('res',Adapter('fly', 1));
+    function BUS (type, index) {
+        var num = Math.random();
+        function action() {
+            var ship = airShips[index];
+            var psw = Adapter(type, index);
+            ship.operate(psw);
+        }
+        if(0.1 < num && num <=1) { //模拟丢包
+            action();
+        } else {
+            BUS(type, index);
         }
     }
 
