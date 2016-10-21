@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+        <html>
+<head>
+    <meta charset="utf-8">
+    <title>表单验证</title>
+    <style>
+        div {
+            font-family: SimHei;
+        }
+        input {
+            border-radius: 5%;
+            border: 1px solid #787878;
+            margin-left: 32px;
+            padding-right: 20px;
+            height: 25px;
+            width: 200px;
+        }
+        label {
+            color: #787878;
+            padding-left: 70px;
+            display: none;
+        }
+        button {
+            border-radius: 10%;
+            background-color: #297cd3;
+            color: white;
+            width: 50px;
+            height: 40px;
+            line-height: 40px;
+            text-align: center;
+            margin-left: 300px;
+        }
+        #repsw {
+            margin-left: 0px;
+        }
+        .tr {
+            padding-left: 50px;
+            padding-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+<div>
+    <div class="tr">
+        <div><b>名称</b> <input id="name" type="text" placeholder=""> </div>
+        <div><label id="name_warn">必填，长度为4-16个字符</label></div>
+    </div>
+    <div class="tr">
+        <div><b>密码</b> <input id="psw" type="password" placeholder=""> </div>
+        <div><label id="psw_warn">必填，长度为4-16个字符</label></div>
+    </div>
+    <div class="tr">
+        <div><b>密码确认</b> <input id="repsw" type="password" placeholder=""> </div>
+        <div><label id="repsw_warn">必填，长度为4-16个字符</label></div>
+    </div>
+    <div class="tr">
+        <div><b>邮箱</b> <input id="email" type="text" placeholder=""> </div>
+        <div><label id="email_warn">必填</label></div>
+    </div>
+    <div class="tr">
+        <div><b>手机</b> <input id="tel" type="text" placeholder=""> </div>
+        <div><label id="tel_warn">必填，长度为11个数字</label></div>
+    </div>
+    <button id="submit">验证</button>
+</div>
+</body>
+<script>
+    var inputs = document.getElementsByTagName('input');
+    var warn = document.getElementById('warn');
+    function  getStringLen(str){
+        var i,len,code;
+        if(str === null || str ===  "") return 0;
+        len =  str.length;
+        for (i = 0;i < str.length;i++) {
+            code = str.charCodeAt(i);
+            if (code > 255) {len ++;}
+        }
+        return len;
+    }
+    function testForm() {
+        var len = getStringLen(input.value);
+        var text='';
+        console.log('111',len);
+        if(len === 0){
+            text = '内容不能为空';
+            input.style.borderColor = '#cd4a48';
+        } else if(len>16 || len<4) {
+            text = '长度为'+len+'不符合要求';
+            input.style.borderColor = '#cd4a48';
+        } else {
+            text = '格式正确';
+            input.style.borderColor = '#297cd3';
+        }
+        input.style.borderWidth= '2px';
+        warn.innerText = text;
+
+    }
+    function remind(input){
+        var id = input.id +　'warn';
+        var label = document.getElementById(id);
+        label.style.display = 'block';
+    }
+    function focusShow() {
+        Array.prototype.forEach.call(inputs,function(input){
+            input.onfocus = remind;
+        });
+    }
+    (function(){
+        document.getElementById('submit').onclick = testForm;
+    })();
+</script>
+</html>
