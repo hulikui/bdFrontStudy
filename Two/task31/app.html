@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+        <html>
+<head>
+    <meta charset="UTF-8">
+    <title>表单二级联动</title>
+<style>
+    div {
+        margin: 20px;
+    }
+    input {
+        margin-left: 20px;
+    }
+    select {
+        margin-right: 20px;
+    }
+    select > option {
+        font-size: 40px;
+    }
+    #job {
+      display: none;
+    }
+</style>
+</head>
+<body>
+<form name="form">
+    <div >
+        <input type="radio" name="type" checked="checked" value="0" onchange="setForm(this.value)">在校生
+        <input type="radio" name="type" value="1" onchange="setForm(this.value)">非在校生
+    </div>
+    <div id="univ">
+        学校: <select   name="s1"   onChange="changeSelect(this.value)">
+            <option   value="北京">北京</option>
+            <option   value="上海">上海</option>
+            <option   value="广州">广州</option>
+        </select>
+
+        <select   name="s2">
+            <option>北京大学</option>
+            <option>清华大学</option>
+            <option>中国政法大学</option>
+        </select>
+    </div>
+    <div id="job">
+        就业单位: <input type="text" value="" >
+    </div>
+</form>
+</body>
+<script>
+    var data = [];
+    data[0] = ['北京', '北京大学', '清华大学', '中国政法大学'];
+    data[1] = ['上海', '上海交通大学', '复旦大学'];
+    data[2] = ['广州', '中山大学', '华南理工大学'];
+
+    function changeSelect(value) {
+        document.form.s2.length = 0;
+        for(var i = 0; i<data.length; i++) {
+            if(data[i][0] === value) {
+                for(var j = 1; j< data[i].length; j++ ){
+                    var option = new Option(data[i][j], data[i][j]);
+                    document.form.s2.options[document.form.s2.length] = option;
+                }
+
+            }
+        }
+    }
+    function setForm(value) {
+        var univ = document.getElementById('univ');
+        var job = document.getElementById('job');
+
+        if(value ==='0'){
+            univ.style.display = 'block';
+            job.style.display="none";
+        }else {
+            univ.style.display = 'none';
+            job.style.display="block";
+        }
+    }
+</script>
+</html>

@@ -1,0 +1,62 @@
+<html>
+<head>
+    <title>UI浮出层</title>
+    <meta charset="utf-8" />
+   <style>
+       table {
+           border-left: 1px solid;
+           width: 80%;
+           background-color: #eeeeee;
+
+       }
+       table td {
+           border-right: 1px solid;
+           border-bottom: 1px solid;
+           margin: 0px;
+           text-align: center;
+           line-height: 25px;
+           height: 25px;
+       }
+       table th {
+           background-color: black;
+           color: white;
+           border-left:1px solid white;
+           height: 30px;
+           line-height: 30px;
+       }
+    </style>
+
+
+</head>
+<body>
+    <table id="table" border="0px" cellpadding="0" cellspacing="0">
+
+    </table>
+</body>
+<script language="javascript">
+    var th = ['姓名','语文','数学','英语','总分'];
+    var data = [];
+    data[0]=['小明',80,90,70,240];
+    data[1]=['小华',90,70,60,220];
+    data[2]=['小红',100,80,80,260];
+    var table = document.getElementById('table');
+    th.forEach(function (item, index) {
+       var nodeth = document.createElement('TH');
+        nodeth.innerText=item;
+        nodeth.id=index+"_th";
+        table.appendChild(nodeth);
+    });
+    data.forEach(function (item) {
+        var nodetr = document.createElement('TR');
+        var content = '';
+        item.forEach(function (data) {
+            content += '<td>'+data+'</td>';
+        });
+        nodetr.innerHTML = content;
+        table.appendChild(nodetr);
+    });
+    (function() {
+
+    })()
+</script>
+</html>

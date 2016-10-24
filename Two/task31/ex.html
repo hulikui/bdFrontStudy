@@ -1,0 +1,45 @@
+<!DOCTYPE HTML >
+<HTML>
+<HEAD>
+    <meta charset="utf-8">
+</HEAD>
+<!-- by sundful  starting-->
+<BODY>
+<script   language="JavaScript">
+
+    var   subcat   =   new   Array();
+    subcat[0]   =   new   Array('中文','英语','英语')
+    subcat[1]   =   new   Array('中文','法语','法语')
+    subcat[2]   =   new   Array('英语','中文','中文')
+    subcat[3]   =   new   Array('法语','中文','中文')
+    function   changeselect1(locationid)
+    {
+        document.form1.s2.length   =   0;   //初始化下拉列表   清空下拉数据
+        document.form1.s2.options[0]   =   new   Option('==请选择==','');   //给第一个值
+        for   (i=0;   i<subcat.length;   i++)   //legth=20
+        {
+            if   (subcat[i][0]   ==   locationid)   //[0]   [1]   第一列   第二列
+            {document.form1.s2.options[document.form1.s2.length]   =   new   Option(subcat[i][1],   subcat[i][2]);}   //建立option
+            //第一次   length=1   因为有==请选择==
+            //i=9时   length=   10   值有11个   因为从0数起   subcat[i][0]   ==   locationid屏蔽了再写
+        }
+    }
+</script>
+
+<form   name="form1"     method="post"   runat="server">
+    二级联动：
+
+    <select   name="s1"   onChange="changeselect1(this.value)">
+        <option>==请选择==</option>
+        <option   value="中文">中文</option>
+        <option   value="英语">英语</option>
+        <option   value="英语">法语</option>
+    </select>
+
+    <select   name="s2">
+        <option>==请选择==</option>
+    </select>
+</form>
+<!-- by sundful  ending-->
+</BODY>
+</HTML>

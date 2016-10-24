@@ -68,6 +68,7 @@
 <script>
     var inputs = document.getElementsByTagName('input');
     var warn = document.getElementById('warn');
+    var isPassed = false;
     function  getStringLen(str){
         var i,len,code;
         if(str === null || str ===  "") return 0;
@@ -78,36 +79,192 @@
         }
         return len;
     }
-    function testForm() {
-        var len = getStringLen(input.value);
-        var text='';
-        console.log('111',len);
+
+    function testName(nameInput) {
+        var value = nameInput.value;
+        var len = getStringLen(value);
+        var warn = document.getElementById(nameInput.id+'_warn');
+        var text = '';
         if(len === 0){
             text = '内容不能为空';
-            input.style.borderColor = '#cd4a48';
+            nameInput.style.borderColor = '#cd4a48';
+            isPassed = false;
         } else if(len>16 || len<4) {
             text = '长度为'+len+'不符合要求';
-            input.style.borderColor = '#cd4a48';
+            nameInput.style.borderColor = '#cd4a48';
+            isPassed = false;
         } else {
             text = '格式正确';
-            input.style.borderColor = '#297cd3';
+            nameInput.style.borderColor = '#297cd3';
+            isPassed = true;
         }
-        input.style.borderWidth= '2px';
+        nameInput.style.borderWidth= '2px';
         warn.innerText = text;
+        warn.style.display = 'block';
+    }
 
+    function testPsw(pswInput) {
+        var value = pswInput.value;
+        var len = getStringLen(value);
+        var warn = document.getElementById(pswInput.id+'_warn');
+        var text = '';
+        if(len === 0){
+            text = ' 密码不能为空';
+            pswInput.style.borderColor = '#cd4a48';
+            isPassed=false;
+        } else if(len < 6) {
+            isPassed=false;
+            text = '长度小于'+len+'不符合要求';
+            pswInput.style.borderColor = '#cd4a48';
+        } else {
+            isPassed=true;
+            text = '格式正确';
+            pswInput.style.borderColor = '#297cd3';
+        }
+        pswInput.style.borderWidth= '2px';
+        warn.innerText = text;
+        warn.style.display = 'block';
+    }
+
+    function testrePsw(repswInput) {
+
+        var revalue = repswInput.value;
+        var value = document.getElementById('psw').value;
+        var warn = document.getElementById(repswInput.id+'_warn');
+        var text = '';
+        if (revalue.length === 0) {
+            isPassed=false;
+            text = '内容不能为空';
+            repswInput.style.borderColor = '#cd4a48';
+        } else if(revalue === value){
+            isPassed=false;
+            text = '密码正确';
+            repswInput.style.borderColor = '#297cd3';
+        } else {
+            isPassed=true;
+            text = ' 密码不一致';
+            repswInput.style.borderColor = '#cd4a48';
+        }
+        repswInput.style.borderWidth= '2px';
+        warn.innerText = text;
+        warn.style.display = 'block';
+    }
+
+    function testEmail(emailInput) {
+        var value = emailInput.value;
+        var len = getStringLen(value);
+        var warn = document.getElementById(emailInput.id+'_warn');
+        var text = '';
+        isPassed=false;
+        var pattern = /^\w+@\w+\.\w+$/;
+        if(len === 0){
+            text = ' 密码不能为空';
+            emailInput.style.borderColor = '#cd4a48';
+        } else if(len < 6) {
+            text = '长度小于'+len+'不符合要求';
+            emailInput.style.borderColor = '#cd4a48';
+        } else if(pattern.test(value)){
+            isPassed=true;
+            text = '格式正确';
+            emailInput.style.borderColor = '#297cd3';
+        }
+        emailInput.style.borderWidth= '2px';
+        warn.innerText = text;
+        warn.style.display = 'block';
+    }
+    function testTel(telInput) {
+        var value = telInput.value;
+        var warn = document.getElementById(telInput.id+'_warn');
+        var text = '';
+        var pattern = /^[0-9]{11}$/;
+        isPassed=false;
+        if(!pattern.test(value)){
+            text = ' 手机号格式不正确';
+            telInput.style.borderColor = '#cd4a48';
+        } else {
+            isPassed=true;
+            text = '格式正确';
+            telInput.style.borderColor = '#297cd3';
+        }
+        telInput.style.borderWidth= '2px';
+        warn.innerText = text;
+        warn.style.display = 'block';
+    }
+
+    function test(input){
+        //console.log(input);
+
+        switch (input.target.id) {
+            case 'name' :
+                testName(input.target);
+                break;
+            case 'psw' :
+                testPsw(input.target);
+                break;
+            case 'repsw' :
+                testrePsw(input.target);
+                break;
+            case 'email' :
+                testEmail(input.target);
+                break;
+            case 'tel' :
+                testTel(input.target);
+                break;
+        }
     }
     function remind(input){
-        var id = input.id +　'warn';
+        //console.log(input);
+        var id = input.target.id +　'_warn';
         var label = document.getElementById(id);
         label.style.display = 'block';
+        var warn = document.getElementById(input.target.id+'_warn');
+        switch (input.target.id) {
+            case 'name' :
+
+                warn.innerText = '必填，长度为4-16个字符';
+                break;
+            case 'psw' :
+
+                warn.innerText = '必填，长度为4-16个字符';
+
+                break;
+            case 'repsw' :
+
+                warn.innerText = '必填，长度为4-16个字符';
+                break;
+            case 'email' :
+
+                warn.innerText = '必填，xxx@xx.com';
+                break;
+            case 'tel' :
+
+                warn.innerText = '必填，长度为11个数字';
+                break;
+        }
     }
+
+    function shadow(input) {
+        var id = input.target.id +　'_warn';
+        var label = document.getElementById(id);
+        label.style.display = 'none';
+    }
+
     function focusShow() {
         Array.prototype.forEach.call(inputs,function(input){
             input.onfocus = remind;
+            input.onblur = test;
         });
+    }
+    function testForm() {
+        if(isPassed){
+            alert('提交成功!');
+        }else {
+            alert('提交失败!');
+        }
     }
     (function(){
         document.getElementById('submit').onclick = testForm;
+        focusShow();
     })();
 </script>
 </html>

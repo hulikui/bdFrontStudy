@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>表格</title>
+    <style>
+        #table td {
+            border: 1px solid;
+        }
+        .table2 {
+            float: left;
+        }
+        .table1 {
+            padding-left:50px;
+        }
+        .animation {
+            animation: anibag 1s ;
+        }
+        div {
+            margin-left: 100px;
+        }
+        input {
+            margin-top: 30px;
+        }
+        @keyframes anibag {
+            from { opacity: 0;}
+            to {opacity: 1;}
+        }
+    </style>
+</head>
+<body>
+    <table class="table1" cellpadding="29">
+        <th>1</th>
+        <th>2</th>
+        <th>3</th>
+        <th>4</th>
+        <th>5</th>
+        <th>6</th>
+        <th>7</th>
+        <th>8</th>
+        <th>9</th>
+        <th>10</th>
+    </table>
+
+    <table class="table2" cellpadding="20">
+        <tr><td>1</td></tr>
+        <tr><td>2</td></tr>
+        <tr><td>3</td></tr>
+        <tr><td>4</td></tr>
+        <tr><td>5</td></tr>
+        <tr><td>6</td></tr>
+        <tr><td>7</td></tr>
+        <tr><td>8</td></tr>
+        <tr><td>9</td></tr>
+        <tr><td>10</td></tr>
+    </table>
+ <table id="table" class="table2" border="1" cellspacing="0" cellpadding="20">
+
+ </table>
+    <div>
+<input id="input"><button id="action">执行</button>
+
+<p>GO：向蓝色边所面向的方向前进一格（一格等同于正方形的边长）</p>
+    <p>TUN LEF：向左转（逆时针旋转90度）</p>
+    <p>TUN RIG：向右转（顺时针旋转90度）</p>
+    <p>TUN BAC：向右转（旋转180度）</p>
+        </div>
+</body>
+<script>
+    var table = document.getElementById('table');
+    var th="";
+    var trs = "";
+    var selectId = '';
+    for(var i = 1; i<11; i++){
+
+        trs+= '<tr>';
+        for(var j=1;j<11;j++){
+            var id = i*10+j;
+            trs+='<td id='+id+' onclick="setId(this.id)">'+id+'</td>';
+        }
+        trs+='</tr>';
+
+    }
+    table.innerHTML = trs;
+    function  setId(id, oldId) {
+        //console.log(arguments);
+        var box = document.getElementById(id);
+        if(selectId!=='' && arguments.length === 1) return;
+        if(box.style.borderColor !== 'red'){
+            if(arguments.length === 2) {
+                var oldbox = document.getElementById(arguments[1]);
+                var background = oldbox.style.background;
+                //console.log(background);
+                box.style.borderColor="red";
+                box.style.boxShadow = '3px 3px 2px #888888';
+                box.style.background = background;
+                box.className="animation";
+                oldbox.style.borderColor = "black";
+                oldbox.style.boxShadow = '';
+                oldbox.style.background ="";
+            } else {
+                box.style.borderColor = "red";
+                box.style.boxShadow = '3px 3px 2px #888888';
+                box.style.background ="linear-gradient(blue, red)";
+            }
+            selectId = id;
+
+        } else {
+            box.style.borderColor = "black";
+            box.style.boxShadow = '';
+            box.style.background ="";
+            selectId = '';
+        }
+
+
+    }
+    function getDirect() {
+        var direct;
+        var box = document.getElementById(selectId);
+        if(!box) return;
+        if(box.style.background.indexOf('right')<0){//上下
+            if(box.style.background.indexOf('blue') < box.style.background.indexOf('red')){//上
+                direct = 'top';
+            } else {
+                direct = 'bottom';
+            }
+        } else {//左右
+            if(box.style.background.indexOf('blue') < box.style.background.indexOf('red')){//左
+                direct = 'left';
+            } else {
+                direct = 'right';
+            }
+        }
+        return direct;
+    }
+    function GO() {
+        console.log('selected', selectId);
+        var direct = getDirect();
+        if(!direct) return;
+        var isGo = false;
+        switch (direct) {
+            case 'top':
+                var targetId = parseInt(selectId,10)-10;
+                if(targetId < 110 && targetId > 11) {
+                    setId(targetId, selectId);
+                    isGo = true;
+                }
+                break;
+            case 'bottom':
+                var targetId = parseInt(selectId,10)+10;
+                if(targetId < 110 && targetId > 11) {
+                    setId(targetId, selectId);
+                    isGo = true;
+                }
+                break;
+            case 'left':
+                var targetId = parseInt(selectId,10)-1;
+                if(targetId < 110 && targetId > 11) {
+                    setId(targetId, selectId);
+                    isGo = true;
+                }
+                break;
+            case 'right':
+                var targetId = parseInt(selectId,10)+1;
+                if(targetId < 110 && targetId > 11) {
+                    setId(targetId, selectId);
+                    isGo = true;
+                }
+                break;
+        }
+        
+    }
+    function TUNLEF() {
+        var box = document.getElementById(selectId);
+        if(!box) return;
+        box.style.background = 'linear-gradient(to right, blue , red)';
+        
+    }
+    function TUNRIG() {
+        var box = document.getElementById(selectId);
+        if(!box) return;
+        box.style.background = 'linear-gradient(to right, red , blue)';
+    }
+    function TUNBACK() {
+        var box = document.getElementById(selectId);
+        if(!box) return;
+        box.style.background = 'linear-gradient(red , blue)';
+        
+    }
+    function action() {
+        var value = document.getElementById('input').value;
+        switch (value.trim()) {
+            case 'GO':
+                GO();
+                break;
+            case 'TUNLEF':
+                TUNLEF();
+                break;
+            case 'TUNRIG':
+                TUNRIG();
+                break;
+            case 'TUNBACk':
+                TUNBACk();
+                break;
+        }
+    }
+    (function(){
+        document.getElementById('action').onclick = action;
+    })()
+</script>
+</html>

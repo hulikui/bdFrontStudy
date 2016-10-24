@@ -1,0 +1,109 @@
+<html>
+<head>
+    <title>UI浮出层</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+        .black_overlay{
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index:1001;
+            -moz-opacity: 0.8;
+            opacity:.80;
+            filter: alpha(opacity=80);
+        }
+        .white_content {
+            display: none;
+            position: absolute;
+            top: 25%;
+            left: 25%;
+            width: 50%;
+            height: 50%;
+            border: 2px solid orange;
+            background-color: white;
+            z-index:1002;
+            overflow: auto;
+        }
+        #title, #content {
+            width: 100%;
+            font-size: 20px;
+            padding: 16px;
+
+        }
+        #title {
+            background-color: #5a5b5b;
+            color: white;
+        }
+        #control {
+            width: 60%;
+            position: absolute;
+            bottom: 10px;
+            right: 0px;
+        }
+        button {
+            width: 40%;
+            height: 40px;
+            background-color: #5a5b5b;
+            color: white;
+            margin-left: 20px;
+        }
+    </style>
+
+
+</head>
+<body>
+
+<p>可以根据自己要求修改css样式
+    <input type="button" value="点击这里打开窗口" onclick="openWindow()"/></p>
+
+<div id="light" class="white_content">
+    <div id="title">这是一个浮出层</div>
+    <div id="content">这是一个浮出层</div>
+    <div id="control">
+        <button href="#" onClick="closeWindow()"> 确定 </button>
+        <button href="#" onClick="closeWindow()"> 取消 </button>
+    </div>
+
+</div>
+<div id="fade" class="black_overlay"></div>
+</body>
+<script language="javascript">
+    var isDrag = false;
+    var diffX=0;
+    var diffY=0;
+    function openWindow(){
+        document.getElementById('light').style.display='block';
+        document.getElementById('fade').style.display='block';
+    }
+    function closeWindow(){
+        document.getElementById('light').style.display='none';
+        document.getElementById('fade').style.display='none';
+    }
+    function move(e) {
+        if(!isDrag) return;
+        var notion = document.getElementById('light');
+
+        notion.style.left=(e.clientX-diffX)+'px';
+        notion.style.top=(e.clientY-diffY)+'px';
+    }
+
+    function down(e) {
+        isDrag=true;
+        var draggingObj=e.target.offsetParent;
+        diffX=e.clientX-draggingObj.offsetLeft;
+        diffY=e.clientY-draggingObj.offsetTop;
+    }
+    function up() {
+        isDrag = false
+    }
+    (function() {
+        document.getElementById('light').onmousedown = down;
+        document.getElementById('light').onmouseup=up;
+        document.getElementById('light').onmousemove=move;
+    })()
+</script>
+</html>
