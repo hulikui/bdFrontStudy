@@ -1,6 +1,6 @@
 <html>
 <head>
-    <title>UI浮出层</title>
+    <title>表项排序</title>
     <meta charset="utf-8" />
    <style>
        table {
@@ -24,6 +24,9 @@
            height: 30px;
            line-height: 30px;
        }
+       th:hover {
+           background-color: #767777;
+       }
     </style>
 
 
@@ -34,29 +37,66 @@
     </table>
 </body>
 <script language="javascript">
+    var type = 'default';
     var th = ['姓名','语文','数学','英语','总分'];
     var data = [];
     data[0]=['小明',80,90,70,240];
     data[1]=['小华',90,70,60,220];
     data[2]=['小红',100,80,80,260];
     var table = document.getElementById('table');
-    th.forEach(function (item, index) {
-       var nodeth = document.createElement('TH');
-        nodeth.innerText=item;
-        nodeth.id=index+"_th";
-        table.appendChild(nodeth);
-    });
-    data.forEach(function (item) {
-        var nodetr = document.createElement('TR');
-        var content = '';
-        item.forEach(function (data) {
-            content += '<td>'+data+'</td>';
-        });
-        nodetr.innerHTML = content;
-        table.appendChild(nodetr);
-    });
-    (function() {
+    function refresh(selectId) {
+        table.innerHTML = '';
+        th.forEach(function (item, index) {
+            var nodeth = document.createElement('TH');
+            var id = index+"_th";
+            if(index === 0) {
+                nodeth.innerHTML= '<label>'+item+'</label>';
+            }else {
+                console.log(selectId);
+                var icon = '◆';
+                if (type === 'desc' && selectId === index) {
+                    icon = '▼';
+                } else if (type === 'asce' && selectId === index){
+                    icon = '▲';
+                }
+                nodeth.innerHTML= '<label class="'+id+'" onclick="sort(this)">'+item+' <a>'+icon+'</a></label>';
+            }
 
-    })()
+            nodeth.id=id;
+            table.appendChild(nodeth);
+        });
+        data.forEach(function (item) {
+            var nodetr = document.createElement('TR');
+            var content = '';
+            item.forEach(function (data) {
+                content += '<td>'+data+'</td>';
+            });
+            nodetr.innerHTML = content;
+            table.appendChild(nodetr);
+        });
+    }
+    refresh();
+    function sort(obj) {
+        var id = parseInt(obj.className.split('_')[0]);
+        if(type === 'default'){
+            type = "asce"
+        } else if (type === 'asce') {
+            type = "desc";
+        } else {
+            type = "asce";
+        }
+
+        data.sort(function(a, b){
+            if(type==='asce') {
+                return a[id] < b[id];
+            } else {
+                return a[id] > b[id];
+            }
+
+        });
+
+        refresh(id);
+    }
+
 </script>
 </html>

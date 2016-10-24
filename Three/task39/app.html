@@ -1,0 +1,161 @@
+<html>
+<head>
+    <title>表项排序</title>
+    <meta charset="utf-8" />
+    <style>
+        #container {
+            margin-top: 100px;
+            width: 70%;
+            z-index: 0;
+
+        }
+        #table {
+            border-left: 1px solid;
+            width: 99%;
+            background-color: #eeeeee;
+            z-index: 999;
+
+        }
+        table td {
+            border-right: 1px solid;
+            border-bottom: 1px solid;
+            margin: 0px;
+            text-align: center;
+            line-height: 25px;
+            height: 25px;
+            width: 20%;
+        }
+        table th {
+            background-color: black;
+            color: white;
+            border-left:1px solid white;
+            height: 30px;
+            line-height: 30px;
+            width: 20%;
+        }
+        th:hover {
+            background-color: #767777;
+        }
+        label {
+            width: 100%;
+        }
+        #over {
+            width: 69%;
+            z-index: 1001;
+            position: absolute;
+            background-color: #eeeeee;
+        }
+        body {
+            height: 200%;
+        }
+        table tr:nth-child(1) {
+            position:absolute;
+            left: 8px;
+            top:70px;
+            width: 69%;
+            display: inherit;
+        }
+        table tr:nth-child(1) th {
+
+        }
+    </style>
+
+
+</head>
+<body>
+<div id="container">
+
+<table id="table" border="0px" cellpadding="0" cellspacing="0">
+
+</table>
+</div>
+</body>
+<script language="javascript">
+    var type = 'default';
+    var th = ['姓名','语文','数学','英语','总分'];
+    var data = [];
+    data[0]=['小明',80,90,70,240];
+    data[1]=['小华',90,70,60,220];
+    data[2]=['小红',100,80,80,260];
+    data[3]=['小明',80,90,70,240];
+    data[4]=['小华',90,70,60,220];
+    data[5]=['小红',100,80,80,260];
+    data[6]=['小明',80,90,70,240];
+    data[7]=['小华',90,70,60,220];
+    data[8]=['小红',100,80,80,260];
+    data[9]=['小明',80,90,70,240];
+    data[10]=['小华',90,70,60,220];
+    data[11]=['小红',100,80,80,260];
+    data[12]=['小明',80,90,70,240];
+    data[13]=['小华',90,70,60,220];
+    data[14]=['小红',100,80,80,260];
+    var table = document.getElementById('table');
+    var over = document.getElementById('over');
+    function refresh(selectId) {
+        table.innerHTML = '';
+        var trh = document.createElement('TR');
+        th.forEach(function (item, index) {
+
+            var nodeth = document.createElement('TH');
+            var id = index+"_th";
+            if(index === 0) {
+                nodeth.innerHTML= '<label>'+item+'</label>';
+            }else {
+                console.log(selectId);
+                var icon = '◆';
+                if (type === 'desc' && selectId === index) {
+                    icon = '▼';
+                } else if (type === 'asce' && selectId === index){
+                    icon = '▲';
+                }
+                nodeth.innerHTML= '<label class="'+id+'" onclick="sort(this)">'+item+' <a>'+icon+'</a></label>';
+            }
+
+            nodeth.id=id;
+            trh.appendChild(nodeth);
+
+        });
+        table.appendChild(trh);
+        data.forEach(function (item) {
+            var nodetr = document.createElement('TR');
+            var content = '';
+            item.forEach(function (data) {
+                content += '<td>'+data+'</td>';
+            });
+            nodetr.innerHTML = content;
+            table.appendChild(nodetr);
+        });
+    }
+    refresh();
+    function sort(obj) {
+        var id = parseInt(obj.className.split('_')[0]);
+        if(type === 'default'){
+            type = "asce"
+        } else if (type === 'asce') {
+            type = "desc";
+        } else {
+            type = "asce";
+        }
+
+        data.sort(function(a, b){
+            if(type==='asce') {
+                return a[id] < b[id];
+            } else {
+                return a[id] > b[id];
+            }
+
+        });
+        refresh(id);
+    }
+    function tableFix() {
+
+    }
+    (function(){
+        document.body.onmousewheel = function(event) {
+            event = event || window.event;
+            console.log(event);
+        }
+    })()
+
+</script>
+</html>
