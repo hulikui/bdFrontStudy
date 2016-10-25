@@ -1,17 +1,12 @@
 <html>
 <head>
-    <title>表项排序</title>
+    <title>冻结表头</title>
     <meta charset="utf-8" />
     <style>
-        #container {
-            margin-top: 100px;
-            width: 70%;
-            z-index: 0;
 
-        }
         #table {
             border-left: 1px solid;
-            width: 99%;
+            width: 100%;
             background-color: #eeeeee;
             z-index: 999;
 
@@ -28,34 +23,24 @@
         table th {
             background-color: black;
             color: white;
-            border-left:1px solid white;
+            border:2px solid white;
             height: 30px;
             line-height: 30px;
-            width: 20%;
         }
         th:hover {
             background-color: #767777;
         }
         label {
-            width: 100%;
-        }
-        #over {
-            width: 69%;
-            z-index: 1001;
-            position: absolute;
-            background-color: #eeeeee;
+
         }
         body {
             height: 200%;
         }
         table tr:nth-child(1) {
-            position:absolute;
-            left: 8px;
-            top:70px;
-            width: 69%;
-            display: inherit;
+
         }
         table tr:nth-child(1) th {
+            width: 20%;
 
         }
     </style>
@@ -63,12 +48,11 @@
 
 </head>
 <body>
-<div id="container">
+
 
 <table id="table" border="0px" cellpadding="0" cellspacing="0">
 
 </table>
-</div>
 </body>
 <script language="javascript">
     var type = 'default';
@@ -90,28 +74,40 @@
     data[13]=['小华',90,70,60,220];
     data[14]=['小红',100,80,80,260];
     var table = document.getElementById('table');
-    var over = document.getElementById('over');
-    function refresh(selectId) {
+    var styles = ['position', 'top', 'display', 'width', 'paddingLeft'];
+    function setTitleStyle(title, styleObjs){
+       styles.forEach(function(style){
+           console.log(styleObjs[style]);
+            title['style'][style] = styleObjs[style];
+       });
+    }
+    function init(selectId) {
+        var title;
+        if (selectId) {
+            title = document.getElementById('over');
+        }
+
         table.innerHTML = '';
         var trh = document.createElement('TR');
+        trh.id = 'over';
         th.forEach(function (item, index) {
 
             var nodeth = document.createElement('TH');
-            var id = index+"_th";
-            if(index === 0) {
-                nodeth.innerHTML= '<label>'+item+'</label>';
-            }else {
+            var id = index + "_th";
+            if (index === 0) {
+                nodeth.innerHTML = '<label>' + item + '</label>';
+            } else {
                 console.log(selectId);
                 var icon = '◆';
                 if (type === 'desc' && selectId === index) {
                     icon = '▼';
-                } else if (type === 'asce' && selectId === index){
+                } else if (type === 'asce' && selectId === index) {
                     icon = '▲';
                 }
-                nodeth.innerHTML= '<label class="'+id+'" onclick="sort(this)">'+item+' <a>'+icon+'</a></label>';
+                nodeth.innerHTML = '<label class="' + id + '" onclick="sort(this)">' + item + ' <a>' + icon + '</a></label>';
             }
 
-            nodeth.id=id;
+            nodeth.id = id;
             trh.appendChild(nodeth);
 
         });
@@ -120,13 +116,16 @@
             var nodetr = document.createElement('TR');
             var content = '';
             item.forEach(function (data) {
-                content += '<td>'+data+'</td>';
+                content += '<td>' + data + '</td>';
             });
             nodetr.innerHTML = content;
             table.appendChild(nodetr);
         });
+        if (selectId) {
+            var styleObjs = title.style;
+            setTitleStyle(trh, styleObjs);
+        }
     }
-    refresh();
     function sort(obj) {
         var id = parseInt(obj.className.split('_')[0]);
         if(type === 'default'){
@@ -145,16 +144,29 @@
             }
 
         });
-        refresh(id);
+        init(id);
     }
-    function tableFix() {
-
+    function fixTitle() {
+        var top = table.offsetTop;
+        var height = table.clientHeight + top;
+        var over = document.getElementById('over');
+        if(window.scrollY > top){
+            over.style.position = "fixed";
+            over.style.top = 0;
+            over.style.display = 'inherit';
+            over.style.width="99%";
+            over.style.paddingLeft="3px";
+            if(window.scrollY > height){
+                over.style.position = "absolute";
+            }
+        }else{
+            over.style.position = "static";
+            over.style.display = '';
+        }
     }
     (function(){
-        document.body.onmousewheel = function(event) {
-            event = event || window.event;
-            console.log(event);
-        }
+        init();
+        document.body.onmousewheel = fixTitle;
     })()
 
 </script>
