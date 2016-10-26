@@ -1,0 +1,302 @@
+<html>
+<head>
+    <title>相册</title>
+    <meta charset="utf-8" />
+    <style type="text/css">
+    #container {
+        width: 50%;
+        height: 1000px;
+        display: flex;
+        border: 1px solid black;
+        margin: auto;
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
+    .photo_frame {
+        background-color: #787878;
+        border: 1px solid #C0C0C0;
+        width: 40%;
+        height: 30%;
+
+    }
+        .left_tx {
+            -webkit-clip-path: polygon(0 0, 70% 0, 30% 100%, 0% 100%);
+            clip-path: polygon(0 0, 70% 0, 30% 100%, 0% 100%);
+        }
+        .right_tx {
+            -webkit-clip-path: polygon(70% 0, 100% 0, 100% 100%, 30% 100%);
+            clip-path: polygon(70% 0, 100% 0, 100% 100%, 30% 100%);
+        }
+    </style>
+
+
+</head>
+<body>
+    <div id="container">
+
+    </div>
+</body>
+<script language="javascript">
+    //two 两个梯形遮罩 上半角和下半角 z-index 设置
+
+    var contain = document.getElementById('container');
+    function PFrame(width, height) {//定义高度和宽度
+        this.width = width;
+        this.height = height;
+        this.setStyles = function (obj, styles) {
+            for (var style in styles) {
+                obj['style'][style] = styles[style];
+            }
+        };
+        this.createChildFrame = function(styles, isSetImg){//迭代一个函数 生成子模块 检测 float 和 子模块 数量的 num float
+            var frame = document.createElement('DIV');
+            if(isSetImg){
+                var img = document.createElement('IMG');
+                img.src = "./img.jpg";
+                var imgStyles = {
+                    height: '100%',
+                    width: '100%'
+                };
+                this.setStyles(img, imgStyles);
+                frame.appendChild(img);
+            }
+            this.setStyles(frame, styles);
+            return frame;
+        };
+
+    }
+
+    PFrame.prototype.setOne = function(){
+
+        var styles = {
+            width: this.width,
+            height: this.height
+        };
+        var frame = this.createChildFrame(styles, true);
+        return frame;
+    };
+
+    PFrame.prototype.setTwo = function(){
+        var styles = {
+            width: this.width,
+            height: this.height,
+            position: 'relative'
+        };
+        var frame = this.createChildFrame(styles, false);
+        var left_frame_styles = {
+            position: 'absolute',
+            left: '0',
+            right: '0',
+            width: '100%',
+            height: '100%',
+            clipPath: 'polygon(0 0, 70% 0, 30% 100%, 0% 100%)'
+        };
+        var right_frame_styles = {
+            position: 'absolute',
+            left: '0',
+            right: '0',
+            width: '100%',
+            height: '100%',
+            clipPath: 'polygon(70% 0, 100% 0, 100% 100%, 30% 100%)'
+        };
+        var left_frame = this.createChildFrame(left_frame_styles, false);
+        var right_frame = this.createChildFrame(right_frame_styles, true);
+        var img = document.createElement('IMG');
+        img.src="./img2.jpg";
+        var img_styles = {
+            width: '100%',
+            height: '100%'
+        };
+        this.setStyles(img, img_styles);
+        left_frame.className="left_tx";
+        right_frame.className = 'right_tx';
+        left_frame.appendChild(img);
+        frame.appendChild(left_frame);
+        frame.appendChild(right_frame);
+        return frame;
+
+    };
+    PFrame.prototype.setThree = function(){
+        var father_styles = {
+            width: this.width,
+            height: this.height
+        };
+        var father_frame = this.createChildFrame(father_styles, false);
+        var left_framewidth = parseInt(this.width.split('px')[0]) - parseInt(this.height.split('px')[0])/2;
+        var right_width = parseInt(this.height.split('px')[0])/2;
+        var left_styles = {
+            width: left_framewidth,
+            height: this.height,
+            float: 'left'
+        };
+        var left_frame = this.createChildFrame(left_styles, true);
+        var right_styles = {
+            width: right_width,
+            height: this.height,
+            float: 'left'
+        };
+        var right_frame = this.createChildFrame(right_styles, false);
+        var right_box_styles = {
+            width: right_width,
+            height: right_width
+        };
+        var right_frame_1 = this.createChildFrame(right_box_styles, true);
+        var right_frame_2 = this.createChildFrame(right_box_styles, true);
+        right_frame.appendChild(right_frame_1);
+        right_frame.appendChild(right_frame_2);
+        father_frame.appendChild(left_frame);
+        father_frame.appendChild(right_frame);
+        return father_frame;
+    };
+
+    PFrame.prototype.setFour = function(){
+        var father_styles = {
+            width: this.width,
+            height: this.height
+        };
+        var father_frame = this.createChildFrame(father_styles, false);
+        var box_width = parseInt(this.width.split('px')[0])/2 ;
+        var box_height = parseInt(this.height.split('px')[0])/2;
+        var box_styles = {
+            width: box_width,
+            height: box_height,
+            float: 'left'
+        };
+        for(var i =0;i<4;i++){
+            var box_frame = this.createChildFrame(box_styles, true);
+            father_frame.appendChild(box_frame);
+        }
+        return father_frame;
+    };
+
+    PFrame.prototype.setFive = function(){
+        var father_styles = {
+            width: this.width,
+            height: this.height,
+        };
+        var father_frame = this.createChildFrame(father_styles, false);
+        var left_framewidth = parseInt(this.width.split('px')[0]) - parseInt(this.width.split('px')[0])/3;
+        var right_width = parseInt(this.width.split('px')[0])/3;
+        var left_styles = {
+            width: left_framewidth,
+            height: this.height,
+            float: 'left'
+        };
+        var left_frame = this.createChildFrame(left_styles, false);
+        var right_styles = {
+            width: right_width,
+            height: this.height,
+            float: 'right'
+        };
+        var right_frame = this.createChildFrame(right_styles, false);
+        var left_top_styles = {
+            width: left_framewidth,
+            height: parseInt(this.height.split('px')[0])*2/3
+        };
+        var left_top_frame = this.createChildFrame(left_top_styles, true);
+        var left_bottom_styles = {
+            width: left_framewidth,
+            height: parseInt(this.height.split('px')[0])/3,
+        };
+        var left_bottom_frame = this.createChildFrame(left_bottom_styles, false);
+        var left_box_style = {
+            width: left_framewidth/2,
+            height: parseInt(this.height.split('px')[0])/3,
+            float: 'left'
+        };
+        var left_box_1 = this.createChildFrame(left_box_style, true);
+        var left_box_2 = this.createChildFrame(left_box_style, true);
+        left_bottom_frame.appendChild(left_box_1);
+        left_bottom_frame.appendChild(left_box_2);
+        var right_top_styles = {
+            width: right_width,
+            height: right_width
+        };
+        var right_top_frame = this.createChildFrame(right_top_styles, true);
+        var right_bottom_styles = {
+            width: right_width,
+            height: parseInt(this.height.split('px')[0])-right_width
+        };
+        var right_bottom_frame = this.createChildFrame(right_bottom_styles, true);
+        right_frame.appendChild(right_top_frame);
+        right_frame.appendChild(right_bottom_frame);
+
+        left_frame.appendChild(left_top_frame);
+        left_frame.appendChild(left_bottom_frame);
+        father_frame.appendChild(left_frame);
+        father_frame.appendChild(right_frame);
+        return father_frame;
+    };
+
+    PFrame.prototype.setSix = function(){
+        var father_styles = {
+            width: this.width,
+            height: this.height,
+        };
+        var father_frame = this.createChildFrame(father_styles, false);
+        var left_framewidth = parseInt(this.width.split('px')[0])*2/3;
+        var right_width = parseInt(this.width.split('px')[0])/3;
+        var left_styles = {
+            width: left_framewidth,
+            height: this.height,
+            float: 'left'
+        };
+        var left_frame = this.createChildFrame(left_styles, false);
+        var right_styles = {
+            width: right_width,
+            height: this.height,
+            float: 'left'
+        };
+        var right_frame = this.createChildFrame(right_styles, false);
+        var left_top_styles = {
+            width: left_framewidth,
+            height: parseInt(this.height.split('px')[0])*2/3
+        };
+        var left_top_frame = this.createChildFrame(left_top_styles, true);
+        var left_bottom_styles = {
+            width: left_framewidth,
+            height: parseInt(this.height.split('px')[0])/3
+        };
+        var left_bottom_frame = this.createChildFrame(left_bottom_styles, false);
+        var left_box_style = {
+            width: parseInt(this.width.split('px')[0])/3,
+            height: parseInt(this.height.split('px')[0])/3,
+            float: 'left'
+        };
+        var left_box_1 = this.createChildFrame(left_box_style, true);
+        var left_box_2 = this.createChildFrame(left_box_style, true);
+        left_bottom_frame.appendChild(left_box_1);
+        left_bottom_frame.appendChild(left_box_2);
+        var right_box_styles = {
+            width: parseInt(this.width.split('px')[0])/3,
+            height: parseInt(this.height.split('px')[0])/3
+        };
+        for(var i=0;i<3;i++){
+            var right_box = this.createChildFrame(right_box_styles, true);
+            right_frame.appendChild(right_box);
+        }
+        left_frame.appendChild(left_top_frame);
+        left_frame.appendChild(left_bottom_frame);
+        father_frame.appendChild(left_frame);
+        father_frame.appendChild(right_frame);
+        return father_frame;
+    };
+
+    (function() {
+        var pf1 = new PFrame('400px', '300px');
+        var oneFrame = pf1.setOne();
+        contain.appendChild(oneFrame);
+        var TwoFrame = pf1.setTwo();
+        contain.appendChild(TwoFrame);
+        var ThreeFrame = pf1.setThree();
+        contain.appendChild(ThreeFrame);
+        var FourFrame = pf1.setFour();
+        contain.appendChild(FourFrame);
+        var FiveFrame = pf1.setFive();
+        contain.appendChild(FiveFrame);
+        var SixFrame = pf1.setSix();
+        contain.appendChild(SixFrame);
+
+    })()
+</script>
+</html>

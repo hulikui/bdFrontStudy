@@ -87,7 +87,7 @@
         #time_span {
             display: none;
         }
-        #start {
+        .time_span {
             background-color: #297cd3;
         }
         #end {
@@ -105,7 +105,7 @@
         <br>
         <input id="date_text" type="text" readonly  onchange="changed()" onmouseover="showCalendar()" />
         <br>
-        <input type="radio"  value="0" name="type" onclick="timeType(0)">单个日期
+        <input type="radio"  value="0" name="type" checked onclick="timeType(0)">单个日期
         <input type="radio" value="1" name="type" onclick="timeType(1)">日期段
         <select id="time_span">
 
@@ -146,10 +146,11 @@
     var time_span = document.getElementById('time_span');
     var type = 0;
     var span = 0;
-    var selectObj = {
-        start:'',
-        end: ''
-    };
+    var selectObj = {};//存储选择的时间段
+    function getSpan() {
+        var selectIndex = document.getElementById("time_span").selectedIndex;//获得是第几个被选中了
+        span = document.getElementById("time_span").options[selectIndex].text //获得被选中的项目
+    }
     function timeType(value){
         if(value === 1){
             time_span.style.display="inline-block";
@@ -210,9 +211,12 @@
             cal_body.style.display = "block";
         if(style == "block")
             cal_body.style.display = "none";
-
         var date_text = document.getElementById("date_text");
         var val = date_text.value;
+        if(type === 1){//提取两个时间段
+            val = date_text.value.split('*')[1];
+        }
+
         init(val);
     }
     function getWeekendays(fth_weekday) {
@@ -274,7 +278,7 @@
         }
         for(var i = start; i < end; i++){
             var cube = document.getElementsByClassName("cube").item(i);
-            var dayNum = i - start + 1
+            var dayNum = i - start + 1;
             cube.innerHTML = dayNum;
             var isWeekends = false;
             if(weekendays.indexOf(dayNum)>=0){
@@ -285,42 +289,66 @@
             cube.style.cursor = "pointer";
             cube.onmouseover = function(){
                 this.style.backgroundColor = '#cd4a48';
-            }
-            if(date == (i - start + 1))
-                cube.style.backgroundColor = '#cd4a48';
-            else{
-                cube.onmouseout = function(){
-                    this.style.backgroundColor = '';
+            };
+            if(type === 1){
+                var nodes = document.getElementsByClassName('time_span');
+                if(nodes[0] === (i - start +1 ) || nodes[1] === (i-start+1)){
+                    cube.style.backgroundColor = '#cd4a48';
+                }
+            } else {
+                if(date == (i - start + 1))
+                    cube.style.backgroundColor = '#cd4a48';
+                else {
+                    cube.onmouseout = function(){
+                        this.style.backgroundColor = '';
+                    }
                 }
             }
+
             cube.onclick = function(){
                 var date = year + "-" + month + "-" + this.innerHTML;
                 dateValue = new Date(date);
                 date_text.value = date;
+                var nodes = document.getElementsByClassName('time_span');
                 if(type === 0) {
                     cal_body.style.display = "none";
+                    selectObj.start = this.innerHTML;
+                    Array.prototype.forEach(function(item){
+                        item.className = 'cube';
+                    });
+                    changed();
                 } else {
-                    if(selectObj.start==='' && selectObj.end !==''){
-                        selectObj.start = date;
-                        this.id = "start";
-                    }else if (selectObj.start!=='' && selectObj.end ===''){
-                        selectObj.end = date;
-                        this.id = "end";
-                    }else if (selectObj.start!=='' && selectObj.end !=='') {//取消状态
-                        if(selectObj.start.split("-")[2] === this.innerHTML){//点的一样
-                            selectObj.start = "";
-                            this.id = '';
-                        }else if(selectObj.end.split("-")[2] === this.innerHTML){
-                            selectObj.end = "";
-                            this.id = '';
-                        }
+                    if(nodes && nodes.length < 2){
+                        this.className = 'cube time_span';
 
-                    }else {
-                        selectObj.start = date;
-                        this.id = "start";
+                    }else if(nodes && nodes.length >= 2){
+                        nodes[1].className = 'cube';
+                        this.className = 'cube time_span';
+                        this.title = '点击提交';
+                        if (confirm("你确定提交吗？")) {
+                            getSpan();
+                            if(nodes.length === 1){
+                                alert('请选择另一个日期');
+                                return;
+                            }
+                            var start = parseInt(nodes[0].innerText);
+                            var end = parseInt(nodes[1].innerText);
+                            if(end-start <= span){
+                                selectObj.start = start;
+                                selectObj.end = end;
+                                date_text.value = ''+year+'-'+month+'-'+nodes[0].innerText+'*'+year+'-'+month+'-'+nodes[1].innerText+'';
+                                alert('你选择了 '+year+'-'+month+'-'+nodes[0].innerText+'----'+year+'-'+month+'-'+nodes[1].innerText+'的时间段');
+                                changed();
+                            } else {
+                                alert('你选择的日期超出规定的时间段');
+                                return;
+                            }
+
+                        }
                     }
+
                 }
-                changed();
+
             }
         }
 
@@ -446,9 +474,9 @@
         if(isValidated()){
             var year = document.getElementById("text_year").value;
             var month = document.getElementById("text_month").value;
-            var day = selectObj.start.split('-')[2];
-            console.log(day);
-            var val = year + "-" + month + "-" + day;
+            var day = selectObj.start;
+            var val = year + "-" + month + "-" + 1;
+            console.log(val);
             init(val);
         }else{
             var value = new Date();
