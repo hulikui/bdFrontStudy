@@ -91,7 +91,7 @@
         notion.style.top=(e.clientY-diffY)+'px';
     }
 
-    function down(e) {
+    function down(e) {//修改为指定区域才能拖拽 修复BUG
         isDrag=true;
         var draggingObj=e.target.offsetParent;
         diffX=e.clientX-draggingObj.offsetLeft;
@@ -101,8 +101,8 @@
         isDrag = false
     }
     (function() {
-        document.getElementById('light').onmousedown = down;
-        document.getElementById('light').onmouseup=up;
+        document.getElementById('title').onmousedown = down;
+        document.getElementById('title').onmouseup=up;
         document.getElementById('light').onmousemove=move;
     })()
 </script>
