@@ -1,0 +1,8 @@
+
+.buckets {
+    width: 800px;
+    min-height: 500px;
+    border: 1px solid #787878;
+    display: flex;
+    flex-flow: wrap;
+}

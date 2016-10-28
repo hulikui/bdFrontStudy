@@ -1,0 +1,54 @@
+<html>
+<head>
+    <title>相册瀑布布局</title>
+    <meta charset="utf-8" />
+    <link href="bucket.css" rel="stylesheet" type="text/css"/>
+    <style type="text/css">
+        .buckets {
+            width: 1000px;
+            min-height: 700px;
+
+        }
+    </style>
+
+
+</head>
+<body>
+<div class="buckets">
+
+</div>
+
+
+</body>
+<script language="javascript">
+    //设置 宽度和栏数和间距都要提前设置
+    var contain = document.getElementsByClassName('buckets')[0];
+    function photos(nums) { //生成必要的图片, 高度-随机
+        var photos = [];
+        for(var i=0;i<nums;i++){
+            var index = parseInt(Math.random()*6);
+            var width=Math.floor(Math.random()*300+300);
+            var height=Math.floor(Math.random()*30+300);
+            photos.push({
+                width: width,
+                height: height,
+                ratio: width/height,
+                src: '../task43/img'+index+'.jpg'
+            });
+
+        }
+        return photos;
+    }
+
+    var photos = photos(15);
+    photos.forEach(function(photo){
+        var img = document.createElement('IMG');
+        img.src = photo.src;
+        img.style.height = photo.height;
+        img.style.width = photo.width;
+        contain.appendChild(img);
+    });
+
+</script>
+<script src="bucket.js"></script>
+</html>

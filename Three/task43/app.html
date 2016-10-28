@@ -2,6 +2,7 @@
 <head>
     <title>相册拼图布局</title>
     <meta charset="utf-8" />
+    <link href="puzzle.css" rel="stylesheet" type="text/css"/>
     <style type="text/css">
     #container {
         width: 50%;
@@ -12,432 +13,49 @@
         flex-wrap: wrap;
         justify-content: space-around;
     }
-    .left_tx {
-        -webkit-clip-path: polygon(0 0, 70% 0, 30% 100%, 0% 100%);
-        clip-path: polygon(0 0, 70% 0, 30% 100%, 0% 100%);
-    }
-    .right_tx {
-        -webkit-clip-path: polygon(70% 0, 100% 0, 100% 100%, 30% 100%);
-        clip-path: polygon(70% 0, 100% 0, 100% 100%, 30% 100%);
-    }
     </style>
-
 
 </head>
 <body>
+
     <div id="container">
+        <div class="puzzle">
+            <img src="img0.jpg">
+        </div>
+        <div class="puzzle">
+            <img src="img2.jpg">
+            <img src="img0.jpg">
+        </div>
+        <div class="puzzle">
+            <img src="img0.jpg">
+            <img src="img1.jpg">
+            <img src="img2.jpg">
+        </div>
+        <div class="puzzle">
+            <img src="img0.jpg">
+            <img src="img1.jpg">
+            <img src="img2.jpg">
+            <img src="img3.jpg">
+        </div>
+        <div class="puzzle">
+            <img src="img0.jpg">
+            <img src="img1.jpg">
+            <img src="img2.jpg">
+            <img src="img3.jpg">
+            <img src="img4.jpg">
+        </div>
+
+        <div class="puzzle">
+            <img src="img2.jpg">
+            <img src="img0.jpg">
+            <img src="img3.jpg">
+            <img src="img4.jpg">
+            <img src="img1.jpg">
+            <img src="img5.jpg">
+        </div>
 
     </div>
+    <script src="puzzle.js"></script>
 </body>
-<script language="javascript">
-    //设置 用json格式简单描述 布局情况 作为参数 递归生成
 
-    var contain = document.getElementById('container');
-    function PFrame(width, height) {//定义高度和宽度
-        this.width = width.split('px')[0];
-        this.height = height.split('px')[0];
-        this.setStyles = function (obj, styles) {
-            for (var style in styles) {
-                obj['style'][style] = styles[style];
-            }
-        };
-        this.setAttr = function(obj, attrs){
-            for (var attr in attrs) {
-                obj[attr] = attrs[attr];
-            }
-        };
-        this.getImg = function(imgObj) {
-            var img = document.createElement('IMG');
-            var styles = imgObj.styles;
-            img.src = imgObj.src;
-            this.setStyles(img, styles);
-            return img;
-        };
-        this.createChildFrame = function(styles, innerObjs) {//迭代一个函数 生成子模块 检测 float 和 子模块 数量的 num float
-            var frame = document.createElement('DIV');
-            this.setStyles(frame, styles);
-            if (innerObjs.sameNums) {
-                for (var i = 0; i < innerObjs.sameNums; i++) {
-                    var box = document.createElement('DIV');
-                    this.setStyles(box, innerObjs.obj.styles);
-                    if (innerObjs.obj.attr) {
-                        this.setAttr(box, innerObjs.obj.attr);
-                    }
-                    if (innerObjs.obj.img) {
-                        box.appendChild(this.getImg(innerObjs.obj.img));
-                    }
-                    frame.appendChild(box);
-                }
-            } else {
-                for (var obj in innerObjs) {
-                    if (innerObjs[obj].innerObj) {//若有子模块递归生成
-                        var box = this.createChildFrame(innerObjs[obj].styles, innerObjs[obj].innerObj);
-                    } else {
-                        var box = document.createElement('DIV');
-                        this.setStyles(box, innerObjs[obj].styles);
-                        if (innerObjs[obj].attr) {
-                            this.setAttr(box, innerObjs[obj].attr);
-                        }
-                        if (innerObjs[obj].img) {
-                            box.appendChild(this.getImg(innerObjs[obj].img));
-                        }
-                    }
-                    frame.appendChild(box);
-                }
-            }
-            return frame;
-        }
-
-    }
-
-
-    PFrame.prototype.setOne = function(){
-
-        var styles = {
-            width: this.width,
-            height: this.height
-        };
-        var innerObjs = {
-            obj1: {
-                styles: {
-                    width: '100%',
-                    height: '100%',
-                    display: 'flex'
-                },
-                img: {
-                    src: './img.jpg',
-                    styles: {
-                        height: '100%',
-                        width: '100%'
-                    }
-                }
-            }
-        };
-        var frame = this.createChildFrame(styles, innerObjs);
-        return frame;
-    };
-
-    PFrame.prototype.setTwo = function(){
-        var styles = {
-            width: this.width,
-            height: this.height,
-            position: 'relative'
-        };
-        var innerObjs = {
-            obj1: {
-                styles: {
-                    position: 'absolute',
-                    left: '0',
-                    right: '0',
-                    width: '100%',
-                    height: '100%'
-                },
-                attr: {
-                    className: "left_tx"
-                },
-                img: {
-                    src: './img2.jpg',
-                    styles: {
-                        height: '100%',
-                        width: '100%'
-                    }
-                }
-            },
-            obj2: {
-                styles: {
-                    position: 'absolute',
-                    left: '0',
-                    right: '0',
-                    width: '100%',
-                    height: '100%'
-                },
-                attr: {
-                    className: "right_tx"
-                },
-                img: {
-                    src: './img.jpg',
-                    styles: {
-                        height: '100%',
-                        width: '100%'
-                    }
-                }
-            }
-        };
-        var frame = this.createChildFrame(styles, innerObjs);
-        return frame;
-
-    };
-    PFrame.prototype.setThree = function(){
-        var left_width = this.width - this.height/2;
-        var right_width = this.height/2;
-        var styles = {
-            width: this.width,
-            height: this.height,
-            display: 'flex'
-        };
-        var innerObjs = {
-            obj1: {
-                styles: {
-                    width: left_width,
-                    height: this.height,
-                },
-                img: {
-                    src: './img.jpg',
-                    styles: {
-                        height: '100%',
-                        width: '100%'
-                    }
-                }
-            },
-            obj2: {
-                styles: {
-                    width: right_width,
-                    height: this.height,
-                },
-                innerObj: {
-                    sameNums: 2,
-                    obj: {
-                        styles: {
-                            width: right_width,
-                            height: right_width
-                        },
-                        img: {
-                            src: './img.jpg',
-                            styles: {
-                                height: '100%',
-                                width: '100%'
-                            }
-                        }
-                    }
-                }
-            }
-        };
-        var father_frame = this.createChildFrame(styles, innerObjs);
-        return father_frame;
-    };
-
-    PFrame.prototype.setFour = function(){
-        var box_width = this.width/2 ;
-        var box_height = this.height/2;
-        var styles = {
-            width: this.width,
-            height: this.height,
-            display: 'flex',
-            flexWrap: 'wrap'
-        };
-        var innerObjs = {
-            sameNums: 4,
-            obj: {
-                styles: {
-                    width: box_width,
-                    height: box_height,
-                },
-                img: {
-                    src: './img.jpg',
-                    styles: {
-                        height: '100%',
-                        width: '100%'
-                    }
-                }
-            }
-        };
-        var frame = this.createChildFrame(styles, innerObjs);
-        return frame;
-    };
-
-    PFrame.prototype.setFive = function(){
-        var left_width = this.width*2/3;
-        var right_width = this.width/3;
-        var min_height = this.height/3;
-        var styles = {
-            width: this.width,
-            height: this.height,
-            display: 'flex'
-        };
-        var innerObjs = {
-            obj1: {
-                styles: {
-                    width: left_width,
-                    height: this.height,
-                    float: 'left'
-                },
-                innerObj: {
-                    obj1: {
-                        styles: {
-                            width: left_width,
-                            height: min_height*2
-                        },
-                        img: {
-                            src: './img.jpg',
-                            styles: {
-                                height: '100%',
-                                width: '100%'
-                            }
-                        }
-                    },
-                    obj2: {
-                        styles: {
-                            width: left_width,
-                            height: min_height,
-                            display: 'flex'
-                        },
-                        innerObj: {
-                            sameNums: 2,
-                            obj: {
-                                styles: {
-                                    width: left_width/2,
-                                    height: min_height,
-                                },
-                                img: {
-                                    src: './img.jpg',
-                                    styles: {
-                                        height: '100%',
-                                        width: '100%'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            obj2: {
-                styles: {
-                    width: right_width,
-                    height: this.height
-                },
-                innerObj: {
-                    obj1: {
-                        styles: {
-                            width: right_width,
-                            height: right_width
-                        },
-                        img: {
-                            src: './img.jpg',
-                            styles: {
-                                height: '100%',
-                                width: '100%'
-                            }
-                        }
-                    },
-                    obj2: {
-                        styles: {
-                            width: right_width,
-                            height: this.height-right_width
-                        },
-                        img: {
-                            src: './img.jpg',
-                            styles: {
-                                height: '100%',
-                                width: '100%'
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        var father_frame = this.createChildFrame(styles, innerObjs);
-        return father_frame;
-    };
-
-    PFrame.prototype.setSix = function(){
-
-        var left_width = this.width*2/3;
-        var right_width = this.width/3;
-        var min_height = this.height/3;
-        var styles = {
-            width: this.width,
-            height: this.height,
-            display: 'flex'
-        };
-        var innerObjs = {
-            obj1: {
-                styles: {
-                    width: left_width,
-                    height: this.height
-                },
-                innerObj: {
-                    obj1: {
-                        styles: {
-                            width: left_width,
-                            height: min_height*2
-                        },
-                        img: {
-                            src: './img.jpg',
-                            styles: {
-                                height: '100%',
-                                width: '100%'
-                            }
-                        }
-                    },
-                    obj2: {
-                        styles: {
-                            width: left_width,
-                            height: min_height,
-                            display: 'flex'
-                        },
-                        innerObj: {
-                            sameNums: 2,
-                            obj: {
-                                styles: {
-                                    width: left_width/2,
-                                    height: min_height
-                                },
-                                img: {
-                                    src: './img.jpg',
-                                    styles: {
-                                        height: '100%',
-                                        width: '100%'
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            },
-            obj2: {
-                styles: {
-                    width: right_width,
-                    height: this.height
-                },
-                innerObj: {
-                    sameNums: 3,
-                    obj: {
-                        styles: {
-                            width: right_width,
-                            height: min_height
-                        },
-                        img: {
-                            src: './img.jpg',
-                            styles: {
-                                height: '100%',
-                                width: '100%'
-                            }
-                        }
-                    },
-                }
-            }
-        };
-
-        var father_frame = this.createChildFrame(styles, innerObjs);
-        return father_frame;
-    };
-
-    (function() {
-        var pf1 = new PFrame('400px', '300px');
-        var oneFrame = pf1.setOne();
-        contain.appendChild(oneFrame);
-        var TwoFrame = pf1.setTwo();
-        contain.appendChild(TwoFrame);
-        var ThreeFrame = pf1.setThree();
-        contain.appendChild(ThreeFrame);
-        var FourFrame = pf1.setFour();
-        contain.appendChild(FourFrame);
-        var FiveFrame = pf1.setFive();
-        contain.appendChild(FiveFrame);
-        var SixFrame = pf1.setSix();
-        contain.appendChild(SixFrame);
-
-    })()
-</script>
 </html>
