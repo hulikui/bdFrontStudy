@@ -1,9 +1,4 @@
-body {
 
-}
-div {
-
-}
 #content {
   height: 460px;
   background-color: #ccc;
@@ -11,25 +6,27 @@ div {
 }
 
 .left_content {
+  position: relative;
   width: 200px;
   height: 120px;
   border-color:#999;
   border: 1px solid;
   float: left;
-  margin-top: 20px;
-  margin-left: 20px;
+  left:20px;
+  top: 20px;
   background-color: white;
 }
 
 .right_content {
   background-color: white;
+  position: relative;
+  right: 20px;
+  top: 20px;
   float: right;
   width: 120px;
   height: 422px;
   border: 1px solid;
   border-color: #999;
-  margin-top: 20px;
-  margin-right: 20px;
 }
 .main_content {
   background-color: white;
@@ -39,6 +36,7 @@ div {
   margin-left:240px;
   margin-right: 160px;
   padding: 20px;
+  /*属性规定文本块中首行文本的缩进*/
   text-indent:20px;
   max-height: 380px;
   overflow: hidden;

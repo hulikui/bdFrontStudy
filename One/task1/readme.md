@@ -1,50 +1,35 @@
-## Ç°¶Ë»ù´¡ÖªÊ¶
-### Ò»¸öÆÕÍ¨ÍøÕ¾·ÃÎÊµÄ¹ý³Ì
-¼òµ¥¸ÅÀ¨Ò»ÏÂ£¬¶ÔÓÚÎÒÃÇÆÕÍ¨µÄÍøÕ¾·ÃÎÊ£¬Éæ¼°µ½µÄ¼¼Êõ¾ÍÊÇ£º
-
-* ÓÃ»§²Ù×÷ä¯ÀÀÆ÷·ÃÎÊ£¬ä¯ÀÀÆ÷Ïò·þÎñÆ÷·¢³öÒ»¸ö HTTP ÇëÇó£»
-* ·þÎñÆ÷½ÓÊÕµ½ HTTP ÇëÇó£¬Web Server ½øÐÐÏàÓ¦µÄ³õ²½´¦Àí£¬Ê¹ÓÃ·þÎñÆ÷½Å±¾Éú³ÉÒ³Ãæ£»
-* ·þÎñÆ÷½Å±¾£¨ÀûÓÃWeb Framework£©µ÷ÓÃ±¾µØºÍ¿Í»§¶Ë´«À´µÄÊý¾Ý£¬Éú³ÉÒ³Ãæ£»
-* Web Server ½«Éú³ÉµÄÒ³Ãæ×÷Îª HTTP ÏìÓ¦µÄ body£¬¸ù¾Ý²»Í¬µÄ´¦Àí½á¹ûÉú³É HTTP header£¬·¢»Ø¸ø¿Í»§¶Ë£»
-* ¿Í»§¶Ë£¨ä¯ÀÀÆ÷£©½ÓÊÕµ½ HTTP ÏìÓ¦£¬Í¨³£µÚÒ»¸öÇëÇóµÃµ½µÄ HTTP ÏìÓ¦µÄ body ÀïÊÇ HTML ´úÂë£¬ÓÚÊÇ¶Ô HTML ´úÂë¿ªÊ¼½âÎö£»
-* ½âÎö¹ý³ÌÖÐÓöµ½ÒýÓÃµÄ·þÎñÆ÷ÉÏµÄ×ÊÔ´£¨¶îÍâµÄ CSS¡¢JS´úÂë£¬Í¼Æ¬¡¢ÒôÊÓÆµ£¬¸½¼þµÈ£©£¬ÔÙÏò Web Server ·¢ËÍÇëÇó£¬Web Server ÕÒµ½¶ÔÓ¦µÄÎÄ¼þ£¬·¢ËÍ»ØÀ´£»
-* ä¯ÀÀÆ÷½âÎö HTML °üº¬µÄÄÚÈÝ£¬ÓÃµÃµ½µÄ CSS ´úÂë½øÐÐÍâ¹ÛÉÏµÄ½øÒ»²½äÖÈ¾£¬JS ´úÂëÒ²¿ÉÄÜ»á¶ÔÍâ¹Û½øÐÐÒ»¶¨µÄ´¦Àí£»
-* ÓÃ»§ÓëÒ³Ãæ½»»¥£¨µã»÷£¬ÐüÍ£µÈµÈ£©Ê±£¬JS ´úÂë¶Ô´Ë×÷³öÒ»¶¨µÄ·´Ó¦£¬Ìí¼ÓÌØÐ§Óë¶¯»­£»
-* ½»»¥µÄ¹ý³ÌÖÐ¿ÉÄÜÐèÒªÏò·þÎñÆ÷Ë÷È¡»òÌá½»¶îÍâµÄÊý¾Ý£¨¾Ö²¿µÄË¢ÐÂ£¬ÀàËÆÎ¢²©µÄÐÂÏûÏ¢Í¨Öª£©£¬Ò»°ã²»ÊÇÌø×ª¾ÍÊÇÍ¨¹ý JS ´úÂë£¨ÏìÓ¦Ä³¸ö¶¯×÷»òÕß¶¨Ê±£©Ïò Web Server ·¢ËÍÇëÇó£¬Web Server ÔÙÓÃ·þÎñÆ÷½Å±¾½øÐÐ´¦Àí£¨Éú³É×ÊÔ´orÐ´ÈëÊý¾ÝÖ®ÀàµÄ£©£¬°Ñ×ÊÔ´·µ»Ø¸ø¿Í»§¶Ë£¬¿Í»§¶ËÓÃµÃµ½µÄ×ÊÔ´À´ÊµÏÖ¶¯Ì¬Ð§¹û»òÆäËû¸Ä±ä¡£
-
-### [flex²¼¾ÖÔËÓÃ][1]
-µ¼º½¾ÓÖÐ
+## å®šä½ [position][1] 
 
 ``` stylus
-  display: flex;
-  justify-content: space-between;//Á½¶Ë¶ÔÆë
-  align-items:center;//¾ÓÖÐ
+/* å…³é”®å­—å€¼ */
+position: static;//æ­£å¸¸çš„å¸ƒå±€è¡Œä¸ºï¼Œå³å…ƒç´ åœ¨æ–‡æ¡£æµä¸­å½“å‰çš„å¸ƒå±€ä½ç½®ã€‚æ­¤æ—¶ top, right, bottom, left å’Œ z-index å±žæ€§æ— æ•ˆ
+position: relative;
+position: absolute;//ä¸ä¸ºå…ƒç´ é¢„ç•™ç©ºé—´ï¼Œé€šè¿‡æŒ‡å®šå…ƒç´ ç›¸å¯¹äºŽæœ€è¿‘çš„éž static å®šä½ç¥–å…ˆå…ƒç´ çš„åç§»ï¼Œæ¥ç¡®å®šå…ƒç´ ä½ç½®
+position: fixed;//ä¸ä¸ºå…ƒç´ é¢„ç•™ç©ºé—´ï¼Œè€Œæ˜¯é€šè¿‡æŒ‡å®šå…ƒç´ ç›¸å¯¹äºŽå±å¹•è§†å£ï¼ˆviewportï¼‰çš„ä½ç½®æ¥æŒ‡å®šå…ƒç´ ä½ç½®ã€‚å…ƒç´ ä¼šå‡ºçŽ°åœ¨çš„æ¯é¡µçš„å›ºå®šä½ç½®
+position: sticky;
+
+/* å…¨å±€å€¼ */
+position: inherit;
+positionï¼šinitial;
+position: unset;
 ```
-### css ÑùÊ½
+
+### float
+å±…ä¸­è‡ªé€‚åº”
+* å·¦è¾¹divè®¾ç½®å·¦æµ®åŠ¨ï¼Œå³è¾¹è®¾ç½®å³æµ®åŠ¨ï¼Œåœ¨å·¦å³divåŽæ·»åŠ ä¸€ä¸ªdivåŽï¼Œæœ€åŽä¸€ä¸ªdivè‡ªåŠ¨å±…ä¸­ï¼Œå¹¶è‡ªé€‚åº”
 
 ``` stylus
-  box-shadow: 3px 3px 3px;//ÒõÓ°
-  white-space:normal;//Ç¿ÖÆ»»ÐÐ
-  border-collapse:collapse;// table ÖÐ°Ñ±ß¿òºÏ²¢ÎªÒ»Ìõ±ß
-  <td rowspan="2">¿çÁÐ</td>
-  <td colspan="2">¿çÐÐ</td>
+<div>å·¦</div>
+<div>å³</div>
+<div>ä¸­</div>
 ```
-### html5 ±êÇ©
+### css
 
 ``` stylus
-<dl>
-<dt>ÁÐ±í±êÌâ</dt>
-<dd>ÁÐ±íÄÚÈÝ</dd>
-<dd>ÁÐ±íÄÚÈÝ</dd>
-...
-</dl>
-ÎÄÕÂ×éÖ¯½á¹¹
-<header></header>
-<article></article>
-<footer></footer>
+display: inline-block;//é™åˆ¶divå†…
+overflow:hidden 
 ```
 
 
 
-
-  [1]: http://www.ruanyifeng.com/blog/2015/07/flex-grammar.html?utm_source=tuicool
+  [1]: https://developer.mozilla.org/zh-CN/docs/Web/CSS/position
