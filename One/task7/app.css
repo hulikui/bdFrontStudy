@@ -144,9 +144,7 @@ article {
   margin-bottom: 40px;
 
 }
-.ph_border {
 
-}
 .phlist img {
   width: 180px;
   height: 350px;
@@ -224,9 +222,7 @@ article {
 .article_p5 button{
   margin-top:40px;
   border: 2px solid;
-
   font-family: "SimHei";
-
   width: 50%;
   height: 30px;
 }
@@ -365,15 +361,13 @@ footer {
   color: white;
   font-size: 20px;
   height: 50px;
-  line-height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .footer_left {
-  float: left;
-  height: 50px;
   padding-left: 50px;
 }
 .footer_right {
-  float: right;
-  height: 50px;
   padding-right: 50px;
 }
