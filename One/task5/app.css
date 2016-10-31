@@ -1,44 +1,33 @@
-body {
 
-
-}
 #main {
 
   background-color: #C0C0C0;
-  width: 67%;
+  width: 70%;
   margin-left: auto;
   margin-right: auto;
 }
 #left {
-  width: 72%;
+  width: 70%;
   float: left;
   max-width: 1000px;
 }
 #right {
-  width: 600px;
+  width: 550px;
   float: right;
 }
 header {
   width: 100%;
   background-color: black;
   height: 80px;
-  line-height: 80px;
-  display: inline-block;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .head_left {
-  float: left;
   margin-left: 50px;
 }
-.logo {
-  width: 80px;
-  height: 80px;
-}
 
-.head_right {
-  float: right;
-}
-
-h3 ,small {
+h3 , small {
   color: #787878;
 }
 nav a {
@@ -101,7 +90,6 @@ dd {
 }
 #table1 {
   width: 98%;
-  border-width:1px;
   border-collapse: collapse;
 }
 
@@ -109,17 +97,18 @@ dd {
   width: 30%;
   background-color: black;
   color: white;
-  border-width: 1px;
-  border:solid #D0D0D0;
 }
-#table1 td {
+#table1 td, #table1 th, #table1 {
   border:solid #D0D0D0;
   border-width:1px;
 }
-
+form {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
 #table2 {
-  margin-left: auto;
-  margin-right: auto;
+  font-size: 12px;
 }
 #table2 tr td:first-child{
   text-align:right;
@@ -137,7 +126,6 @@ dd {
   padding-bottom: 10px;
 }
 .art3 {
-  width: 93%;
 }
 #index {
   border-left: 3px solid #D9D9D9;
@@ -147,8 +135,6 @@ dd {
 
 #submit {
   width: 90%;
-  margin-left: auto;
-  margin-right: auto;
 
 }
 
@@ -162,7 +148,7 @@ button {
 
 textarea {
   height: 80px;
-  width: 400px;
+  width: 360px;
 }
 #last_art {
   margin-bottom: 20px;
