@@ -7,27 +7,38 @@ background-color: #eee;
   margin: auto;
   background-color: white;
 }
-.center {
-  margin-left: 44px;
-  margin-bottom: 30px;
-}
+
 header {
   border-bottom: 2px solid;
   border-color: black;
   height: 61px;
-  display: inline-block;
   width: 892px;
   overflow: hidden;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  font-family:SimHei;
 }
+
 .head_left {
   width: 110px;
   height: 61px;
   background-color: #dc6b6b;
-  float: left;
   color:#ffffff;
   font-size: 12px;
-  padding-top: 48px;
-  font-family:SimHei;
+  display: flex;
+  align-items: flex-end;
+
+}
+
+.head_right {
+  color: #d45d5c;
+  font-size: 12px;
+}
+
+.center {
+  margin-left: 44px;
+  margin-bottom: 30px;
 
 }
 
@@ -35,13 +46,8 @@ article {
   clear: both;
   display: inline-block;
 }
-.head_right {
-  color: #d45d5c;
-  float: right;
-  padding-top: 48px;
-  font-size: 12px;
-  font-family:SimHei;
-}
+
+
 .art1_left {
   float: left;
   width: 680px;
@@ -129,7 +135,7 @@ article {
   font-variant: small-caps;
   color: #000000;
   font-family: "Microsoft YaHei";
-  padding: 10px ,0;
+  padding: 10px 0;
   font-size:24px;
 }
 .tech {
@@ -183,7 +189,7 @@ article {
   font-size: 42px;
   color:#11456b;
 }
-.art2_lt p: first-letter {
+.e_font:first-letter {
   font-size:72px;
   color:#f5e327;
 }
@@ -201,9 +207,10 @@ article {
   font-family: "SimSun";
   text-indent: 20px;
 }
-.art2_lb: first-letter {
+.art2_lb:first-letter {
   font-size:33px;
   font-weight: bold !important;
+  color: #d2994f;
 }
 .img3 {
   width: 100px;
@@ -295,6 +302,10 @@ footer {
   color: #5a5b5b;
   font-size: 16px;
 }
+.art2_rb table td:nth-child(2n){
+  text-align: right;
+  font-style: italic;
+}
 .art2_rb table tr td em {
   font-size: 12px;
 }
@@ -309,31 +320,23 @@ footer {
   height: 160px;
   background-color: #f88e8b;
   float: left;
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .art2_rb_num {
-  width: 85%;
-  height: 88px;
-  position: absolute;
-  margin: auto;
-  left: 0px;
-  top: 0px;
-  bottom: 0px;
-  right: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
 
 }
 .art2_rb_bl_l {
-  float: left;
   font-size: 110px;
   font-family: "Microsoft YaHei";
-  line-height: 87px;
-
 }
 .art2_rb_bl_r {
-  float: left;
   border-left: 2px solid;
-  height: 87px;
   width: 150px;
   font-family: "SimHei";
   padding-left: 2px;
@@ -359,8 +362,4 @@ footer {
   font-family: "SimHei";
   color:#5a5b5b;
   line-height: 16px;
-}
-p: first-letter {
-  font-weight: bold;
-  color: yellow;
 }
