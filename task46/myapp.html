@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+        <html>
+<head>
+    <meta charset="UTF-8">
+    <title>画布基础</title>
+    <style>
+        #canvas {
+            background-color: #C0C0C0;
+            /*#009a61;#d2994f;*/
+        }
+    </style>
+</head>
+<body>
+<canvas id="canvas" width="500" height="700"></canvas>
+</body>
+<script>
+var Wall = function(x, y, width, height) {//绘制墙面
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+};
+
+var keysDown = [];
+var speed = 5;
+Wall.prototype = {
+    draw: function(context){
+        context.beginPath();
+        context.moveTo(this.x, this.y);
+        context.lineTo(this.x + this.width, this.y);
+        context.lineTo(this.x+this.width, this.y+this.height);
+        context.lineTo(this.x, this.y + this.height);
+        context.stroke();
+    }
+};
+
+var Sprite = function(x, y, r, style) {//角色精灵
+    this.x = x;
+    this.y = y;
+    this.speed = speed || 2;//速度
+    this.r = r;
+    this.width = r;
+    this.height =r;
+    this.style = style;
+};
+Sprite.prototype = {
+    move: function() {//更新坐标
+        if (keysDown.indexOf(38)>-1 || keysDown.indexOf(87)>-1) { // Player holding up
+            this.y -= this.speed;
+        }
+        if (keysDown.indexOf(40)>-1|| keysDown.indexOf(68)>-1) { // Player holding down
+            this.y += this.speed;
+        }
+        if (keysDown.indexOf(37)>-1 || keysDown.indexOf(83)>-1) { // Player holding left
+            this.x -= this.speed;
+        }
+        if (keysDown.indexOf(39)> -1 || keysDown.indexOf(65) >-1) { // Player holding right
+            this.x += this.speed;
+        }
+        console.log(this.x , this.y);
+        keysDown = [];
+    },
+    draw: function(context) {//绘圆形
+        this.move();
+        context.beginPath();
+        context.fillStyle = this.style;
+        context.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+        context.fill();
+    }
+};
+
+var Target = function(x, y, width, height, style) {//角色精灵
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.style = style;
+};
+Target.prototype = {
+    draw: function(context) {//绘矩形
+        context.beginPath();
+        context.fillStyle = this.style;
+        context.fillRect(this.x, this.y, this.width, this.height);
+    }
+};
+
+var Stone = function(x, y, width, height, style){//障碍物
+    this.x = x;
+    this.y = y;
+    this.width = width;
+    this.height = height;
+    this.style = style;
+};
+Stone.prototype = {
+    draw: function(context){
+        context.fillStyle = this.style;
+        context.fillRect(this.x, this.y, this.width, this.height);
+    }
+};
+
+var ObjectPool = function(wall, stoneNums){
+    this.wall = wall;
+    this.objects = [];
+    this.stoneNums = stoneNums || 7;
+    this.createObjects();
+
+};
+ObjectPool.prototype = {
+    createObjects: function() {
+        for(var i=0;i<this.stoneNums;i++){
+            var width = Math.random() * 50.0 + 20.0;
+            var height = Math.random() * 50.0 + 50.0;
+            var x = this.wall.x + (Math.random() * (this.wall.width - width));
+            var y = this.wall.y + (Math.random() * (this.wall.height - height));
+            this.objects.push(new Stone(x, y, width, height, '#000'));
+        }
+        var roleWid = 30;
+        var role = new Sprite(this.wall.width/2, this.wall.y + roleWid, roleWid, '#009a61');
+        this.objects.push(role);
+        this.objects.push(new Target(this.wall.width/2 + this.wall.x - roleWid, this.wall.y+this.wall.height-roleWid*2,60,60,'#d2994f'));
+    },
+    draw: function(context) {//绘制池中每一个对象
+        this.objects.forEach(function(item) {
+            item.draw(context);
+        });
+    },
+    collide: function(obj) {
+        return this.collideWalls(obj) && this.collideStones(obj);
+    },
+    collideWalls: function(obj) {//精灵与墙是否碰撞
+        console.log('obj', obj);
+        if(obj.x < this.wall.x || obj.x + obj.width > this.wall.x + this.wall.width){
+
+            return false;
+        }else if(obj.y < this.wall.y || obj.y + obj.height > this.wall.y + this.wall.height){
+            return false;
+        }
+        return true;
+    },
+    collideStones: function(obj) {
+        return true;
+    }
+};
+
+var findRequestAnimationFrame = function() {
+    return window.requestAnimationFrame        ||
+            window.webkitRequestAnimationFrame  ||
+            window.mozRequestAnimationFrame     ||
+            window.oRequestAnimationFrame       ||
+            window.msRequestAnimationFrame      ||
+            function(callback, element){
+                window.setTimeout(callback, 1000 / 30);
+            };
+};
+function init() {
+    var canvas = document.getElementById('canvas');
+    var context = canvas.getContext('2d');
+    var renderFrame = findRequestAnimationFrame();
+    var objects = [];
+    var drawScene = function() { //初始化画布
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        context.save();
+        objects.forEach(function(item) {
+            if(item.draw) item.draw(context);
+        });
+        context.restore();
+    };
+    function doKeyDown(e) {
+        var keyID = e.keyCode;
+
+        keysDown.push(keyID);
+        //console.log(keyID, keysDown);
+        renderFrame(drawScene);
+    }
+    window.addEventListener('keydown', doKeyDown, true);
+
+    var wall = new Wall(0, 0, 500, 700);
+    objects.push(wall);
+    objects.push(new ObjectPool(wall, 7));
+    drawScene();
+}
+window.onload = init;
+</script>
+</html>
