@@ -1,0 +1,91 @@
+body {
+    margin: 0px;
+    padding: 0px;
+}
+.title {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: flex-start;
+    height: 40px;
+    background-color: lime;
+}
+.back {
+    margin-left: 2px;
+    margin-bottom: auto;
+    margin-top: auto;
+}
+
+.article {
+    margin-left: 28%;
+    margin-bottom: auto;
+    margin-top: auto;
+    color: white;
+}
+
+.nav {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    height: 30px;
+}
+.nav a {
+    margin: auto;
+    text-decoration: none;
+    color: black;
+}
+
+.nav a:hover {
+    border-bottom: 2px solid #00ff00;
+}
+
+.label_td {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.label_td label{
+
+    margin: auto;
+}
+
+.label_img {
+    padding-top: 10px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+}
+
+.label {
+    border-bottom: 2px solid gainsboro;
+    width: 98%;
+    margin: auto;
+}
+.head_art {
+    margin-top: 30px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+
+}
+.head_art div {
+    width: 32%;
+    margin: auto;
+    text-align: center;
+}
+.head_art1 {
+    border-right: 2px solid gainsboro;
+}
+.head hr{
+    border: 10px solid gainsboro;
+}
+.article1 table{
+    width: 100%;
+}
+.article1 table td{
+    width: 30%;
+    background-color: gainsboro;
+    text-align: center;
+}
