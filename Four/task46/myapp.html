@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-        <html>
+<html>
 <head>
     <meta charset="UTF-8">
     <meta name ="viewport" content ="initial-scale=1, maximum-scale=3, minimum-scale=1, user-scalable=no">
@@ -18,203 +18,204 @@
     var phoneWidth =  parseInt(window.screen.width);
     var phoneheight =  parseInt(window.screen.height);
     console.log('wh', phoneheight, phoneWidth);
-var Wall = function(x, y, width, height) {//绘制墙面
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-};
+    var Wall = function(x, y, width, height) {//绘制墙面
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+    };
 
-var keysDown = [];
-var speed = 5;
-Wall.prototype = {
-    draw: function(context){
-        context.beginPath();
-        context.moveTo(this.x, this.y);
-        context.lineTo(this.x + this.width, this.y);
-        context.lineTo(this.x+this.width, this.y+this.height);
-        context.lineTo(this.x, this.y + this.height);
-        context.stroke();
-    }
-};
+    var keysDown = [];
+    var speed = 5;
+    Wall.prototype = {
+        draw: function(context){
+            context.beginPath();
+            context.moveTo(this.x, this.y);
+            context.lineTo(this.x + this.width, this.y);
+            context.lineTo(this.x+this.width, this.y+this.height);
+            context.lineTo(this.x, this.y + this.height);
+            context.stroke();
+        }
+    };
 
-var Sprite = function(x, y, r, style) {//角色精灵
-    this.x = x;
-    this.y = y;
-    this.speed = speed || 10;//速度
-    this.r = r;
-    this.width = r;
-    this.height =r;
-    this.style = style;
-    this.vector;
-};
-Sprite.prototype = {
-    move: function() {//更新坐标
-        if(keysDown[0] instanceof Object){
-            console.log('==鼠标点击操作====');
-        }
-        if (keysDown.indexOf(38)>-1 || keysDown.indexOf(87)>-1) { // Player holding up
-            this.y -= this.speed;
-        }
-        if (keysDown.indexOf(40)>-1|| keysDown.indexOf(68)>-1) { // Player holding down
-            this.y += this.speed;
-        }
-        if (keysDown.indexOf(37)>-1 || keysDown.indexOf(83)>-1) { // Player holding left
-            this.x -= this.speed;
-        }
-        if (keysDown.indexOf(39)> -1 || keysDown.indexOf(65) >-1) { // Player holding right
-            this.x += this.speed;
-        }
+    var Sprite = function(x, y, r, style) {//角色精灵
+        this.x = x;
+        this.y = y;
+        this.speed = speed || 10;//速度
+        this.r = r;
+        this.width = r;
+        this.height =r;
+        this.style = style;
+        this.vector;
+    };
+    Sprite.prototype = {
+        move: function() {//更新坐标
+            if(keysDown[0] instanceof Object){
+                console.log('==鼠标点击操作====');
+            }
+            if (keysDown.indexOf(38)>-1 || keysDown.indexOf(87)>-1) { // Player holding up
+                this.y -= this.speed;
+            }
+            if (keysDown.indexOf(40)>-1|| keysDown.indexOf(68)>-1) { // Player holding down
+                this.y += this.speed;
+            }
+            if (keysDown.indexOf(37)>-1 || keysDown.indexOf(83)>-1) { // Player holding left
+                this.x -= this.speed;
+            }
+            if (keysDown.indexOf(39)> -1 || keysDown.indexOf(65) >-1) { // Player holding right
+                this.x += this.speed;
+            }
 
-        //console.log(this.x , this.y);
-        keysDown = [];
-    },
-    draw: function(context, isCollide) {//绘圆形
-        var _this = this;
-        if(!isCollide){//没有碰撞下移动并保存状态
-            _this.vector = {//保存上一步位置以便碰撞后恢复
+            //console.log(this.x , this.y);
+            keysDown = [];
+        },
+        draw: function(context, isCollide) {//绘圆形
+            var _this = this;
+            if(!isCollide){//没有碰撞下移动并保存状态
+                _this.vector = {//保存上一步位置以便碰撞后恢复
+                    x: _this.x,
+                    y: _this.y
+                };
+                console.log('上一步坐标',_this.vector);
+                _this.move();//这边要检测碰撞
+                console.log('下一步坐标',_this.x,this.y);
+            }else{//有碰撞则回退上一步
+                _this.x = _this.vector.x;
+                _this.y = _this.vector.y;
+            }
+
+            context.beginPath();
+            context.fillStyle = this.style;
+            context.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            context.fill();
+            return {
                 x: _this.x,
-                y: _this.y
+                y: _this.y,
+                r: _this.r
             };
-            console.log('上一步坐标',_this.vector);
-            _this.move();//这边要检测碰撞
-            console.log('下一步坐标',_this.x,this.y);
-        }else{//有碰撞则回退上一步
-            _this.x = _this.vector.x;
-            _this.y = _this.vector.y;
         }
+    };
 
-        context.beginPath();
-        context.fillStyle = this.style;
-        context.arc(this.x, this.y, this.r, 0, 2*Math.PI);
-        context.fill();
-        return {
-            x: _this.x,
-            y: _this.y,
-            r: _this.r
-        };
-    }
-};
+    var Target = function(x, y, width, height, style) {//角色精灵
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.style = style;
+    };
+    Target.prototype = {
+        draw: function(context) {//绘矩形
+            context.beginPath();
+            context.fillStyle = this.style;
+            context.fillRect(this.x, this.y, this.width, this.height);
+        }
+    };
 
-var Target = function(x, y, width, height, style) {//角色精灵
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.style = style;
-};
-Target.prototype = {
-    draw: function(context) {//绘矩形
-        context.beginPath();
-        context.fillStyle = this.style;
-        context.fillRect(this.x, this.y, this.width, this.height);
-    }
-};
+    var Stone = function(x, y, width, height, style){//障碍物
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.style = style;
+    };
+    Stone.prototype = {
+        draw: function(context){
+            context.fillStyle = this.style;
+            context.fillRect(this.x, this.y, this.width, this.height);
+        }
+    };
 
-var Stone = function(x, y, width, height, style){//障碍物
-    this.x = x;
-    this.y = y;
-    this.width = width;
-    this.height = height;
-    this.style = style;
-};
-Stone.prototype = {
-    draw: function(context){
-        context.fillStyle = this.style;
-        context.fillRect(this.x, this.y, this.width, this.height);
-    }
-};
+    var ObjectPool = function(wall, stoneNums){
+        this.wall = wall;
+        this.objects = [];
+        this.stoneNums = stoneNums || 7;
+        this.createObjects();
 
-var ObjectPool = function(wall, stoneNums){
-    this.wall = wall;
-    this.objects = [];
-    this.stoneNums = stoneNums || 7;
-    this.createObjects();
+    };
+    ObjectPool.prototype = {
+        createStones: function (rolewidth, step) {
+            var _this = this;
+            var rows = 4;
+            var linestart = rolewidth*2 + step;
+            var rows_height = parseInt((_this.wall.height-linestart*2)/4);
+            var total_width = this.wall.x;
+            var total_height = this.wall.y + linestart;
+            for(var i=0;i<rows;i++){//3行  //生成2边 两边内再生成盒子 以此类推
+                var innerNum = parseInt(1+Math.random()*3);
+                var line_maxheight = 0;
+                var rect = Math.random()*10;
+                for(var j=0;j<innerNum;j++){   //首先规定生成3行,然后每行随机生成几个,每行每个障碍物最低间隔多少
+                    var width;
+                    var height;
+                    if(rect>=3) {
+                        height = parseInt(Math.random() * 6) * step + rolewidth*3;
+                        width = rolewidth*3;
+                    }else{
+                        width = parseInt(Math.random() * 6) * step + rolewidth*3;
+                        height = rolewidth*3;
+                    }
 
-};
-ObjectPool.prototype = {
-    createStones: function (rolewidth) {
-        var _this = this;
-        var rows = 4;
-        var linestart = rolewidth*2 + 5;
-        var rows_height = parseInt((_this.wall.height-linestart*2)/4);
-        var total_width = this.wall.x;
-        var total_height = this.wall.y + linestart;
-        for(var i=0;i<rows;i++){//3行  //生成2边 两边内再生成盒子 以此类推
-            var innerNum = parseInt(1+Math.random()*3);
-            var line_maxheight = 0;
-            var rect = Math.random()*10;
-            for(var j=0;j<innerNum;j++){   //首先规定生成3行,然后每行随机生成几个,每行每个障碍物最低间隔多少
-                var width;
-                var height;
-                if(rect>=3) {
-                    height = Math.random() * 50.0 + 60.0;
-                    width = height*0.618;
+                    var interval_width = 30 + Math.random()*50;
+                    if(j===0){
+                        total_width = Math.random()*30;
+                    }
+                    if(height > line_maxheight){
+                        line_maxheight = height;
+                    }
+                    // console.log(total_width, total_height);
+                    _this.objects.push(new Stone(total_width, total_height, width, height,'#000'));
+                    total_width = width + interval_width + total_width;
+                }
+                total_width =_this.wall.x;
+                total_height += rows_height;
+            }
+            _this.stoneNums =  _this.objects.length;
+            // console.log('stoneNums', _this.stoneNums, _this.objects);
+        },
+        createObjects: function() {
+            var roleWid = 20;
+            var step = 10;
+            this.createStones(roleWid, step);
+            var role = new Sprite(this.wall.width/2, this.wall.y + roleWid+2, roleWid, '#009a61');
+            this.objects.push(role);
+            this.objects.push(new Target(this.wall.width/2 + this.wall.x - roleWid, this.wall.y+this.wall.height-roleWid*2,roleWid*2,roleWid*2,'#d2994f'));
+        },
+        draw: function(context) {//绘制池中每一个对象
+            var _this = this;
+            this.objects.forEach(function(item) {//检测碰撞
+                if(item instanceof Sprite){ //鼠标操作和键盘操作
+                    var sprite = item.draw(context, false);
+                    var isColide = _this.collide(sprite, _this.stoneNums);
+                    item.draw(context, isColide);
                 }else{
-                    width = Math.random() * 50.0 + 60.0;
-                    height = width*0.618;
+                    item.draw(context);
                 }
 
-                var interval_width = 30 + Math.random()*50;
-                if(j===0){
-                    total_width = Math.random()*30;
-                }
-                if(height > line_maxheight){
-                    line_maxheight = height;
-                }
-                // console.log(total_width, total_height);
-                _this.objects.push(new Stone(total_width, total_height, width, height,'#000'));
-                total_width = width + interval_width + total_width;
+            });
+        },
+        collide: function(obj,stoneNums) {
+            var _this = this;
+            if(_this.collideWalls(obj)){
+                console.log('collideWalls');
+                return true;
             }
-            total_width =_this.wall.x;
-            total_height += rows_height;
-        }
-        _this.stoneNums =  _this.objects.length;
-       // console.log('stoneNums', _this.stoneNums, _this.objects);
-    },
-    createObjects: function() {
-        var roleWid = 20;
-        this.createStones(roleWid);
-        var role = new Sprite(this.wall.width/2, this.wall.y + roleWid+2, roleWid, '#009a61');
-        this.objects.push(role);
-        this.objects.push(new Target(this.wall.width/2 + this.wall.x - roleWid, this.wall.y+this.wall.height-roleWid*2,roleWid*2,roleWid*2,'#d2994f'));
-    },
-    draw: function(context) {//绘制池中每一个对象
-        var _this = this;
-        this.objects.forEach(function(item) {//检测碰撞
-            if(item instanceof Sprite){ //鼠标操作和键盘操作
-                 var sprite = item.draw(context, false);
-                var isColide = _this.collide(sprite, _this.stoneNums);
-                item.draw(context, isColide);
-            }else{
-                item.draw(context);
+            if(_this.collideStones(obj,stoneNums)){
+                console.log('-------',stoneNums);
+                return true;
             }
+            return false;
+        },
+        collideWalls: function(obj) {//精灵与墙是否碰撞
+            //console.log('obj', obj);
+            if(obj.x - this.wall.x < obj.r || obj.x+obj.r >this.wall.width+this.wall.x){//R+(wall.x)不能小于圆心x坐标,wall.x+width>arc.x+r|| obj.x + obj.r < this.wall.x + this.wall.width
 
-        });
-    },
-    collide: function(obj,stoneNums) {
-        var _this = this;
-        if(_this.collideWalls(obj)){
-            console.log('collideWalls');
-            return true;
-        }
-        if(_this.collideStones(obj,stoneNums)){
-            console.log('-------',stoneNums);
-            return true;
-        }
-        return false;
-    },
-    collideWalls: function(obj) {//精灵与墙是否碰撞
-        //console.log('obj', obj);
-        if(obj.x - this.wall.x < obj.r || obj.x+obj.r >this.wall.width+this.wall.x){//R+(wall.x)不能小于圆心x坐标,wall.x+width>arc.x+r|| obj.x + obj.r < this.wall.x + this.wall.width
+                return true;
+            }else if(obj.y - this.wall.y < obj.r || obj.y + obj.r > this.wall.y + this.wall.height){//||
 
-            return true;
-        }else if(obj.y - this.wall.y < obj.r || obj.y + obj.r > this.wall.y + this.wall.height){//||
-
-            return true;
-        }
-        return false;
-    },
+                return true;
+            }
+            return false;
+        },
 //
 //     圆形O与矩形R四个边相交
 //     O 在 R-top: O的切点坐标(R.x,O.y + O.r) R的切面范围（R.x,R.y）=>(R.x+R.w,R.y)
@@ -233,96 +234,96 @@ ObjectPool.prototype = {
 //     O在 R-bottom-left: O的切点坐标（R.x, R.y+R.h）
 //       与圆心算距离
 //     O在 R-bottom-right: O的切点坐标（R.x+R.w,R.y+R.h）
-    collideStones: function(splite, stoneNums) {
-        var _this = this;
-        var isColide = false;
-        for(var i=0;i<stoneNums;i++){
-            var stone = _this.objects[i];
-           // if(){ //||  ||  ||
-             //   return true;
-            //}
-            if(stone.x<=splite.x && splite.x<=stone.x+stone.width && splite.y < stone.y){
-                if(splite.y + splite.r > stone.y){
+        collideStones: function(splite, stoneNums) {
+            var _this = this;
+            var isColide = false;
+            for(var i=0;i<stoneNums;i++){
+                var stone = _this.objects[i];
+                // if(){ //||  ||  ||
+                //   return true;
+                //}
+                if(stone.x<=splite.x && splite.x<=stone.x+stone.width && splite.y < stone.y){
+                    if(splite.y + splite.r > stone.y){
+                        return true;
+                    }
+                }
+                if(stone.x<=splite.x && splite.x<=stone.x+stone.width && splite.y > stone.y){
+                    if(stone.y + stone.height > splite.y - splite.r){
+                        return true;
+                    }
+                }
+                if(stone.y<=splite.y&&splite.y<=stone.y+stone.height && stone.x>splite.x){
+                    if(splite.x+splite.r>stone.x){
+                        return true;
+                    }
+                }
+                if(stone.y<=splite.y&&splite.y<=stone.y+stone.height && stone.x<splite.x){
+                    if(stone.x+stone.width>splite.x-splite.r){
+                        return true;
+                    }
+                }
+                var left_top = Math.sqrt(Math.pow(stone.x-splite.x, 2) + Math.pow(stone.y-splite.y,2));
+                var right_top = Math.sqrt(Math.pow(stone.x+stone.width-splite.x, 2) + Math.pow(stone.y-splite.y,2));
+                var left_bot = Math.sqrt(Math.pow(stone.x-splite.x, 2) + Math.pow(stone.y+stone.height-splite.y,2));
+                var right_bot = Math.sqrt(Math.pow(stone.x+stone.width-splite.x, 2) + Math.pow(stone.y+stone.height-splite.y,2));
+                if(left_bot<splite.r||right_bot<splite.r||left_top<splite.r||right_top<splite.r){
                     return true;
                 }
             }
-            if(stone.x<=splite.x && splite.x<=stone.x+stone.width && splite.y > stone.y){
-                 if(stone.y + stone.height > splite.y - splite.r){
-                     return true;
-                 }
-            }
-            if(stone.y<=splite.y&&splite.y<=stone.y+stone.height && stone.x>splite.x){
-                  if(splite.x+splite.r>stone.x){
-                     return true;
-                  }
-            }
-            if(stone.y<=splite.y&&splite.y<=stone.y+stone.height && stone.x<splite.x){
-                   if(stone.x+stone.width>splite.x-splite.r){
-                      return true;
-                   }
-            }
-            var left_top = Math.sqrt(Math.pow(stone.x-splite.x, 2) + Math.pow(stone.y-splite.y,2));
-            var right_top = Math.sqrt(Math.pow(stone.x+stone.width-splite.x, 2) + Math.pow(stone.y-splite.y,2));
-            var left_bot = Math.sqrt(Math.pow(stone.x-splite.x, 2) + Math.pow(stone.y+stone.height-splite.y,2));
-            var right_bot = Math.sqrt(Math.pow(stone.x+stone.width-splite.x, 2) + Math.pow(stone.y+stone.height-splite.y,2));
-            if(left_bot<splite.r||right_bot<splite.r||left_top<splite.r||right_top<splite.r){
-                 return true;
-            }
+            return isColide;
         }
-        return isColide;
-    }
-};
-
-var findRequestAnimationFrame = function() {
-    return window.requestAnimationFrame        ||
-            window.webkitRequestAnimationFrame  ||
-            window.mozRequestAnimationFrame     ||
-            window.oRequestAnimationFrame       ||
-            window.msRequestAnimationFrame      ||
-            function(callback, element){
-                window.setTimeout(callback, 1000 / 30);
-            };
-};
-function init() {
-    var canvas = document.getElementById('canvas');
-    canvas.width = phoneWidth;
-    canvas.height = phoneheight;
-    var context = canvas.getContext('2d');
-    var renderFrame = findRequestAnimationFrame();
-    var objects = [];
-    var drawScene = function() { //初始化画布
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        context.save();
-        objects.forEach(function(item) {//重绘画布所有元素,但是对象属性依靠js保持
-            if(item.draw) item.draw(context);
-        });
-        context.restore();
     };
-    var wall = new Wall(0, 0, phoneWidth, phoneheight);
-    objects.push(wall);
-    objects.push(new ObjectPool(wall, 7));
-    console.log(objects[1]);
-    drawScene();
-    function doKeyDown(e) {
-        var keyID = e.keyCode;
 
-        keysDown.push(keyID);
-        //console.log(keyID, keysDown);
-        renderFrame(drawScene);
-    }
-    function doClickDown(e) {
-        var target = {
-            x:e.x,
-            y:e.y
+    var findRequestAnimationFrame = function() {
+        return window.requestAnimationFrame        ||
+                window.webkitRequestAnimationFrame  ||
+                window.mozRequestAnimationFrame     ||
+                window.oRequestAnimationFrame       ||
+                window.msRequestAnimationFrame      ||
+                function(callback, element){
+                    window.setTimeout(callback, 1000 / 30);
+                };
+    };
+    function init() {
+        var canvas = document.getElementById('canvas');
+        canvas.width = phoneWidth;
+        canvas.height = phoneheight;
+        var context = canvas.getContext('2d');
+        var renderFrame = findRequestAnimationFrame();
+        var objects = [];
+        var drawScene = function() { //初始化画布
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            context.save();
+            objects.forEach(function(item) {//重绘画布所有元素,但是对象属性依靠js保持
+                if(item.draw) item.draw(context);
+            });
+            context.restore();
         };
-        keysDown.push(target);
-        renderFrame(drawScene);
-        console.log('target:', target);
+        var wall = new Wall(0, 0, phoneWidth, phoneheight);
+        objects.push(wall);
+        objects.push(new ObjectPool(wall, 7));
+        console.log(objects[1]);
+        drawScene();
+        function doKeyDown(e) {
+            var keyID = e.keyCode;
 
+            keysDown.push(keyID);
+            //console.log(keyID, keysDown);
+            renderFrame(drawScene);
+        }
+        function doClickDown(e) {
+            var target = {
+                x:e.x,
+                y:e.y
+            };
+            keysDown.push(target);
+            renderFrame(drawScene);
+            console.log('target:', target);
+
+        }
+        window.addEventListener('keydown', doKeyDown, true);
+        window.addEventListener('click',doClickDown,true);
     }
-    window.addEventListener('keydown', doKeyDown, true);
-    window.addEventListener('click',doClickDown,true);
-}
-window.onload = init;
+    window.onload = init;
 </script>
 </html>
