@@ -17,7 +17,46 @@
 <script>
     var phoneWidth =  parseInt(window.screen.width);
     var phoneheight =  parseInt(window.screen.height);
-    console.log('wh', phoneheight, phoneWidth);
+    function getCanvasWH(w ,h) {
+        var strw = String(w);
+        var strh = String(h);
+        var canvasW = strw.substring(0, strh.length-1) +'0';
+        var canvasH = strh.substring(0, strw.length-1)+'0';
+        return {
+            w: canvasW,
+            h: canvasH
+        };
+    }
+
+    var Maps = [];
+    function setMaps(step) {//初始化地图
+        Maps = [];
+        var wh = getCanvasWH(phoneWidth, phoneheight);
+        var w = wh.w/step;
+        var h = wh.h/step;
+        for(var i=0;i<w;i++){
+            Maps[i] = [];
+            for(var j=0;j<h;j++){
+                var obj = {
+                  val: 0
+                };
+                Maps[i][j] = obj;
+            }
+        }
+    }
+    function setMapblock(stones, step) {
+        for(var i=0;i<stones.length;i++){
+            var row_start = stones[i].x/step;//计算出第几行
+            var col_start = stones[i].y/step;//计算出第几列
+            var row_end = stones[i].width/step + row_start;//截止行
+            var col_end = stones[i].height/step + col_start;//截止列
+            for(var j=row_start;j<=row_end;j++){
+                for(var p=col_start;p<=col_end;p++){
+                    Maps[j][p].val = 1;
+                }
+            }
+        }
+    }
     var Wall = function(x, y, width, height) {//绘制墙面
         this.x = x;
         this.y = y;
@@ -133,13 +172,12 @@
 
     };
     ObjectPool.prototype = {
-        createStones: function (rolewidth, step) {
+        createStones: function (rolewidth, step) {//以step为元素基础生成障碍物
             var _this = this;
             var rows = 4;
-            var linestart = rolewidth*2 + step;
-            var rows_height = parseInt((_this.wall.height-linestart*2)/4);
+            var interval = step*5;
             var total_width = this.wall.x;
-            var total_height = this.wall.y + linestart;
+            var total_height = this.wall.y + interval;
             for(var i=0;i<rows;i++){//3行  //生成2边 两边内再生成盒子 以此类推
                 var innerNum = parseInt(1+Math.random()*3);
                 var line_maxheight = 0;
@@ -147,17 +185,17 @@
                 for(var j=0;j<innerNum;j++){   //首先规定生成3行,然后每行随机生成几个,每行每个障碍物最低间隔多少
                     var width;
                     var height;
-                    if(rect>=3) {
-                        height = parseInt(Math.random() * 6) * step + rolewidth*3;
-                        width = rolewidth*3;
+                    if(rect>=4) {
+                        height = parseInt(Math.random() * 6) * step + step*8;
+                        width = step*5;
                     }else{
-                        width = parseInt(Math.random() * 6) * step + rolewidth*3;
-                        height = rolewidth*3;
+                        width = parseInt(Math.random() * 6) * step + step*5;
+                        height = step*5;
                     }
 
-                    var interval_width = 30 + Math.random()*50;
+                    var interval_width = parseInt(Math.random()*8)*step + interval;
                     if(j===0){
-                        total_width = Math.random()*30;
+                        total_width = parseInt(Math.random()*3)*step;//每行首个间距
                     }
                     if(height > line_maxheight){
                         line_maxheight = height;
@@ -167,9 +205,11 @@
                     total_width = width + interval_width + total_width;
                 }
                 total_width =_this.wall.x;
-                total_height += rows_height;
+                total_height = line_maxheight +total_height+interval;
             }
             _this.stoneNums =  _this.objects.length;
+            var stones = _this.objects;
+            console.log('========', stones);
             // console.log('stoneNums', _this.stoneNums, _this.objects);
         },
         createObjects: function() {
@@ -286,8 +326,10 @@
     };
     function init() {
         var canvas = document.getElementById('canvas');
-        canvas.width = phoneWidth;
-        canvas.height = phoneheight;
+        var canvasWh = getCanvasWH(phoneWidth, phoneheight);
+        canvas.width = canvasWh.w;
+        canvas.height = canvasWh.h;
+
         var context = canvas.getContext('2d');
         var renderFrame = findRequestAnimationFrame();
         var objects = [];
