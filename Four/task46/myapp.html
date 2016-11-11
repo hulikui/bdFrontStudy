@@ -38,7 +38,9 @@
             Maps[i] = [];
             for(var j=0;j<h;j++){
                 var obj = {
-                  val: 0
+                  val: 0,
+                  row:i,
+                  col:j
                 };
                 Maps[i][j] = obj;
             }
@@ -61,7 +63,7 @@
         }
     }
     // 获取四周点
-    function getRounds(points, current) {// 地图， 当前位置
+    function getRounds(points, current) {// 地图
         var u = null;//上
         var l = null;//左
         var d = null;//下
@@ -99,6 +101,15 @@
     }
     //寻找路径（astar算法）-地图、起点、终点
     function findway(points, start, end) {
+        var rows= Maps.length;
+        var cols = Maps[0].length;
+        var step = start.r*2;
+        start.row = Math.floor(start.x/step);//需要重设role坐标
+        start.col = Math.floor(start.y/step);
+
+        end.row = Math.floor(end.x/step);//需要重设end坐标
+        end.col = Math.floor(end.y/step);
+
         var opens = [];  // 存放可检索的方块(开启列表)
         var closes = [];  // 存放已检索的方块（关闭列表）
         var cur = null;  // 当前指针
@@ -318,12 +329,12 @@
 
     };
     ObjectPool.prototype = {
-        createStones: function (rolewidth, step) {//以step为元素基础生成障碍物
+        createStones: function (rolewidth, step) {//以role为单位创建格子
             var _this = this;
             var rows = 4;
-            var interval = rolewidth * 4;
+            var box_width = rolewidth*2;
             var total_width = this.wall.x;
-            var total_height = this.wall.y + interval;
+            var total_height = this.wall.y + box_width*2;
             for(var i=0;i<rows;i++){//3行  //生成2边 两边内再生成盒子 以此类推
                 var innerNum = parseInt(1+Math.random()*3);
                 var line_maxheight = 0;
@@ -332,16 +343,16 @@
                     var width;
                     var height;
                     if(rect>=4) {
-                        height = parseInt(Math.random() * 6) * rolewidth + rolewidth*4;
-                        width = rolewidth*3;
+                        height = parseInt(Math.random() * 3) * box_width + box_width*2;
+                        width = rolewidth*4;
                     }else{
-                        width = parseInt(Math.random() * 6) * rolewidth + rolewidth*4;
-                        height = rolewidth*3;
+                        width = parseInt(Math.random() * 3) * box_width + box_width*2;
+                        height = rolewidth*4;
                     }
 
-                    var interval_width = parseInt(Math.random()*4)*rolewidth + interval;
+                    var interval_width = parseInt(Math.random()*4)*box_width + box_width*2;
                     if(j===0){
-                        total_width = parseInt(Math.random()*3)*rolewidth;//每行首个间距
+                        total_width = parseInt(Math.random()*3)*2*box_width;//每行首个间距
                     }
                     if(height > line_maxheight){
                         line_maxheight = height;
@@ -352,7 +363,7 @@
                     total_width = width + interval_width + total_width;
                 }
                 total_width =_this.wall.x;
-                total_height = line_maxheight +total_height+interval;
+                total_height = line_maxheight +total_height+box_width*2;
             }
             _this.stoneNums =  _this.objects.length;
             var stones = _this.objects;
@@ -361,13 +372,13 @@
             setMaps(step);
             //把障碍物映射到地图上
             setMapblock(stones, _this.stoneNums, step);
-            // console.log('stoneNums', _this.stoneNums, _this.objects);
+            console.log('Maps', Maps);
         },
         createObjects: function() {
             var roleWid = 15;
             var step = 10;
             this.createStones(roleWid, step);
-            var role = new Sprite(this.wall.width/2, this.wall.y + roleWid, roleWid, '#009a61');
+            var role = new Sprite(this.wall.x +　this.wall.width/2, this.wall.y + roleWid, roleWid, '#009a61');
             this.objects.push(role);
             this.objects.push(new Target(this.wall.width/2 + this.wall.x - roleWid, this.wall.y+this.wall.height-roleWid*2,roleWid*2,roleWid*2,'#d2994f'));
         },
@@ -509,9 +520,17 @@
                 x:e.x,
                 y:e.y
             };
+            var objs = objects[1].objects;
+            //设置target 和 start 坐标， 获取路径
+            console.log('=======', objs[objs.length-2], objs[objs.length-1]);
+            //box路径
+            var path = findway(Maps, objs[objs.length-2], objs[objs.length-1]);
+            //转换为role像素路径
+
+            //渲染路径
             keysDown.push(target);
             renderFrame(drawScene);
-            console.log('target:', target);
+            console.log('path:', path);
 
         }
         window.addEventListener('keydown', doKeyDown, true);
