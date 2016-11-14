@@ -15,28 +15,44 @@
 <canvas id="canvas"></canvas>
 </body>
 <script>
+    /*
+    * 获取屏幕大小并整取
+    * */
     var phoneWidth =  parseInt(window.screen.width);
     var phoneheight =  parseInt(window.screen.height);
+    var level = 1;
+    var intervalID;
     function getCanvasWH(w ,h) {
         var strw = String(w);
         var strh = String(h);
         var canvasW = strw.substring(0, strh.length-1) +'0';
         var canvasH = strh.substring(0, strw.length-1)+'0';
         return {
-            w: canvasW,
-            h: canvasH
+            w: Number(canvasW),
+            h: Number(canvasH),
+            text: {
+                x: Number(canvasW) - 120,
+                y: 30,
+                width: 120
+            }
         };
     }
+    var canvasWh = getCanvasWH(phoneWidth, phoneheight);
+    console.log('WH', canvasWh);
 
+
+    /*
+    * 设置地图并映射障碍物坐标
+    * 实现A* 寻路算法
+    * */
     var Maps = [];
     function setMaps(step) {//初始化地图
         Maps = [];
-        var wh = getCanvasWH(phoneWidth, phoneheight);
-        var w = wh.w/step;
-        var h = wh.h/step;
-        for(var i=0;i<w;i++){
+        var col = canvasWh.w/step;
+        var row = canvasWh.h/step;
+        for(var i=0;i<row;i++){
             Maps[i] = [];
-            for(var j=0;j<h;j++){
+            for(var j=0;j<col;j++){
                 var obj = {
                   val: 0,
                   row:i,
@@ -48,10 +64,10 @@
     }
     function setMapblock(stones, len, step) {
         for(var i=0;i<len;i++){
-            var row_start = stones[i].x/step;//计算出第几行
-            var col_start = stones[i].y/step;//计算出第几列
-            var row_end = stones[i].width/step + row_start;//截止行
-            var col_end = stones[i].height/step + col_start;//截止列
+            var row_start = stones[i].y/step;//计算出第几行
+            var col_start = stones[i].x/step;//计算出第几列
+            var row_end = stones[i].height/step + row_start;//截止行
+            var col_end = stones[i].width/step + col_start;//截止列
             for(var j=row_start;j<=row_end;j++){
                 for(var p=col_start;p<=col_end;p++){
                     if(Maps[j] && Maps[j][p]){//超出地图部分不设置
@@ -99,17 +115,40 @@
         }
         return false;
     }
+    // 检测是否为障碍点
+
+    function isStone(maps, targetV, role) {
+        targetV.col = Math.floor(targetV.x/(role.r*2));//需要重设点击目标坐标
+        targetV.row = Math.floor(targetV.y/(role.r*2));
+        //console.log('----------', targetV, maps[targetV.row][targetV.col]);
+        if (maps[targetV.row][targetV.col].val == 1 ) return true;
+        return false;
+    }
+    // 检测role和target是否在同一区域
+    function isWin(role, target) {
+        var t = {};
+        var r = {};
+        t.col = Math.floor(target.x/(role.r*2));//需要重设点击目标坐标
+        t.row = Math.floor(target.y/(role.r*2));
+        r.col = Math.floor(role.x/(role.r*2));//需要重设点击目标坐标
+        r.row = Math.floor(role.y/(role.r*2));
+        //console.log('====iswIN=====', t, r ,t.row == r.col && t.row==t.col);
+        if(t.col === r.col && t.row===r.row){
+            return true;
+        }
+        return false;
+    }
     //寻找路径（astar算法）-地图、起点、终点
     function findway(points, start, end) {
         var rows= Maps.length;
         var cols = Maps[0].length;
         var step = start.r*2;
-        start.row = Math.floor(start.x/step);//需要重设role坐标
-        start.col = Math.floor(start.y/step);
+        start.col = Math.floor(start.x/step);//需要重设role坐标
+        start.row = Math.floor(start.y/step);
 
-        end.row = Math.floor(end.x/step);//需要重设end坐标
-        end.col = Math.floor(end.y/step);
-
+        end.col = Math.floor(end.x/step);//需要重设end坐标
+        end.row = Math.floor(end.y/step);
+        console.log(start, end);
         var opens = [];  // 存放可检索的方块(开启列表)
         var closes = [];  // 存放已检索的方块（关闭列表）
         var cur = null;  // 当前指针
@@ -126,10 +165,12 @@
             end.P = start;
             closes.push(end);
             bFind = false;
+            console.log('error', bFind);
         }
         // 计算路径
         while (cur && bFind) {
             //如果当前元素cur不在closes列表中，则将其压入closes列表中
+            //console.log('111111, cur', cur, bFind);
             if (!inList(closes, cur))
                 closes.push(cur);
             // 然后获取当前点四周点
@@ -214,6 +255,80 @@
             return false;
         }
     }
+    /*
+    * 根据速度映射路径
+    * */
+    function getPathPx(role, path) {
+
+        var pxPaths = [];
+        var paths = path.map(function (item) {//只能变一个x或者y对比前后参数,递归步数
+            return {
+                x: item.col*role.r*2 + role.r,
+                y: item.row*role.r*2 + role.r
+            }
+        });
+        var cur = {
+            x: role.x,
+            y: role.y
+        };
+        //从当前点移到下一个点需要 steps 步数
+        function getSteps(cur, next) {
+            var steps = role.r*2/role.speed;//移动一个空格需要多少步数
+            var speed = role.speed;
+            var path = [];
+            if(cur.x>next.x){//对比 x
+                for(var i=0;i<steps;i++){
+                    var obj = {
+                        x: cur.x - speed*(i+1),
+                        y: cur.y
+                    };
+                    path.push(obj);
+                }
+            }else if(cur.x<next.x){
+                for(var i=0;i<steps;i++){
+                    var obj = {
+                        x: cur.x + speed*(i+1),
+                        y: cur.y
+                    };
+                    path.push(obj);
+                }
+            }
+            if(cur.y>next.y){
+                for(var i=0;i<steps;i++){
+                    var obj = {
+                        x: cur.x,
+                        y: cur.y-speed*(i+1)
+                    };
+                    path.push(obj);
+                }
+            }else if(cur.y<next.y){
+                for(var i=0;i<steps;i++){
+                    var obj = {
+                        x: cur.x,
+                        y: cur.y + speed*(i+1)
+                    };
+                    path.push(obj);
+                }
+            }
+            //console.log(path);
+            return path;
+
+        }
+        paths.forEach(function (item) {
+            //
+            pxPaths = pxPaths.concat(getSteps(cur, item));
+            cur = item;
+        });
+        return pxPaths;
+
+    }
+
+    /*
+    * 生成墙壁
+    * 障碍物
+    * 角色
+    * 以及目标等对象
+    * */
     var Wall = function(x, y, width, height) {//绘制墙面
         this.x = x;
         this.y = y;
@@ -237,7 +352,7 @@
     var Sprite = function(x, y, r, style) {//角色精灵
         this.x = x;
         this.y = y;
-        this.speed = speed || 10;//速度
+        this.speed = 10;//速度
         this.r = r;
         this.width = r;
         this.height =r;
@@ -247,34 +362,41 @@
     Sprite.prototype = {
         move: function() {//更新坐标
             if(keysDown[0] instanceof Object){
-                console.log('==鼠标点击操作====');
-            }
-            if (keysDown.indexOf(38)>-1 || keysDown.indexOf(87)>-1) { // Player holding up
-                this.y -= this.speed;
-            }
-            if (keysDown.indexOf(40)>-1|| keysDown.indexOf(68)>-1) { // Player holding down
-                this.y += this.speed;
-            }
-            if (keysDown.indexOf(37)>-1 || keysDown.indexOf(83)>-1) { // Player holding left
-                this.x -= this.speed;
-            }
-            if (keysDown.indexOf(39)> -1 || keysDown.indexOf(65) >-1) { // Player holding right
-                this.x += this.speed;
+                //console.log('==鼠标点击操作====');
+
+                this.x = keysDown[0].x;
+                this.y = keysDown[0].y;
+                //console.log(this.x , this.y);
+            }else{
+                if (keysDown.indexOf(38)>-1 || keysDown.indexOf(87)>-1) { // Player holding up
+                    this.y -= this.speed;
+                }
+                if (keysDown.indexOf(40)>-1|| keysDown.indexOf(68)>-1) { // Player holding down
+                    this.y += this.speed;
+                }
+                if (keysDown.indexOf(37)>-1 || keysDown.indexOf(83)>-1) { // Player holding left
+                    this.x -= this.speed;
+                }
+                if (keysDown.indexOf(39)> -1 || keysDown.indexOf(65) >-1) { // Player holding right
+                    this.x += this.speed;
+                }
+
             }
 
-            //console.log(this.x , this.y);
+
             keysDown = [];
         },
         draw: function(context, isCollide) {//绘圆形
             var _this = this;
+            //_this.move();
             if(!isCollide){//没有碰撞下移动并保存状态
                 _this.vector = {//保存上一步位置以便碰撞后恢复
                     x: _this.x,
                     y: _this.y
                 };
-                console.log('上一步坐标',_this.vector);
+                //console.log('上一步坐标',_this.vector);
                 _this.move();//这边要检测碰撞
-                console.log('下一步坐标',_this.x,this.y);
+                //console.log('下一步坐标',_this.x,this.y);
             }else{//有碰撞则回退上一步
                 _this.x = _this.vector.x;
                 _this.y = _this.vector.y;
@@ -292,7 +414,7 @@
         }
     };
 
-    var Target = function(x, y, width, height, style) {//角色精灵
+    var Target = function(x, y, width, height, style) {//目标
         this.x = x;
         this.y = y;
         this.width = width;
@@ -320,16 +442,32 @@
             context.fillRect(this.x, this.y, this.width, this.height);
         }
     };
+    var Notice = function (x, y, width, text, style) {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.text = text;
+        this.style = style;
 
+    };
+    Notice.prototype={
+        draw: function (context) {
+            context.fillStyle = this.style;
+            context.font = '18px Arial';
+            context.fillText(this.text,this.x,this.y, this.maxWidth);
+
+        }
+    };
     var ObjectPool = function(wall, stoneNums){
         this.wall = wall;
         this.objects = [];
         this.stoneNums = stoneNums || 7;
         this.createObjects();
+        console.log('objects', this.objects);
 
     };
     ObjectPool.prototype = {
-        createStones: function (rolewidth, step) {//以role为单位创建格子
+        createStones: function (rolewidth) {//以role为单位创建格子
             var _this = this;
             var rows = 4;
             var box_width = rolewidth*2;
@@ -369,18 +507,23 @@
             var stones = _this.objects;
             //console.log(_this.stoneNums, stones);
             //初始化地图
-            setMaps(step);
+            setMaps(box_width);
             //把障碍物映射到地图上
-            setMapblock(stones, _this.stoneNums, step);
-            console.log('Maps', Maps);
+            setMapblock(stones, _this.stoneNums, box_width);
+            //console.log('Maps', Maps);
         },
         createObjects: function() {
             var roleWid = 15;
-            var step = 10;
-            this.createStones(roleWid, step);
-            var role = new Sprite(this.wall.x +　this.wall.width/2, this.wall.y + roleWid, roleWid, '#009a61');
+            this.createStones(roleWid);
+            //纠正坐标以便计算
+            var r_x = roleWid*2 * Math.floor(canvasWh.w/(roleWid*4))+roleWid; //x
+            //console.log('======',canvasWh.w/(roleWid*4));
+            var notice = new Notice(canvasWh.text.x, canvasWh.text.y, canvasWh.text.width, '当前关卡: ' + level, '#009a61');
+            this.objects.push(notice);
+            var role = new Sprite(this.wall.x +　r_x, this.wall.y + roleWid, roleWid, '#009a61');
             this.objects.push(role);
-            this.objects.push(new Target(this.wall.width/2 + this.wall.x - roleWid, this.wall.y+this.wall.height-roleWid*2,roleWid*2,roleWid*2,'#d2994f'));
+            var t_x = r_x-roleWid;
+            this.objects.push(new Target(t_x, this.wall.y + this.wall.height-roleWid*2,roleWid*2,roleWid*2,'#d2994f'));
         },
         draw: function(context) {//绘制池中每一个对象
             var _this = this;
@@ -436,7 +579,7 @@
 //     O在 R-bottom-left: O的切点坐标（R.x, R.y+R.h）
 //       与圆心算距离
 //     O在 R-bottom-right: O的切点坐标（R.x+R.w,R.y+R.h）
-        collideStones: function(splite, stoneNums) {
+        collideStones: function(splite, stoneNums) {//精灵与障碍物是否碰撞
             var _this = this;
             var isColide = false;
             for(var i=0;i<stoneNums;i++){
@@ -488,7 +631,6 @@
     };
     function init() {
         var canvas = document.getElementById('canvas');
-        var canvasWh = getCanvasWH(phoneWidth, phoneheight);
         canvas.width = canvasWh.w;
         canvas.height = canvasWh.h;
 
@@ -497,16 +639,20 @@
         var objects = [];
         var drawScene = function() { //初始化画布
             context.clearRect(0, 0, canvas.width, canvas.height);
-            context.save();
+            //context.save();
             objects.forEach(function(item) {//重绘画布所有元素,但是对象属性依靠js保持
                 if(item.draw) item.draw(context);
             });
-            context.restore();
+            //context.restore();
         };
-        var wall = new Wall(0, 0, phoneWidth, phoneheight);
+        var wall = new Wall(0, 0, canvasWh.w, canvasWh.h);
         objects.push(wall);
         objects.push(new ObjectPool(wall, 7));
         console.log(objects[1]);
+        var objs = objects[1].objects;
+        //设置target 和 start 坐标， 获取路径
+        var role = objs[objs.length-2];
+        var target = objs[objs.length-1];
         drawScene();
         function doKeyDown(e) {
             var keyID = e.keyCode;
@@ -516,23 +662,43 @@
             renderFrame(drawScene);
         }
         function doClickDown(e) {
-            var target = {
-                x:e.x,
-                y:e.y
+            var targetV = {
+                x: e.x,
+                y: e.y
             };
-            var objs = objects[1].objects;
-            //设置target 和 start 坐标， 获取路径
-            console.log('=======', objs[objs.length-2], objs[objs.length-1]);
+            console.log('===', e);
+
+            //console.log('====是否为障碍点===', isStone(Maps, targetV, role));
+            if(isStone(Maps, targetV ,role)) return;
+
+            //console.log('=======', role, targetV);
             //box路径
-            var path = findway(Maps, objs[objs.length-2], objs[objs.length-1]);
+            var path = findway(Maps, role, targetV);
+            if(path == false) return;
             //转换为role像素路径
+            var pxPath = getPathPx(role, path);
+            //console.log('===pxPath====',pxPath);
+            //渲染canvas
+                pxPath.forEach(function (item, index) {
+                    setTimeout(function () {
+                            keysDown.push(item);
+                            renderFrame(drawScene);
 
-            //渲染路径
-            keysDown.push(target);
-            renderFrame(drawScene);
-            console.log('path:', path);
-
+                    }, (index+1)*100);
+                });
         }
+        intervalID = setInterval(function () {
+            //console.log('isWin', isWin(role, target));
+            if(isWin(role, target)){
+                //console.log('role====', intervalID);
+                    if(confirm('恭喜,你点击确认进入下一关')){
+                        level ++ ;
+                        clearInterval(intervalID);
+                        init();
+                    }
+            }
+        },1000);
+        //console.log('path:', path);
         window.addEventListener('keydown', doKeyDown, true);
         window.addEventListener('click',doClickDown,true);
     }
