@@ -16,8 +16,8 @@
 </body>
 <script>
     /*
-    * 获取屏幕大小并整取
-    * */
+     * 获取屏幕大小并整取
+     * */
     var phoneWidth =  parseInt(window.screen.width);
     var phoneheight =  parseInt(window.screen.height);
     var level = Number(sessionStorage.level) || 1;
@@ -41,8 +41,8 @@
     console.log('WH', canvasWh);
 
     /*
-    * 随机生成敌人坐标
-    * */
+     * 随机生成敌人坐标
+     * */
     function genEnemy(width) {
         var nums = 1+ Math.random()*2;
         var enemys = [];
@@ -68,9 +68,9 @@
 
     }
     /*
-    * 设置地图并映射障碍物坐标
-    * 实现A* 寻路算法
-    * */
+     * 设置地图并映射障碍物坐标
+     * 实现A* 寻路算法
+     * */
     var Maps = [];
     function setMaps(step) {//初始化地图
         Maps = [];
@@ -80,9 +80,9 @@
             Maps[i] = [];
             for(var j=0;j<col;j++){
                 var obj = {
-                  val: 0,
-                  row:i,
-                  col:j
+                    val: 0,
+                    row:i,
+                    col:j
                 };
                 Maps[i][j] = obj;
             }
@@ -286,8 +286,8 @@
         }
     }
     /*
-    * 根据速度映射路径
-    * */
+     * 根据速度映射路径
+     * */
     function getPathPx(role, path) {
 
         var pxPaths = [];
@@ -354,13 +354,13 @@
     }
 
     /*
-    * 生成墙壁
-    * 障碍物
-    * 板擦
-    * 敌人
-    * 角色
-    * 以及目标等对象
-    * */
+     * 生成墙壁
+     * 障碍物
+     * 板擦
+     * 敌人
+     * 角色
+     * 以及目标等对象
+     * */
     var Wall = function(x, y, width, height) {//绘制墙面
         this.x = x;
         this.y = y;
@@ -614,7 +614,7 @@
 
             var enemys = genEnemy(roleWid);
             enemys.forEach(function(enemy){
-               var ene = new Enemy(enemy.x, enemy.y, roleWid*0.8, '#e27e7e');
+                var ene = new Enemy(enemy.x, enemy.y, roleWid*0.8, '#e27e7e');
                 _this.objects.push(ene);
             });
             console.log('enemys' , enemys);
@@ -740,6 +740,7 @@
         var context = canvas.getContext('2d');
         var renderFrame = findRequestAnimationFrame();
         var objects = [];
+        var shotObjs = [];
         var drawScene = function() { //初始化画布
             context.clearRect(0, 0, canvas.width, canvas.height);
             //context.save();
@@ -758,10 +759,65 @@
         var target = objs[objs.length-1];
         drawScene();
 
+        // 渲染子弹射出
+        //子弹数组， 每个子弹有颜色，方向，速度
+        //出界后摧毁对象
+        function renderShots() {
+            var shotID= setInterval(function () {
+                if(shotObjs.length ==0 ) clearInterval(shotID);
+                shotObjs.forEach(function (item) {
+                    console.log('1111', item);
+
+                    switch (item.direction){
+                        case 'up':
+                            item.y -= item.speed;
+                            break;
+                        case 'down':
+                            item.y += item.speed;
+                            break;
+                        case 'left':
+                            item.x -= item.speed;
+                            break;
+                        case 'right':
+                            item.x += item.speed;
+                            break;
+
+                    }
+                    renderFrame(drawScene);
+                    //if(item.draw) item.draw(context);
+                });
+                shotObjs.forEach(function (item, index) {
+                    if(item.y<-item.r || item.y > canvas.height + item.r || item.x < -item.r || item.x > item.r + canvas.width || isStone(Maps, item, role)){
+                        shotObjs.splice(index, 1);
+                        objects.splice(index,1);
+                    }
+
+                });
+            }, 500);
+
+        }
+        function shots(role){
+            var direction = role.direction;//人物的子弹只有四个方向
+            //生成方向和起始点
+            var shot = new Shot(role.x, role.y, role.r*0.8, direction, '#009a61');
+            shotObjs.push(shot);
+            objects.unshift(shot);
+        }
+
         function doKeyDown(e) {
             var keyID = e.keyCode;
-            keysDown.push(keyID);
-            renderFrame(drawScene);
+            console.log('===18', keyID);// q = 18的时候 发射子弹
+            if(keyID == 81){
+                shots(role);
+                //console.log(keyID, keysDown);
+                if(shotObjs.length ==1){
+                    renderShots();
+                }
+
+            }else {
+                keysDown.push(keyID);
+                renderFrame(drawScene);
+            }
 
         }
         function doClickDown(e) {
@@ -782,24 +838,24 @@
             var pxPath = getPathPx(role, path);
             //console.log('===pxPath====',pxPath);
             //渲染canvas
-                pxPath.forEach(function (item, index) {
-                     var settimeID = setTimeout(function () {
-                            keysDown.push(item);
-                            renderFrame(drawScene);
+            pxPath.forEach(function (item, index) {
+                var settimeID = setTimeout(function () {
+                    keysDown.push(item);
+                    renderFrame(drawScene);
 
-                    }, (index+1)*100);
-                });
+                }, (index+1)*100);
+            });
         }
         intervalID = setInterval(function () {
             //console.log('isWin', isWin(role, target));
             if(isWin(role, target)){
                 //console.log('role====', intervalID);
-                    if(confirm('恭喜,你点击确认进入下一关')){
-                        level ++ ;
-                        sessionStorage.level = level;
-                        clearInterval(intervalID);
-                        location.reload();
-                    }
+                if(confirm('恭喜,你点击确认进入下一关')){
+                    level ++ ;
+                    sessionStorage.level = level;
+                    clearInterval(intervalID);
+                    location.reload();
+                }
             }
         },1000);
         //console.log('path:', path);
