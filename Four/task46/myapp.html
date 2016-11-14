@@ -20,7 +20,7 @@
     * */
     var phoneWidth =  parseInt(window.screen.width);
     var phoneheight =  parseInt(window.screen.height);
-    var level = 1;
+    var level = Number(sessionStorage.level) || 1;
     var intervalID;
     function getCanvasWH(w ,h) {
         var strw = String(w);
@@ -40,7 +40,33 @@
     var canvasWh = getCanvasWH(phoneWidth, phoneheight);
     console.log('WH', canvasWh);
 
+    /*
+    * 随机生成敌人坐标
+    * */
+    function genEnemy(width) {
+        var nums = 1+ Math.random()*2;
+        var enemys = [];
+        console.log(Maps, Maps.length, Maps[0].length);
+        for(var i=0;i<nums;i++){
+            var vector  = {
+                row: parseInt(Maps.length*Math.random()),
+                col: parseInt(Maps[0].length*Math.random())
+            }
+            console.log(vector);
+            if(enemys.indexOf(vector)>0 || Maps[vector.row][vector.col].val == 1 || vector.row == 1 || vector.row == 0){
+                i-- ;
+            }else{
+                enemys.push(vector);
+            }
+        }
+        return enemys.map(function (item) {//只能变一个x或者y对比前后参数,递归步数
+            return {
+                x: item.col*width*2 + width,
+                y: item.row*width*2 + width
+            }
+        });
 
+    }
     /*
     * 设置地图并映射障碍物坐标
     * 实现A* 寻路算法
@@ -62,16 +88,20 @@
             }
         }
     }
-    function setMapblock(stones, len, step) {
+    function setMapblock(stones, len, step , eaer) {
+        var val = 1;
+        if(eaer){
+            val = 0;
+        }
         for(var i=0;i<len;i++){
             var row_start = stones[i].y/step;//计算出第几行
             var col_start = stones[i].x/step;//计算出第几列
             var row_end = stones[i].height/step + row_start;//截止行
             var col_end = stones[i].width/step + col_start;//截止列
-            for(var j=row_start;j<=row_end;j++){
-                for(var p=col_start;p<=col_end;p++){
+            for(var j=row_start;j<row_end;j++){
+                for(var p=col_start;p<col_end;p++){
                     if(Maps[j] && Maps[j][p]){//超出地图部分不设置
-                        Maps[j][p].val = 1;
+                        Maps[j][p].val = val;
                     }
 
                 }
@@ -326,6 +356,8 @@
     /*
     * 生成墙壁
     * 障碍物
+    * 板擦
+    * 敌人
     * 角色
     * 以及目标等对象
     * */
@@ -357,6 +389,7 @@
         this.width = r;
         this.height =r;
         this.style = style;
+        this.direction = 'down';
         this.vector;
     };
     Sprite.prototype = {
@@ -370,15 +403,19 @@
             }else{
                 if (keysDown.indexOf(38)>-1 || keysDown.indexOf(87)>-1) { // Player holding up
                     this.y -= this.speed;
+                    this.direction = 'up';
                 }
                 if (keysDown.indexOf(40)>-1|| keysDown.indexOf(68)>-1) { // Player holding down
                     this.y += this.speed;
+                    this.direction = 'down';
                 }
                 if (keysDown.indexOf(37)>-1 || keysDown.indexOf(83)>-1) { // Player holding left
                     this.x -= this.speed;
+                    this.direction = 'left';
                 }
                 if (keysDown.indexOf(39)> -1 || keysDown.indexOf(65) >-1) { // Player holding right
                     this.x += this.speed;
+                    this.direction = 'right';
                 }
 
             }
@@ -409,7 +446,8 @@
             return {
                 x: _this.x,
                 y: _this.y,
-                r: _this.r
+                r: _this.r,
+                direction: _this.direction
             };
         }
     };
@@ -442,6 +480,56 @@
             context.fillRect(this.x, this.y, this.width, this.height);
         }
     };
+    var Enemy =  function(x, y, r, style) {//敌人
+        this.x = x;
+        this.y = y;
+        this.speed = 5;
+        this.r = r;
+        this.width = r;
+        this.height =r;
+        this.style = style;
+    };
+    Enemy.prototype = {
+        draw: function(context) {//绘圆形
+            context.beginPath();
+            context.fillStyle = this.style;
+            context.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            context.fill();
+        }
+    };
+
+    var Shot =  function(x, y, r, style) {//子弹
+        this.x = x;
+        this.y = y;
+        this.speed = 5;//每秒移动距离
+        this.r = r;
+        this.width = r;
+        this.height =r;
+        this.style = style;
+    };
+    Shot.prototype = {
+        draw: function(context) {//绘圆形
+            context.beginPath();
+            context.fillStyle = this.style;
+            context.arc(this.x, this.y, this.r, 0, 2*Math.PI);
+            context.fill();
+        }
+    };
+
+    var Eraser = function(x, y, width, height, style){//黑板擦
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
+        this.style = style;
+    };
+    Eraser.prototype = {
+        draw: function(context){
+            context.fillStyle = this.style;
+            context.fillRect(this.x, this.y, this.width, this.height);
+        }
+    };
+
     var Notice = function (x, y, width, text, style) {
         this.x = x;
         this.y = y;
@@ -514,16 +602,30 @@
         },
         createObjects: function() {
             var roleWid = 15;
+            var _this = this;
             this.createStones(roleWid);
             //纠正坐标以便计算
             var r_x = roleWid*2 * Math.floor(canvasWh.w/(roleWid*4))+roleWid; //x
             //console.log('======',canvasWh.w/(roleWid*4));
             var notice = new Notice(canvasWh.text.x, canvasWh.text.y, canvasWh.text.width, '当前关卡: ' + level, '#009a61');
             this.objects.push(notice);
+            var t_x = r_x-roleWid;
+
+            var enemys = genEnemy(roleWid);
+            enemys.forEach(function(enemy){
+               var ene = new Enemy(enemy.x, enemy.y, roleWid*0.8, '#e27e7e');
+                _this.objects.push(ene);
+            });
+            console.log('enemys' , enemys);
+            //设置target 附近无障碍区
+            var eaer = new Eraser(6*roleWid, this.wall.height-roleWid*2, this.wall.width -12*roleWid, 2*roleWid, '#C0C0C0');
+            this.objects.push(eaer);
             var role = new Sprite(this.wall.x +　r_x, this.wall.y + roleWid, roleWid, '#009a61');
             this.objects.push(role);
-            var t_x = r_x-roleWid;
-            this.objects.push(new Target(t_x, this.wall.y + this.wall.height-roleWid*2,roleWid*2,roleWid*2,'#d2994f'));
+            var target = new Target(t_x, this.wall.y + this.wall.height-roleWid*2,roleWid*2,roleWid*2,'#d2994f');
+            this.objects.push(target);
+            //设置target 附近无障碍区
+            setMapblock([eaer], 1, roleWid*2 , 0);
         },
         draw: function(context) {//绘制池中每一个对象
             var _this = this;
@@ -654,9 +756,20 @@
         var role = objs[objs.length-2];
         var target = objs[objs.length-1];
         drawScene();
+
+        // 渲染子弹射出
+        //子弹数组， 每个子弹有颜色，方向，速度
+        //出界后摧毁对象
+        function shots(role){
+            var direction = role.direction;//人物的子弹只有四个方向
+            //生成方向和起始点
+            var shot = new Shot(role.x, role.y, role.r*0.8, '#009a61')
+
+
+        }
         function doKeyDown(e) {
             var keyID = e.keyCode;
-
+            console.log('===18', keyID);// q = 18的时候 发射子弹
             keysDown.push(keyID);
             //console.log(keyID, keysDown);
             renderFrame(drawScene);
@@ -680,7 +793,7 @@
             //console.log('===pxPath====',pxPath);
             //渲染canvas
                 pxPath.forEach(function (item, index) {
-                    setTimeout(function () {
+                     var settimeID = setTimeout(function () {
                             keysDown.push(item);
                             renderFrame(drawScene);
 
@@ -693,8 +806,9 @@
                 //console.log('role====', intervalID);
                     if(confirm('恭喜,你点击确认进入下一关')){
                         level ++ ;
+                        sessionStorage.level = level;
                         clearInterval(intervalID);
-                        init();
+                        location.reload();
                     }
             }
         },1000);
