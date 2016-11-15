@@ -160,13 +160,13 @@
         var t = getVector(target, step);
         var isclickenemy = false;
         objs.forEach(function(item){
-           if(item instanceof Enemy){
-               var enemy = getVector(item, step);
-               if(t.col == enemy.col && t.row == enemy.row){
-                   role.direction = shotDirect(role, enemy);
-                   isclickenemy = true;
-               }
-           }
+            if(item instanceof Enemy){
+                var enemy = getVector(item, step);
+                if(t.col == enemy.col && t.row == enemy.row){
+                    role.direction = shotDirect(role, enemy);
+                    isclickenemy = true;
+                }
+            }
         });
         return isclickenemy;
     }
