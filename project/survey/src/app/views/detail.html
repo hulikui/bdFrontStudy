@@ -1,0 +1,36 @@
+
+
+<div class="leader">
+  <h2 class="sub-header">{{detail.content.title}}</h2>
+  <div class="table-responsive">
+    <table class="table width_his table-striped">
+      <tbody ng-repeat='item in detail.content.questions'>
+        <tr>
+          <td>
+            题号{{item.id + 1}}：{{item.type| filterQuestionType}}
+          </td>
+        </tr>
+        <tr>
+          <td>题目{{item.question}}</td>
+        </tr>
+          <tr>
+            <tr ng-repeat='i in item.content'>
+              <td>{{i}}</td>
+            </tr>
+          </tr>
+      <tr>
+        <td>
+          <button>编辑</button>
+          <button>删除</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <!--<div class="btn-group getpage" role="group" >-->
+    <!--<button type="button" class="btn btn-default" ng-disabled="table.page <= 1" ng-click="pre()">上一页</button>-->
+    <!--<button type="button" class="btn btn-default" style="background: #eee;">当前:{{table.page}}</button>-->
+    <!--<button type="button" class="btn btn-default" ng-disabled="table.page >= table.pageTotalNum" ng-click="next()">下一页</button>-->
+    <!--</div>-->
+  </div>
+</div>
+
