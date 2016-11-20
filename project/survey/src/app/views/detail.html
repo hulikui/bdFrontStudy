@@ -1,5 +1,5 @@
 
-
+<form name="form">
 <div class="leader">
   <h2 class="sub-header">{{detail.content.title}}</h2>
   <div class="table-responsive">
@@ -13,8 +13,8 @@
         <tr>
           <td>题目{{item.question}}</td>
         </tr>
-          <tr>
-            <tr ng-repeat='i in item.content'>
+          <tr >
+            <tr ng-if="item.type<2" ng-repeat='i in item.content track by $index'>
               <td>{{i}}</td>
             </tr>
           </tr>
@@ -26,11 +26,13 @@
       </tr>
       </tbody>
     </table>
-    <!--<div class="btn-group getpage" role="group" >-->
-    <!--<button type="button" class="btn btn-default" ng-disabled="table.page <= 1" ng-click="pre()">上一页</button>-->
-    <!--<button type="button" class="btn btn-default" style="background: #eee;">当前:{{table.page}}</button>-->
-    <!--<button type="button" class="btn btn-default" ng-disabled="table.page >= table.pageTotalNum" ng-click="next()">下一页</button>-->
-    <!--</div>-->
+    <div ng-if="detail.content.state == 1" class="btn-group getpage" role="group" >
+    <button type="submit" class="btn btn-default" ng-click="detail.vote()">提交投票</button>
+    </div>
+    <div ng-if="detail.content.state == 0" class="btn-group getpage" role="group" >
+      <button type="submit" class="btn btn-default" ng-click="detail.save()">保存编辑</button>
+    </div>
   </div>
 </div>
+</form>
 

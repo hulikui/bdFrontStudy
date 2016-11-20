@@ -1,0 +1,30 @@
+
+
+<div class="leader">
+  <form name="form" >
+  <h2 class="sub-header"><input type="text" placeholder="问卷标题" name="survey_title" ng-model="survey_title"></h2>
+  <div class="table-responsive" style="border: 1px solid" ng-repeat="type in create.questTypes track by $index">
+    <radio-question ng-if="type==0 || type==1" id="{{$index+1}}_{{type}}"></radio-question>
+    <text-Question ng-if="type==2" id="{{$index+1}}_{{type}}"></text-Question>
+    </div>
+  <div class="table-responsive">
+    <table class="table width_his table-striped">
+      <tr ng-if="create.typeDisplay">
+        <td><button ng-click="create.addRadio()">单选</button></td>
+        <td><button ng-click="create.addMuti()">多选</button></td>
+        <td><button ng-click="create.addText()">文本</button></td>
+      </tr>
+    <tr>
+      <td><a ng-click="create.showType()">+ 添加问题</a></td>
+    </tr>
+    </table>
+    <div class=" " role="group" >
+    <button type="button" class="btn btn-default" 问卷截止日期</button>
+      <input type="date" name="endTime" ng-model="endTime">
+    <button type="submit" class="btn btn-default" style="background: #eee;" ng-click="create.add(0)">保存问卷</button>
+    <button type="submit" class="btn btn-default"  ng-click="create.add(1)" >发布问卷</button>
+    </div>
+  </div>
+    </form>
+</div>
+

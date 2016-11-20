@@ -1,0 +1,24 @@
+ <table class="table width_his table-striped" >
+      <tbody>
+      <tr>
+        <td>
+          {{vm.index}} , 类型 {{vm.type}}
+        </td>
+      </tr>
+      <tr>
+        <td><input type="text" placeholder="题目" ng-model="title" name="{{vm.index}}_{{vm.typeNum}}_title"></td>
+      </tr>
+      <tr>
+        <td>选项</td>
+        <td>
+          <button ng-click="vm.add()">+ 增加</button>
+          <button ng-click="vm.reduce()">- 删除</button>
+        </td>
+      </tr>
+
+      <tr ng-repeat='i in vm.selects'>
+        <td><input type="text" placeholder="选项{{i}}" ng-model="options" name="{{vm.index}}_{{vm.typeNum}}_option"></td>
+      </tr>
+      </tbody>
+    </table>
+

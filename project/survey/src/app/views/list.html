@@ -11,29 +11,28 @@
           <th >时间</th>
           <th >状态</th>
           <th >操作</th>
-          <th><button>+ 新建问卷</button></th>
+          <th><button ui-sref="create">+ 新建问卷</button></th>
         </tr>
         </thead>
         <tbody>
         <tr ng-repeat='item in list.surveyData'>
           <td >{{item.title}}</td>
-          <td >{{item.time}}</td>
-          <td >{{item.state| filterSurveyType}}</td>
+          <td >{{item.time | getFormatTime }}</td>
+          <td >{{item.state| filterSurveyType }}</td>
           <td colspan="2">
             <button>编辑</button>
-            <button ng-click="list.deleteSurvey(item.id)">删除</button>
+            <button ng-click="list.deleteSurvey(item.title, item.id)">删除</button>
             <script type="text/ng-template" id="deleteId">
-              <div class="modal-header">
-                <h3 class="modal-title">确定删除 {{item.title}} 吗？</h3>
-                <button class="cancel" ng-click="cancel()">X</button>
+              <div class="modal-header" >
+                <h3 class="modal-title">确定删除 {{delete.items.title}} 吗？</h3>
               </div>
 
                 <div class="desc">
-                  <button ng-click="ok()">确定</button>
-                  <button ng-click="cancel()">取消</button>
+                  <button ng-click="delete.ok()">确定</button>
+                  <button ng-click="delete.cancel()">取消</button>
                 </div>
             </script>
-            <button ui-sref="detail({{item.id}})">{{item.state| filterSurveyOperation}}</button>
+            <button ui-sref="detail({id:item.id, state: item.state})">{{item.state| filterSurveyOperation}}</button>
           </td>
         </tr>
         </tbody>

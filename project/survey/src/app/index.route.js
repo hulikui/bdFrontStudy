@@ -14,10 +14,16 @@ export function routerConfig ($stateProvider, $urlRouterProvider) {
       controllerAs: 'list'
     })
     .state('detail', {
-      url: '/detail/{id}',
+      url: '/detail/:id/:state',
       templateUrl: 'app/views/detail.html',
       controller: 'DeTailController',
       controllerAs: 'detail'
+    })
+    .state('create', {
+      url: '/create',
+      templateUrl: 'app/views/create.html',
+      controller: 'CreateSurveyController',
+      controllerAs: 'create'
     });
 
   $urlRouterProvider.otherwise('/');

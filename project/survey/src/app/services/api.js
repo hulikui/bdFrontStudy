@@ -1,4 +1,4 @@
-import { getData } from '../config/surveyData.js';
+import { getData, setData } from '../config/surveyData.js';
 export class SurveyApi {
   constructor ($log, $http) {
     'ngInject';
@@ -10,5 +10,8 @@ export class SurveyApi {
 
   getSurveyData() {
     return getData();
+  }
+  setSurveyData(data) {
+    return setData(data);
   }
 }

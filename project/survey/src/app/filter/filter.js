@@ -58,4 +58,19 @@ function filterSurveyOperation(){
   }
 }
 
-export { filterQuestionType, filterSurveyType, filterSurveyOperation}
+function getFormatTime() {
+  return function (time) {
+    const formatTime = time.getFullYear() + "年" +
+      (time.getMonth() + 1 ) + "月" +
+      time.getDate() + "日" +
+      " " +
+      time.getHours() + ":" +
+      (time.getMinutes()<10 ? '0'+ time.getMinutes(): time.getMinutes()) + ":" +
+      (time.getSeconds()<10 ? '0'+ time.getSeconds(): time.getSeconds());
+    return formatTime;
+  }
+
+}
+
+
+export { filterQuestionType, filterSurveyType, filterSurveyOperation, getFormatTime}

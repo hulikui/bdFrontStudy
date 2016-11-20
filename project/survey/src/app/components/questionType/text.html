@@ -1,0 +1,19 @@
+<table class="table width_his table-striped">
+  <tbody>
+  <tr>
+    <td>
+      {{vm.index}} , 类型 {{vm.type}}
+    </td>
+  </tr>
+  <tr>
+    <td><input type="text" placeholder="题目" ng-model="title" name="{{vm.index}}_{{vm.typeNum}}_title"></td>
+  </tr>
+  <tr>
+    <td>内容</td>
+    <td>
+      <textarea placeholder="填写内容" ng-model="text" name="{{vm.index}}_{{vm.typeNum}}_text"></textarea>
+    </td>
+  </tr>
+  </tbody>
+</table>
+

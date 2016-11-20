@@ -1,14 +1,4 @@
-
-function GetNowDateTime(nowTime) {
-  var NowDateTime = nowTime.getFullYear() + "年" +
-    (nowTime.getMonth() + 1 ) + "月" +
-    nowTime.getDate() + "日" +
-    " " +
-    nowTime.getHours() + ":" +
-    (nowTime.getMinutes()<10 ? '0'+ nowTime.getMinutes(): nowTime.getMinutes()) + ":" +
-    (nowTime.getSeconds()<10 ? '0'+ nowTime.getSeconds(): nowTime.getSeconds());
-  return NowDateTime;
-}
+var surveys = [];
 
 function getQuestions() {
   const questions = [];
@@ -23,14 +13,13 @@ function getQuestions() {
   }
   return questions;
 }
-function getData() {
+function generteData() {
   const questions = getQuestions();
-  const surveys = [];
   for(let i=0;i<10;i++){
     const item = {
       id: i,
       title: '这是我的第'+i+'份问卷',
-      time: GetNowDateTime(new Date()),
+      time: new Date(),
       state: parseInt(Math.random()*3),
       questions
     };
@@ -39,6 +28,15 @@ function getData() {
   return surveys;
 }
 
+generteData();
+function getData() {
+  return surveys;
+}
+function setData(data) {
+  surveys.push(data);
+}
+
 export {
-  getData
+  getData,
+  setData
 }
