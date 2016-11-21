@@ -13,13 +13,27 @@ export class DeTailController {
   showQuestions(id, status) {
     console.log('-------', id);
     this.surveyData = this.surveyApi.getSurveyData();
-    let content = '';
+    let content = [];
     this.surveyData.forEach((item) => {
       if(item.id == id){
         content = item;
       }
     });
+    // id,
+    //   type: parseInt(obj[1]),
+    //   question: '',
+    //   content: []
+    content.questions.forEach((item) =>{
+      if(item.type == 0 ){
+        item.votes = 0;
+      }else if(item.type == 1){
 
+          item.votes=[false, false, false, false];
+      }else {
+
+          item.votes='';
+      }
+    });
     return content;
   }
   change(el) {
@@ -27,6 +41,7 @@ export class DeTailController {
   }
   vote() {
     console.log('==============', this.$scope)
+    console.log('this.content.questions',this.content.questions);
   }
   save() {
 

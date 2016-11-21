@@ -14,12 +14,14 @@
           <td>题目{{item.question}}</td>
         </tr>
           <tr >
-            <tr ng-if="item.type<2" ng-repeat='i in item.content track by $index'>
-              <td><input type="{{item.type | getInputName}}"  ng-true-value="true" ng-false-value="false" ng-init = "modelName=  item.id+'_'+item.type+'_option_'+$index"
-                         ng-model="i" ng-value="modelName" name="{{ item.id+'_'+item.type+'_option_' + $index | getTagName}}"> {{i}}</td>
+            <tr ng-if="item.type==0" ng-repeat='i in item.content track by $index'>
+              <td><input type="radio"  ng-model="item.votes" value="{{$index}}" name="{{ item.id+'_'+item.type+'_option'}}"> {{i}}</td>
             </tr>
+        <tr ng-if="item.type==1" ng-repeat='i in item.content track by $index'>
+          <td><input type="checkbox"  ng-model="item.votes[$index]" value="$index" name="{{ item.id+'_'+item.type+'_option_' + $index}}"> {{i}}</td>
+        </tr>
             <tr ng-if="item.type == 2" >
-              <td><textarea  ng-model="i" name="{{ item.id+'_'+item.type+'_option'}}"> {{::item.content[0]}} </textarea></td>
+              <td><textarea  ng-model="item.votes" value="$index" name="{{ item.id+'_'+item.type+'_option'}}"> {{::item.content[0]}} </textarea></td>
             </tr>
           </tr>
       </tbody>
