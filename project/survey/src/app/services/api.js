@@ -11,7 +11,7 @@ export class SurveyApi {
   getSurveyData() {
     return getData();
   }
-  setSurveyData(data) {
-    return setData(data);
+  setSurveyData(data, id) {
+    return setData(data, id);
   }
 }

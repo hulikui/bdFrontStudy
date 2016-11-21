@@ -2,16 +2,16 @@
   <tbody>
   <tr>
     <td>
-      {{vm.index}} , 类型 {{vm.type}}
+      {{vm.obj.id+1}} , 类型 {{vm.obj.type | filterQuestionType}}
     </td>
   </tr>
   <tr>
-    <td><input type="text" placeholder="题目" ng-model="title" name="{{vm.index}}_{{vm.typeNum}}_title"></td>
+    <td><input type="text" placeholder="{{vm.obj.question}}" ng-model="vm.obj.question" ng-init="vm.obj.content[0] = vm.obj.content[0]"  name="{{vm.obj.id}}_{{vm.obj.type}}_title"></td>
   </tr>
   <tr>
     <td>内容</td>
     <td>
-      <textarea placeholder="填写内容" ng-model="text" name="{{vm.index}}_{{vm.typeNum}}_text"></textarea>
+      <textarea placeholder="填写内容" ng-model="vm.obj.content[0]" ng-init="vm.obj.content[0]" name="{{vm.obj.id}}_{{vm.obj.type}}_text"></textarea>
     </td>
   </tr>
   </tbody>

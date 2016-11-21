@@ -20,7 +20,7 @@
           <td >{{item.time | getFormatTime }}</td>
           <td >{{item.state| filterSurveyType }}</td>
           <td colspan="2">
-            <button>编辑</button>
+            <button ui-sref="create({id: item.id})">编辑</button>
             <button ng-click="list.deleteSurvey(item.title, item.id)">删除</button>
             <script type="text/ng-template" id="deleteId">
               <div class="modal-header" >

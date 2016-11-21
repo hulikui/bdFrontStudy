@@ -32,8 +32,27 @@ generteData();
 function getData() {
   return surveys;
 }
-function setData(data) {
-  surveys.push(data);
+function setData(data, id) {
+  let index = parseInt(id);
+  let isExist = false;
+  surveys.forEach((item) => {
+    console.log(item.id, index);
+    if(index === item.id){
+      isExist = true;
+    }
+  });
+  if(!isExist){
+    surveys.push(data);
+    console.log('保存成', surveys);
+  }else{
+    console.log('更新成功', surveys);
+    surveys[id] = data;
+  }
+
+}
+
+function setVote(data) {
+
 }
 
 export {

@@ -2,10 +2,10 @@
 
 <div class="leader">
   <form name="form" >
-  <h2 class="sub-header"><input type="text" placeholder="问卷标题" name="survey_title" ng-model="survey_title"></h2>
-  <div class="table-responsive" style="border: 1px solid" ng-repeat="type in create.questTypes track by $index">
-    <radio-question ng-if="type==0 || type==1" id="{{$index+1}}_{{type}}"></radio-question>
-    <text-Question ng-if="type==2" id="{{$index+1}}_{{type}}"></text-Question>
+  <h2 class="sub-header"><input type="text" placeholder="{{create.questObj.title}}" name="survey_title" ng-model="create.questObj.title"></h2>
+  <div class="table-responsive" style="border: 1px solid" ng-repeat="question in create.questions track by $index">
+    <radio-question ng-if="question.type==0 || question.type==1"  get-question="question"></radio-question>
+    <text-Question ng-if="question.type==2" get-question="question" ></text-Question>
     </div>
   <div class="table-responsive">
     <table class="table width_his table-striped">

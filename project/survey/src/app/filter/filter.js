@@ -72,5 +72,28 @@ function getFormatTime() {
 
 }
 
+function getTagName() {
+    return function(name){
+      const obj = name.split('_');
+      const type = obj[1];
+      if( type == '0'){//单选题
+        return obj[0]+'_0_option';
+      }else if(type == '1'){
+        return obj[0]+'_1_option_'+obj[3];
+      }else {
+        return obj[0]+'_2_option';
+      }
+  }
+}
 
-export { filterQuestionType, filterSurveyType, filterSurveyOperation, getFormatTime}
+function getInputName() {
+  return function(type){
+    if( type == 0){//单选题
+      return 'radio';
+    }else if(type == 1){
+      return 'checkbox';
+    }
+  }
+}
+
+export { filterQuestionType, filterSurveyType, filterSurveyOperation, getFormatTime, getTagName, getInputName }

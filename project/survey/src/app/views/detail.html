@@ -15,23 +15,21 @@
         </tr>
           <tr >
             <tr ng-if="item.type<2" ng-repeat='i in item.content track by $index'>
-              <td>{{i}}</td>
+              <td><input type="{{item.type | getInputName}}"  ng-true-value="true" ng-false-value="false" ng-init = "modelName=  item.id+'_'+item.type+'_option_'+$index"
+                         ng-model="i" ng-value="modelName" name="{{ item.id+'_'+item.type+'_option_' + $index | getTagName}}"> {{i}}</td>
+            </tr>
+            <tr ng-if="item.type == 2" >
+              <td><textarea  ng-model="i" name="{{ item.id+'_'+item.type+'_option'}}"> {{::item.content[0]}} </textarea></td>
             </tr>
           </tr>
-      <tr>
-        <td>
-          <button>编辑</button>
-          <button>删除</button>
-        </td>
-      </tr>
       </tbody>
     </table>
     <div ng-if="detail.content.state == 1" class="btn-group getpage" role="group" >
     <button type="submit" class="btn btn-default" ng-click="detail.vote()">提交投票</button>
     </div>
-    <div ng-if="detail.content.state == 0" class="btn-group getpage" role="group" >
-      <button type="submit" class="btn btn-default" ng-click="detail.save()">保存编辑</button>
-    </div>
+    <!--<div ng-if="detail.content.state == 0" class="btn-group getpage" role="group" >-->
+      <!--<button type="submit" class="btn btn-default" ng-click="detail.save()">保存编辑</button>-->
+    <!--</div>-->
   </div>
 </div>
 </form>

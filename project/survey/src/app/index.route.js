@@ -20,7 +20,7 @@ export function routerConfig ($stateProvider, $urlRouterProvider) {
       controllerAs: 'detail'
     })
     .state('create', {
-      url: '/create',
+      url: '/create/:id',
       templateUrl: 'app/views/create.html',
       controller: 'CreateSurveyController',
       controllerAs: 'create'
