@@ -1,0 +1,48 @@
+<style>
+  .title {
+    text-align: center;
+  }
+</style>
+<form name="form">
+  <div class="leader">
+    <h2 class="sub-header title">{{votes.content.title}}  投票情况</h2>
+    <div class="table-responsive">
+      <table class="table width_his table-striped">
+        <tbody ng-repeat='item in votes.content.questions'>
+        <tr>
+          <td colspan="2">
+            题号{{item.id + 1}}：{{item.type| filterQuestionType}}
+          </td>
+        </tr>
+        <tr>
+          <td>题目{{item.question}}</td>
+        <td ng-if="item.type==2">
+            <div class="progress">
+              <div class="progress-bar progress-bar-success" role="progressbar"
+                   aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                   style="width:{{item.voteNums.length/item.totalVotes*100 || 0}}%;">
+                有效票数{{item.voteNums.length}}
+              </div>
+            </div>
+        </td>
+        </tr>
+        <tr >
+        <tr ng-if="item.type<2" ng-repeat='i in item.content track by $index'>
+          <td> {{i}}</td>
+          <td>
+            <div class="progress progress-striped">
+              <div class="{{$index | getProbarName}}" role="progressbar"
+                   aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
+                   style="width:{{item.voteNums[$index]/item.totalVotes*100 || 0}}%;">
+                 {{item.voteNums[$index]}} 票数
+              </div>
+             </div>
+          </td>
+        </tr>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</form>
+

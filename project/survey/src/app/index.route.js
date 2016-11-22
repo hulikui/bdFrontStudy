@@ -24,6 +24,11 @@ export function routerConfig ($stateProvider, $urlRouterProvider) {
       templateUrl: 'app/views/create.html',
       controller: 'CreateSurveyController',
       controllerAs: 'create'
+    }).state('showvotes', {
+      url: '/showvotes/:id',
+      templateUrl: 'app/views/showvotes.html',
+      controller: 'ShowVotesController',
+      controllerAs: 'votes'
     });
 
   $urlRouterProvider.otherwise('/');

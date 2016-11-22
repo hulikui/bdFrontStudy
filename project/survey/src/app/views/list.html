@@ -1,4 +1,26 @@
+<style>
+  .list_node:hover {
+    background-color: #FCF0E5 !important;
+  }
+  .selected {
+    background-color: #EE7419 !important;
+  }
+  .active {
+    color: #80E973;
+    font-weight: bold;
+    background: none !important;
+  }
+  .desc {
+    margin-top: 30px;
+    width: 50%;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: space-around;
+  }
 
+
+</style>
 
   <div class="leader">
     <h2 class="sub-header">问卷列表</h2>
@@ -7,41 +29,55 @@
       <table class="table width_his table-striped">
         <thead>
         <tr>
+          <th></th>
           <th >标题</th>
           <th >时间</th>
           <th >状态</th>
           <th >操作</th>
-          <th><button ui-sref="create">+ 新建问卷</button></th>
+          <th><button ui-sref="create" class="selected btn btn-default">+ 新建问卷</button></th>
         </tr>
         </thead>
         <tbody>
-        <tr ng-repeat='item in list.surveyData'>
+        <tr ng-init="item.selected=false; " ng-repeat='item in list.surveyData' class="list_node">
+          <td><input type="checkbox" name="{{item.id}}" id="{{item.id}}"  class="selected" ng-model="item.selected"></td>
           <td >{{item.title}}</td>
           <td >{{item.time | getFormatTime }}</td>
-          <td >{{item.state| filterSurveyType }}</td>
+          <td ng-class="{1:'active'}[item.state]">{{item.state| filterSurveyType }}</td>
           <td colspan="2">
-            <button ui-sref="create({id: item.id})">编辑</button>
-            <button ng-click="list.deleteSurvey(item.title, item.id)">删除</button>
+            <button  ui-sref="create({id: item.id})" ng-class="{true: 'selected btn btn-default', false: 'btn btn-default'}[item.selected]" name="{{item.id}}">编辑</button>
+            <button class="btn btn-default" ng-class="{true: 'selected btn btn-default', false: 'btn btn-default'}[item.selected]" ng-click="list.deleteSurvey(item.title, item.id)">删除</button>
             <script type="text/ng-template" id="deleteId">
-              <div class="modal-header" >
-                <h3 class="modal-title">确定删除 {{delete.items.title}} 吗？</h3>
-              </div>
-
-                <div class="desc">
-                  <button ng-click="delete.ok()">确定</button>
-                  <button ng-click="delete.cancel()">取消</button>
+              <div class="modal-content">
+                <div class="modal-header">
+                  <button type="button" class="close" ng-click="delete.cancel()" aria-hidden="true">
+                    &times;
+                  </button>
+                  <h4 class="modal-title" id="myModalLabel">
+                    提示
+                  </h4>
                 </div>
+                <div class="modal-body">
+                  确定删除 {{delete.items.title}} 吗？
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-info" ng-click="delete.cancel()">关闭
+                  </button>
+                  <button type="button" class="btn btn-danger" ng-click="delete.ok()">
+                    确认删除
+                  </button>
+                </div>
+              </div><!-- /.modal-content -->
             </script>
-            <button ui-sref="detail({id:item.id, state: item.state})">{{item.state| filterSurveyOperation}}</button>
+            <button class="btn btn-default "  ng-class="{true: 'selected btn btn-default', false: 'btn btn-default'}[item.selected]"  ng-click="list.detail(item.id,item.state)">{{item.state| filterSurveyOperation}}</button>
           </td>
         </tr>
         </tbody>
       </table>
-      <!--<div class="btn-group getpage" role="group" >-->
-        <!--<button type="button" class="btn btn-default" ng-disabled="table.page <= 1" ng-click="pre()">上一页</button>-->
-        <!--<button type="button" class="btn btn-default" style="background: #eee;">当前:{{table.page}}</button>-->
-        <!--<button type="button" class="btn btn-default" ng-disabled="table.page >= table.pageTotalNum" ng-click="next()">下一页</button>-->
-      <!--</div>-->
+      <div style="margin-left: 10px">
+        <input type="checkbox" ng-model="selectAll" ng-click="list.all(selectAll)" >全选
+        <button type="button" class="btn btn-danger" ng-click="list.deleteSelected()">所选删除</button>
+
+      </div>
     </div>
   </div>
 

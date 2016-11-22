@@ -3,11 +3,18 @@ var surveys = [];
 function getQuestions() {
   const questions = [];
   for(let i=0;i<10;i++){
+    const type = parseInt(Math.random()*3);
+    let voteNums = [0,0,0,0];
+    if(type == 2){
+      voteNums=[];
+    }
     const item = {
       id: i,
       question: '问题' + i,
-      type: parseInt(Math.random()*3),
-      content: ['选项一', '选项二', '选项三', '选项四']
+      type,
+      content: ['选项一', '选项二', '选项三', '选项四'],
+      voteNums,  //投票数
+      totalVotes: 0,
     };
     questions.push(item);
   }
@@ -50,12 +57,46 @@ function setData(data, id) {
   }
 
 }
-
-function setVote(data) {
-
+const votes= [];
+//id: i,
+//  question: '问题' + i,
+//  type,
+//  content: ['选项一', '选项二', '选项三', '选项四'],
+//  votes: []   //投票数
+function setVote(data, id) {
+  let index = 0;
+  surveys.forEach((item, i)=>{
+    if(id == item.id){
+      index = i;
+    }
+  });
+    data.map((item, a)=>{
+    const votes = surveys[index].questions[a].voteNums;
+    if(item.type == 0){
+      const vote_index = parseInt(item.votes);
+      const nums = votes[vote_index] || 0;
+      votes[vote_index] = nums + 1;
+      surveys[index].questions[a].totalVotes +=1.;
+    }else if(item.type == 1){
+      item.votes.forEach((item, i) => {
+        if(item){
+          const nums = votes[i] || 0;
+          votes[i] = nums+1;
+          surveys[index].questions[a].totalVotes +=1 ;
+        }
+      });
+    }else {
+      if(item.votes.length>1){
+        votes.push(item.votes);
+      }
+      surveys[index].questions[a].totalVotes +=1 ;
+    }
+  });
+  console.log('投票情况', surveys[index]);
 }
 
 export {
   getData,
-  setData
+  setData,
+  setVote
 }

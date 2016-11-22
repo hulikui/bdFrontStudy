@@ -6,7 +6,8 @@ export class DeTailController {
     this.surveyApi = surveyApi;
     this.$log = $log;
     this.$scope = $scope;
-    this.content = this.showQuestions($stateParams.id);
+    this.content = this.showQuestions($stateParams.id, $stateParams.state);
+    this.$state = $state;
     console.log('content', $stateParams);
   }
 
@@ -42,6 +43,8 @@ export class DeTailController {
   vote() {
     console.log('==============', this.$scope)
     console.log('this.content.questions',this.content.questions);
+    this.surveyApi.setSurveyVote(this.content.questions, this.content.id);
+    this.$state.go('showvotes',{id: this.content.id});
   }
   save() {
 

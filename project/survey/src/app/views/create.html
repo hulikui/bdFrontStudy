@@ -1,28 +1,48 @@
-
-
+<style>
+  .indisplay {
+    background-color: #F9F9F9;
+  }
+  .display {
+    background-color: white !important;
+  }
+  .add {
+    text-align: center;
+  }
+  .title {
+    width: 100%;
+    text-align: center;
+  }
+  table {
+    margin-top: 10px;
+  }
+</style>
 <div class="leader">
-  <form name="form" >
-  <h2 class="sub-header"><input type="text" placeholder="{{create.questObj.title}}" name="survey_title" ng-model="create.questObj.title"></h2>
-  <div class="table-responsive" style="border: 1px solid" ng-repeat="question in create.questions track by $index">
+  <form name="form"  novalidate>
+    <a href="http://www.cnblogs.com/rohelm/p/4033513.html"> 表单验证 案例</a>
+  <h2 class="sub-header form-group  has-feedback ">
+    <input class="title form-control" type="text" required placeholder="{{create.questObj.title || '这里是标题'}}" name="survey_title" ng-model="create.questObj.title">
+  <span class="glyphicon glyphicon-ok form-control-feedback"
+        ng-show="form.survey_title.$dirty && form.survey_title.$valid"></span>
+  </h2>
+  <div class="table-responsive" ng-repeat="question in create.questions track by $index">
     <radio-question ng-if="question.type==0 || question.type==1"  get-question="question"></radio-question>
     <text-Question ng-if="question.type==2" get-question="question" ></text-Question>
     </div>
   <div class="table-responsive">
-    <table class="table width_his table-striped">
-      <tr ng-if="create.typeDisplay">
-        <td><button ng-click="create.addRadio()">单选</button></td>
-        <td><button ng-click="create.addMuti()">多选</button></td>
-        <td><button ng-click="create.addText()">文本</button></td>
+    <table ng-init="display=false" class="table width_his table-striped" >
+      <tr class="add" ng-if="display" ng-class="{true:'display'}[display]">
+        <td><button ng-click="create.addRadio()" class="glyphicon glyphicon-record btn btn-default">单选</button></td>
+        <td><button ng-click="create.addMuti()" class="	glyphicon glyphicon-check btn btn-default">多选</button></td>
+        <td><button ng-click="create.addText()" class="glyphicon glyphicon-list-alt btn btn-default">文本</button></td>
       </tr>
-    <tr>
-      <td><a ng-click="create.showType()">+ 添加问题</a></td>
+    <tr class="add">
+      <td colspan="3" ng-class="{true:'indisplay'}[display]" ><a ng-click="display=!display" class="glyphicon glyphicon-plus btn btn-default">添加问题</a></td>
     </tr>
     </table>
-    <div class=" " role="group" >
-    <button type="button" class="btn btn-default"> 问卷截止日期</button>
-      <input type="date" name="endTime" ng-model="endTime">
-    <button type="submit" class="btn btn-default" style="background: #eee;" ng-click="create.add(0)">保存问卷</button>
-    <button type="submit" class="btn btn-default"  ng-click="create.add(1)" >发布问卷</button>
+    <label> 问卷截止日期</label> <input type="date" name="endTime"  min="create.minDate" ng-model="create.date" >
+    <div class="btn-group getpage" role="group" >
+    <button type="submit" class="btn btn-default" ng-disabled="form.$invalid" style="background: #eee;" ng-click="create.add(0)">保存问卷</button>
+    <button type="submit" class="btn btn-default"  ng-disabled="form.$invalid" ng-click="create.add(1)" >发布问卷</button>
     </div>
   </div>
     </form>

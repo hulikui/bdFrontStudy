@@ -9,7 +9,7 @@ function filterSurveyType(){
         output = '发布中';
         break;
       case 2:
-        output = '已发布';
+        output = '已结束';
         break;
       default:
         output = '未发布';
@@ -43,7 +43,7 @@ function filterSurveyOperation(){
     let output;
     switch (input){
       case 0:
-        output = '查看数据';
+        output = '查看问卷';
         break;
       case 1:
         output = '查看问卷';
@@ -96,4 +96,18 @@ function getInputName() {
   }
 }
 
-export { filterQuestionType, filterSurveyType, filterSurveyOperation, getFormatTime, getTagName, getInputName }
+function getProbarName() {
+  return function(index){
+    if( index == 0){//单选题
+      return 'progress-bar progress-bar-success';
+    }else if(index == 1){
+      return 'progress-bar progress-bar-info';
+    }else if(index==2){
+      return 'progress-bar progress-bar-warning';
+    }else {
+      return 'progress-bar progress-bar-danger';
+    }
+  }
+}
+
+export { filterQuestionType, filterSurveyType, filterSurveyOperation, getFormatTime, getTagName, getInputName, getProbarName }
