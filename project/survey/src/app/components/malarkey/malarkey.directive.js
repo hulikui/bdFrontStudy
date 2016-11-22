@@ -14,8 +14,7 @@ export function MalarkeyDirective(malarkey) {
 
   return directive;
 
-  function linkFunc(scope, el, attr, vm) {
-    let watcher;
+  function linkFunc(scope, el) {
     let typist = malarkey(el[0], {
       typeSpeed: 40,
       deleteSpeed: 40,
@@ -30,15 +29,6 @@ export function MalarkeyDirective(malarkey) {
       typist.type(value).pause().delete();
     });
 
-    watcher = scope.$watch('vm.contributors', () => {
-      angular.forEach(vm.contributors, (contributor) => {
-        typist.type(contributor.login).pause().delete();
-      });
-    });
-
-    scope.$on('$destroy', () => {
-      watcher();
-    });
   }
 
 }

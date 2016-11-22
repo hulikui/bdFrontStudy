@@ -26,7 +26,7 @@ export class MainController {
   }
 
   showToastr() {
-    this.toastr.info('Fork <a href="https://github.com/Swiip/generator-gulp-angular" target="_blank"><b>generator-gulp-angular</b></a>');
+    this.toastr.info('Fork Me<a href="https://github.com/hulikui/bdFrontStudy/tree/master/project/survey"><b>我的问卷</b></a>');
     this.classAnimation = '';
   }
 }

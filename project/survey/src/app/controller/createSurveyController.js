@@ -7,17 +7,15 @@ export class CreateSurveyController {
     this.$state = $state;
     this.$uibModal = $uibModal;
     this.$stateParams = $stateParams;
-    this.typeDisplay = false;
     this.date = new Date();
     this.minDate = new Date();
     this.questObj = this.showQuestions($stateParams.id);
     this.questions = this.questObj.questions || [];
     this.$scope = $scope;
-    console.log('fo11111111111rm' ,this.questObj);
+    this.$timeout=$timeout;
   }
 
   showQuestions(id) {
-    console.log('-------', id);
     this.surveyData = this.surveyApi.getSurveyData();
     let content = '';
     this.surveyData.forEach((item) => {
@@ -25,16 +23,36 @@ export class CreateSurveyController {
         content = item;
       }
     });
-    console.log('content', content);
     return content;
   }
 
-  showType() {
-    if(!this.typeDisplay){
-      this.typeDisplay = true;
-    }else{
-      this.typeDisplay = false;
-    }
+  delete(id) {
+   this.questions.splice(id,1);
+  }
+  copy(id) {
+    this.questions.push(this.questions[id]);
+  }
+  up(id){
+    const cur=this.questions[id];
+    const pre=this.questions[id-1];
+    this.$timeout(()=>{
+      this.questions[id]=pre;
+      this.questions[id-1]=cur;
+      this.questions[id].id = id;
+      this.questions[id-1].id = id-1;
+    });
+
+  }
+  down(id){
+    const cur=this.questions[id];
+    const next=this.questions[id+1];
+      this.$timeout(()=>{
+        this.questions[id]=next;
+        this.questions[id+1] = cur;
+        this.questions[id].id = id;
+        this.questions[id+1].id = id+1;
+      }, 400);
+
   }
   addRadio() {
     const obj = {
@@ -63,15 +81,14 @@ export class CreateSurveyController {
     };
     this.questions.push(obj);
   }
-  getFormData(formData, id){
-    console.log('===============', id);
+  getFormData(formData, state, id){
     const survey = {
       id,
       title: formData.survey_title.$modelValue,
       time: new Date(),
       endTime: this.date,
       questions: [],
-      state: 1,
+      state
     };
     for (let item in formData) {
         const obj = item.split('_');
@@ -86,7 +103,7 @@ export class CreateSurveyController {
             question: value.$modelValue,
             content: [],
             voteNums: [0, 0, 0, 0],
-            totalVotes: 0,
+            totalVotes: 0
           };
           if(type == 2 ) question.voteNums = [];
           survey.questions[id] = question;
@@ -99,7 +116,7 @@ export class CreateSurveyController {
             question: '',
             content: [],
             voteNums: [0,0,0,0],
-            totalVotes: 0,
+            totalVotes: 0
           };
           if(type == 2 ) question.voteNums = [];
           question.content.push(value.$modelValue);
@@ -108,18 +125,17 @@ export class CreateSurveyController {
           survey.questions[id].content.push(value.$modelValue);
         }
     }
-    console.log('getformData', survey);
     return survey;
   }
   add(state) {
-    console.log('=====submit====', this.$scope.form);//name 表示 index_type_title
-
+    if(this.date.getDay() <= this.minDate.getDay()){
+      this.showToastr('截止日期小于当前天', 0);
+      return;
+    }
     const form = this.$scope.form;
     const surveys = this.surveyApi.getSurveyData();
     const id = this.$stateParams.id || surveys[surveys.length-1].id + 1;
-    console.log('=====id========', this.$stateParams.id, surveys[surveys.length-1].id + 1, id);
-    const survey = this.getFormData(form, id);
-    console.log('=====surveysurvey===', survey);
+    const survey = this.getFormData(form, state, id);
     if(survey.questions.length>0){
 
         this.surveyApi.setSurveyData(survey, id);
@@ -131,21 +147,9 @@ export class CreateSurveyController {
       this.$state.go('list');
     }else{
       this.showToastr('请选择问题类型并填写', 0);
+      return;
     }
 
-    // const item = {
-    //   id: i,
-    //   title: '这是我的第' + i + '份问卷',
-    //   time: GetNowDateTime(new Date()),
-    //   state: parseInt(Math.random() * 3),
-    //   questions: {
-    //     id: i,
-    //     question: '问题' + i,
-    //     type: parseInt(Math.random() * 3),
-    //     content: ['选项一', '选项二', '选项三', '选项四']
-    //   }
-    //
-    // };
   }
   showToastr(message, type) {
     if(type == 0){

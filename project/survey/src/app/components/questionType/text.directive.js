@@ -20,7 +20,7 @@ export function TextDirective() {
 }
 
 class TextController {
-  constructor(moment) {
+  constructor() {
     'ngInject';
     this.count = 0;
     //获取界面单选题数据

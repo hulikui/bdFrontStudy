@@ -8,11 +8,9 @@ export class DeTailController {
     this.$scope = $scope;
     this.content = this.showQuestions($stateParams.id, $stateParams.state);
     this.$state = $state;
-    console.log('content', $stateParams);
   }
 
-  showQuestions(id, status) {
-    console.log('-------', id);
+  showQuestions(id) {
     this.surveyData = this.surveyApi.getSurveyData();
     let content = [];
     this.surveyData.forEach((item) => {
@@ -20,10 +18,6 @@ export class DeTailController {
         content = item;
       }
     });
-    // id,
-    //   type: parseInt(obj[1]),
-    //   question: '',
-    //   content: []
     content.questions.forEach((item) =>{
       if(item.type == 0 ){
         item.votes = 0;
@@ -37,20 +31,12 @@ export class DeTailController {
     });
     return content;
   }
-  change(el) {
-    console.log('========',this.$scope,el);
-  }
   vote() {
-    console.log('==============', this.$scope)
-    console.log('this.content.questions',this.content.questions);
     this.surveyApi.setSurveyVote(this.content.questions, this.content.id);
-    this.$state.go('showvotes',{id: this.content.id});
-  }
-  save() {
-
+    this.showToastr();
   }
   showToastr() {
-    this.toastr.info('Fork <a href="https://github.com/Swiip/generator-gulp-angular" target="_blank"><b>generator-gulp-angular</b></a>');
+    this.toastr.success('<p>投票成功</p>');
     this.classAnimation = '';
   }
 }

@@ -7,11 +7,9 @@ export class ShowVotesController {
     this.$log = $log;
     this.$scope = $scope;
     this.content = this.showQuestions($stateParams.id);
-    console.log('content', $stateParams);
   }
 
-  showQuestions(id, status) {
-    console.log('-------', id);
+  showQuestions(id) {
     this.surveyData = this.surveyApi.getSurveyData();
     let content = [];
     this.surveyData.forEach((item) => {
@@ -20,9 +18,5 @@ export class ShowVotesController {
       }
     });
     return content;
-  }
-  showToastr() {
-    this.toastr.info('Fork <a href="https://github.com/Swiip/generator-gulp-angular" target="_blank"><b>generator-gulp-angular</b></a>');
-    this.classAnimation = '';
   }
 }

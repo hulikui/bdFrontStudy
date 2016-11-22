@@ -18,7 +18,6 @@ export class SurveyListController {
     if(selectedId.length>0) this.deleteSurvey('所选选项', selectedId);
   }
   all(isSelected) {
-    console.log(isSelected, this.surveyData);
     if(isSelected){
       this.surveyData.forEach((survey)=> {
         survey.selected = true;
@@ -31,7 +30,6 @@ export class SurveyListController {
   }
 
   showQuestions(id) {
-    this.$log.info('===detail==', id);
     this.surveyData.forEach((item) => {
       if(item.id == id){
         this.state.go('detail',{id: id});
@@ -49,7 +47,6 @@ export class SurveyListController {
     const $scope = this;
     $scope.id = id;
     $scope.title = title;
-    //this.$log.info('====', this.surveyData);
   var modalInstance = this.$uibModal.open({
     templateUrl: 'deleteId',
     controller: 'DeleteSurveyController',
@@ -67,11 +64,9 @@ export class SurveyListController {
     $scope.$log.info(modalInstance);
   modalInstance.result.then(function(deleteId) {
     $scope.selected = deleteId;
-    console.log('选择删除的Id为:', $scope.surveyData);
     if(deleteId instanceof Array) {
       deleteId.forEach((id)=>{
         $scope.surveyData.forEach((item, index) => {
-            console.log(item.id , id);
             if(item.id == id){
               $scope.surveyData.splice(index, 1);
               $scope.showToastr('删除问卷成功!' ,1)
@@ -88,9 +83,9 @@ export class SurveyListController {
     }
 
   }, function() {
-      console.log('===========', $scope.selected);
+
     });
-  };
+  }
   showToastr(messsge, type) {
     if(type==0){
     this.toastr.info('<p>'+messsge+'</p>');

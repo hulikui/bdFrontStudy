@@ -63,6 +63,18 @@ export class WebDevTecService {
         'url': 'http://haml.info/',
         'description': 'Beautiful, DRY, well-indented, clear markup: templating haiku.',
         'logo': 'haml.png'
+      },
+      {
+        'title': '弹出层UIModel插件',
+        'url': 'https://my.oschina.net/codingBingo/blog/715869',
+        'description': 'ui.boostrap.tlps.',
+        'logo': 'bootstrap.png'
+      },
+      {
+        'title': 'Angular表单验证常用方法',
+        'url': 'http://www.cnblogs.com/rohelm/p/4033513.html',
+        'description': 'Angular表单验证常用方法',
+        'logo': 'ui-bootstrap.png'
       }
     ];
   }

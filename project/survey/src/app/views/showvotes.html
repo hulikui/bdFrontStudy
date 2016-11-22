@@ -21,8 +21,8 @@
               <div class="progress-bar progress-bar-success" role="progressbar"
                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
                    style="width:{{item.voteNums.length/item.totalVotes*100 || 0}}%;">
-                有效票数{{item.voteNums.length}}
               </div>
+              有效票数{{item.voteNums.length}}
             </div>
         </td>
         </tr>
@@ -34,8 +34,9 @@
               <div class="{{$index | getProbarName}}" role="progressbar"
                    aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"
                    style="width:{{item.voteNums[$index]/item.totalVotes*100 || 0}}%;">
-                 {{item.voteNums[$index]}} 票数
+
               </div>
+              {{item.voteNums[$index]}} 票数
              </div>
           </td>
         </tr>

@@ -12,21 +12,33 @@
     width: 100%;
     text-align: center;
   }
+  .hig_light:hover {
+    background-color: #FCF0E5;
+  }
   table {
     margin-top: 10px;
+  }
+  .operation {
+    text-align: right;
+    padding-right: 30px;
   }
 </style>
 <div class="leader">
   <form name="form"  novalidate>
-    <a href="http://www.cnblogs.com/rohelm/p/4033513.html"> 表单验证 案例</a>
   <h2 class="sub-header form-group  has-feedback ">
-    <input class="title form-control" type="text" required placeholder="{{create.questObj.title || '这里是标题'}}" name="survey_title" ng-model="create.questObj.title">
+    <input class="title form-control hig_light" type="text" required placeholder="{{create.questObj.title || '这里是标题'}}" name="survey_title" ng-model="create.questObj.title">
   <span class="glyphicon glyphicon-ok form-control-feedback"
         ng-show="form.survey_title.$dirty && form.survey_title.$valid"></span>
   </h2>
-  <div class="table-responsive" ng-repeat="question in create.questions track by $index">
+  <div class="table-responsive hig_light" ng-repeat="question in create.questions track by $index">
     <radio-question ng-if="question.type==0 || question.type==1"  get-question="question"></radio-question>
     <text-Question ng-if="question.type==2" get-question="question" ></text-Question>
+    <div ng-if="$index!=0 && $index!=create.questions.length-1" class="operation">
+      <button class="btn btn-info" ng-click="create.up($index)">上移</button>
+      <button class="btn btn-info" ng-click="create.down($index)">下移</button>
+      <button class="btn btn-info" ng-click="create.copy($index)">复用</button>
+      <button class="btn btn-info" ng-click="create.delete($index)" >删除</button>
+    </div>
     </div>
   <div class="table-responsive">
     <table ng-init="display=false" class="table width_his table-striped" >
@@ -39,7 +51,7 @@
       <td colspan="3" ng-class="{true:'indisplay'}[display]" ><a ng-click="display=!display" class="glyphicon glyphicon-plus btn btn-default">添加问题</a></td>
     </tr>
     </table>
-    <label> 问卷截止日期</label> <input type="date" name="endTime"  min="create.minDate" ng-model="create.date" >
+    <label> 问卷截止日期</label> <input type="date" name="endTime"  ng-model="create.date" >
     <div class="btn-group getpage" role="group" >
     <button type="submit" class="btn btn-default" ng-disabled="form.$invalid" style="background: #eee;" ng-click="create.add(0)">保存问卷</button>
     <button type="submit" class="btn btn-default"  ng-disabled="form.$invalid" ng-click="create.add(1)" >发布问卷</button>

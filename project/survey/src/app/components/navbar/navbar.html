@@ -1,17 +1,18 @@
 <nav class="navbar navbar-static-top navbar-inverse nav_back">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" ui-sref="list" >
+      <a class="navbar-brand" href="#" >
         <span class="glyphicon glyphicon-question-sign"></span> 问卷调查
+      </a>
+      <a class="navbar-brand" ui-sref="list" >
+        <span class="glyphicon glyphicon-plus"></span> 我的问卷
+      </a>
+      <a class="navbar-brand" href="https://github.com/hulikui/bdFrontStudy" >
+        <span class="glyphicon glyphicon-user"></span> 关于我
       </a>
     </div>
 
-    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-6">
-      <ul class="nav navbar-nav">
-        <li><a ui-sref="list">我的问卷</a></li>
-        <li><a href="https://github.com/hulikui/bdFrontStudy">关于</a></li>
-      </ul>
-
+    <div class="collapse  navbar-collapse" id="bs-example-navbar-collapse-6">
       <ul class="nav navbar-nav navbar-right acme-navbar-text">
         <li>Application was created {{ vm.relativeDate }}.</li>
       </ul>
