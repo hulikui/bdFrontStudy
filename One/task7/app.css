@@ -16,7 +16,12 @@ nav {
   font-weight: bold;
   font-family: "Microsoft YaHei";
 }
-
+datalist {
+  background-color: #5a5b5b;
+}
+datalist:hover {
+  background-color: #843534;
+}
 .nav {
   float: right;
   height: 60px;

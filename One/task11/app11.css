@@ -3,23 +3,20 @@ body {
     padding: 0px;
 }
 .title {
-    display: flex;
-    flex-flow: row wrap;
-    justify-content: flex-start;
+    color: white;
+    font-weight: bold;
     height: 40px;
     background-color: lime;
+    position: relative;
+    line-height: 40px;
+
 }
 .back {
-    margin-left: 2px;
-    margin-bottom: auto;
-    margin-top: auto;
+    position: absolute;
 }
 
 .article {
-    margin-left: 28%;
-    margin-bottom: auto;
-    margin-top: auto;
-    color: white;
+    text-align: center;
 }
 
 .nav {

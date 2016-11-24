@@ -137,6 +137,7 @@ article {
   font-family: "Microsoft YaHei";
   padding: 10px 0;
   font-size:24px;
+  text-decoration:underline;
 }
 .tech {
   color:#676767;
@@ -189,9 +190,10 @@ article {
   font-size: 42px;
   color:#11456b;
 }
-.e_font:first-letter {
-  font-size:72px;
-  color:#f5e327;
+.e_font:before{
+  content: 'THE';
+  color: #f5e327;
+  font-size: 72px;
 }
 
 .c_font {
