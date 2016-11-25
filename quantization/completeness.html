@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>ECharts</title>
+    <!-- 引入 echarts.js -->
+    <script src="echarts.common.min.js"></script>
+</head>
+<body>
+<!-- 为ECharts准备一个具备大小（宽高）的Dom -->
+<div id="main" style="width: 600px;height:400px;"></div>
+<div id="content" style="width: 600px;height:400px;"></div>
+<div id="language" style="width: 600px;height: 400px;"> </div>
+<script type="text/javascript">
+    // 基于准备好的dom，初始化echarts实例
+    var myChart = echarts.init(document.getElementById('main'));
+
+    // 指定图表的配置项和数据
+    myChart.title = '嵌套环形图';
+
+    var option = {
+        title:{
+            text: '百度前端学院tsak完成情况',
+            subtext: '逐步完善中',
+            x:'center'
+        },
+        tooltip: {
+            trigger: 'item',
+            formatter: "{a} <br/>{b}: {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            x: 'left',
+            data:['直达','营销广告','搜索引擎','邮件营销','联盟广告','视频广告','百度','谷歌','必应','其他']
+        },
+        series: [
+            {
+                name:'访问来源',
+                type:'pie',
+                selectedMode: 'single',
+                radius: [0, '30%'],
+
+                label: {
+                    normal: {
+                        position: 'inner'
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        show: false
+                    }
+                },
+                data:[
+                    {value:3, name:'项目', selected:true},
+                    {value:13, name:'ui'},
+                    {value:24, name:'js'},
+                    {value:12, name:'html5'}
+                ]
+            },
+            {
+                name:'task数目',
+                type:'pie',
+                radius: ['40%', '55%'],
+
+                data:[
+                    {value:2, name:'项目完成数'},
+                    {value:1, name:'项目未完成数'},
+                    {value:11, name:'UI完成数'},
+                    {value:2, name:'UI未完成数'},
+                    {value:21, name:'JS完成数'},
+                    {value:3, name:'JS未完成数'},
+                    {value:10, name:'html5完成数'},
+                    {value:2, name:'html5未完成数'}
+
+                ]
+            }
+        ]
+    };
+
+    // 使用刚指定的配置项和数据显示图表。
+    myChart.setOption(option);
+
+    var content = echarts.init(document.getElementById('content'));
+
+    // 指定图表的配置项和数据
+    content.title = '环形图';
+
+
+    var coption = {
+        title : {
+            text: '实习工作内容',
+            subtext: '时间',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left',
+            data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+        },
+        series : [
+            {
+                name: '时间占比',
+                type: 'pie',
+                radius : '55%',
+                center: ['50%', '60%'],
+                data:[
+                    {value:3, name:'gulp'},
+                    {value:20, name:'es5'},
+                    {value:50, name:'es6'},
+                    {value:10, name:'mocha'},
+                    {value:20, name:'sequelize'},
+                    {value:5, name:'boostrap+angular'}
+                ],
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+
+    content.setOption(coption);
+
+    var language = echarts.init(document.getElementById('language'));
+
+    var loption = {
+
+        title: {
+            text: '编程语言结构图',
+            left: 'center',
+            top: 20,
+            textStyle: {
+                color: '#ccc'
+            }
+        },
+
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+
+        visualMap: {
+            show: false,
+            min: 1,
+            max: 400,
+            inRange: {
+                colorLightness: [0, 1]
+            }
+        },
+        series : [
+            {
+                name:'时间占比',
+                type:'pie',
+                radius : '55%',
+                center: ['50%', '50%'],
+                data:[
+                    {value:60, name:'JAVA'},
+                    {value:10, name:'css3'},
+                    {value:5, name:'HTML5'},
+                    {value:20, name:'javascript'},
+                    {value:160, name:'es6'}
+                ].sort(function (a, b) { return a.value - b.value}),
+                roseType: 'angle',
+                label: {
+                    normal: {
+                        textStyle: {
+                            color: 'rgba(255, 255, 255)'
+                        }
+                    }
+                },
+                labelLine: {
+                    normal: {
+                        lineStyle: {
+                            color: 'rgba(255, 255, 255)'
+                        },
+                        smooth: 0.2,
+                        length: 10,
+                        length2: 20
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#c23531',
+                        shadowBlur: 200,
+                        shadowColor: 'rgba(0, 0, 0)'
+                    }
+                }
+            }
+        ]
+    };
+    language.setOption(loption);
+</script>
+</body>
+</html>

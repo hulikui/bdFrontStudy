@@ -1,0 +1,173 @@
+table tr:nth-child(2n+1) {
+    background:#00CCFF;
+}
+table tr:nth-child(2n) {
+    background:#FFCC00;
+}
+table th {
+    background-color: black;
+    color: aliceblue;
+}
+table tr:nth-child(2), table tr:nth-child(3), table tr:nth-child(4) {
+    color: red;
+}
+@keyframes myfocus
+{
+    from {width: 150px}
+    to {width:200px;}
+}
+
+input:focus {
+    width: 200px;
+}
+
+input:hover {
+    border: 2px solid royalblue;
+    border-radius:10px;
+    animation:myfocus 5s infinite;
+
+}
+.ban {
+    height: 100px;
+    width: 180px;
+    background-color: #00CCFF;
+    position: relative;
+}
+.rb {
+    font-size: 8px;
+    width: 60px;
+    height: 20px;
+    bottom: 1px;
+    right: 0px;
+    position: absolute;
+}
+.b {
+    float: left;
+    width: 19px;
+    height: 20px;
+    line-height: 20px;
+    background-color: white;
+    opacity: 0.5;
+    text-align: center;
+    margin-left:1px;
+}
+
+* {
+    margin:0;
+    padding:0;
+}
+
+ul {
+    list-style:none;
+}
+
+#wrap {
+    position:relative;
+    width:600px;
+    height:400px;
+    margin:30px auto;
+    border:1px solid #9cc5ef;
+    overflow:hidden;
+}
+
+#slider {
+    width:300%;
+    height:100%;
+    font:100px/400px Microsoft Yahei;
+    text-align:center;
+    color:#fff;
+    margin-left:0;
+    -webkit-animation:slide1 3s ease-out infinite;
+}
+
+#slider li {
+    float:left;
+    width:600px;
+    height:100%;
+}
+
+#slider li:nth-child(1) {
+    background:#6bacef;
+}
+
+#slider li:nth-child(2) {
+    background:#297cd3;
+}
+
+#slider li:nth-child(3) {
+    background:#01254a;
+}
+
+/*创建三种动画策略*/
+@-webkit-keyframes slide1 {
+    0% { margin-left:0;}
+    23% { margin-left:0;}
+    33% { margin-left:-600px;}
+    56% { margin-left:-600px;}
+    66% { margin-left:-1200px;}
+    90% { margin-left:-1200px;}
+    100% {margin-left:0;}
+}
+
+@-webkit-keyframes slide2 {
+    0% { margin-left:-600px;}
+    23% { margin-left:-600px;}
+    33% { margin-left:-1200px;}
+    56% { margin-left:-1200px;}
+    66% { margin-left:0;}
+    90% { margin-left:0;}
+    100% {margin-left:-600px;}
+}
+
+@-webkit-keyframes slide3 {
+    0% { margin-left:-1200px;}
+    23% { margin-left:-1200px;}
+    33% { margin-left:0;}
+    56% { margin-left:0;}
+    66% { margin-left:-600px;}
+    90% { margin-left:-600px;}
+    100% {margin-left:-1200px;}
+}
+#opts {
+    position: absolute;
+    width:312px;
+    height:40px;
+    bottom: 0px;
+    right: 0px;
+    color:#fff;
+    text-align:center;
+    opacity: 0.3;
+    font:20px/40px Microsoft Yahei;
+}
+
+#opts label {
+    float:left;
+    width:100px;
+    height:40px;
+    margin-right:4px;
+    background-color:black;
+    cursor:pointer;
+}
+
+#opts label:hover {
+    background:#405871;
+}
+
+/*隐藏Input按钮*/
+#l01, #l02, #l03 {
+    display:none;
+}
+
+/*修改动画名称*/
+#l01:hover ~ #wrap #slider {
+    -webkit-animation-name:slide1;
+}
+
+#l02:hover ~ #wrap #slider {
+    -webkit-animation-name:slide2;
+}
+
+#l03:hover ~ #wrap #slider {
+    -webkit-animation-name:slide3;
+}
+

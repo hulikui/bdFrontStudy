@@ -1,17 +1,10 @@
 .container {
-  -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
   padding: 10px;
   width: 100%;
   border: 1px solid #999;
-  display: inline-block;
 }
 div[class^="col-"] {
   display: block;
-  -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-         box-sizing: border-box;
   margin: 10px;
   border: 1px solid #999;
   float: left;
