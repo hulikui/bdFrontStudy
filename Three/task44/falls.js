@@ -1,15 +1,65 @@
 var isShowed = false;
-function showPhoto(obj) {
+
+function getWHdiff(contain, img) {
+    var wdiff = img.width-contain.width*img.height/contain.height;
+    var hdiff=0;
+    var styles;
+    wdiff = parseInt(wdiff);
+    if(wdiff<0){//高度不够,以宽度对齐缩放，高度溢出
+        hdiff = img.height-contain.height*img.width/contain.width;
+        hdiff = parseInt(hdiff);
+        var height = img.height*contain.width/img.width;
+        var hdiff = height-contain.height;
+        styles={
+            width: contain.width,
+            height: height,
+            marginTop: -hdiff/2
+        }
+    }else if(wdiff == 0){//证明比例一致
+        styles = {
+            width: '100%',
+            height: '100%'
+        }
+    }else{//以相框高度为齐缩放,宽度溢出
+        var width = img.width*contain.height/img.height;
+        var wdiff = width -contain.width;
+        styles = {
+            width: width,
+            height: contain.height,
+            marginLeft: -wdiff/2
+        }
+    }
+    return styles;
+}
+
+var orginImgStyle = {
+
+};
+function showPhoto(img) {
     var light = document.getElementsByClassName('white_content')[0];
     var fade = document.getElementsByClassName('black_overlay')[0];
+    var focusStyle = {
+        width: '100%',
+        height: '100%',
+    };
+     function setStyles(obj, styles) {
+        for (var style in styles) {
+            obj['style'][style] = styles[style];
+        }
+    }
 
     if(!isShowed){
         isShowed = true;
+        var lightImg = document.createElement('IMG');
+        lightImg.src = img.src;
+        setStyles(lightImg, focusStyle);
         fade.style.display = 'block';
-        light.innerHTML = obj.innerHTML;
+        light.appendChild(lightImg);
         light.style.display = 'block';
     } else {
         isShowed = false;
+        setStyles(img, orginImgStyle);
+        light.innerHTML = '';
         fade.style.display = 'none';
         light.style.display = 'none';
     }
@@ -59,11 +109,10 @@ function PFrame() {
     };
     this.createFrame = function(option) { //生成框架,默认四列
         option = option || this.options;
-        var cols = option.cols || 4;
         var frame = document.createElement('DIV');
         option.className = 'fall_cols';
         var width = option.width;
-        var col_width = (width - option.padding*(cols + 1)) / cols;
+        var col_width = option.col_width;
         this.options.col_width = col_width;
         var styles = {
             width: width,
@@ -93,13 +142,21 @@ function PFrame() {
     this.getStyle = function(dom, attr){
         return dom.currentStyle ? dom.currentStyle[attr] : getComputedStyle(dom, false)[attr];
     };
-    this.getPhotoStyles = function(target) {
+    this.getPhotoStyles = function(target, width) {
 
         return Array.prototype.map.call(target.children, function(node){
-            return {
-                height: node.style.height,
-                src: node.src
-            }
+            var contain = {
+                width: width,
+                height: node.offsetHeight
+            };
+            var img = {
+                width:node.naturalWidth,
+                height: node.naturalHeight
+            };
+
+            var imgStyles = getWHdiff(contain, img);
+            imgStyles.src = node.src;
+            return imgStyles;
         });
 
     };
@@ -158,12 +215,13 @@ PFrame.prototype.generatePhoto = function(target, imgObjs) {//我只需要知道你的高
     var obj = {
         frameObj: {
             attr: {
-                onmousedown: "showPhoto(this)"
+
             },
             styles: {
                 width: col_width || 500,
                 height: '150px',
-                marginBottom: '16px'
+                marginBottom: '16px',
+                overflow: 'hidden'
             }
         },
         innerObj: {
@@ -174,6 +232,7 @@ PFrame.prototype.generatePhoto = function(target, imgObjs) {//我只需要知道你的高
                 width: "100%",
                 height: '100%'
             }
+
         }
     };
     for(var i=0; i<imgObjs.length;i++){
@@ -182,27 +241,40 @@ PFrame.prototype.generatePhoto = function(target, imgObjs) {//我只需要知道你的高
         obj.frameObj.styles.height = height;
         obj.innerObj.attr.src = src;
         obj.innerObj.attr.alt = i;
+        obj.innerObj.styles = imgObjs[i];
         this.addPhoto(obj);
     }
 };
 
 PFrame.prototype.getFallsOptions = function(){
     var nodes = document.querySelectorAll('div[class^="falls"]');
+    console.log(nodes);
     var context = this;
     return Array.prototype.map.call(nodes, function(node){
-        var imgs = context.getPhotoStyles(node);
+        node.addEventListener("click", function(e){
+            console.log(e.target.tagName)
+            if(e.target.tagName == 'IMG'){
+                showPhoto(e.target);
+            }
+        });
         var padding = parseInt(context.getStyle(node, 'padding').split('px')[0]);
-        var cols = parseInt(node.className.split('_')[1]);
+        var cols = parseInt(node.className.split('_')[1]) || 4;
+        var col_width = (node.offsetWidth - padding*(cols + 1)) / cols;
+        var imgs = context.getPhotoStyles(node, col_width);
         return {
             node: node,
             width: node.offsetWidth,
             height: node.offsetHeight,
             padding: padding,
+            col_width: col_width,
             cols: cols,
             imgs: imgs
         };
     });
 };
+function click(obj){
+    console.log('click', obj);
+}
 (function() {
     addPhotoShade();
     var pfs = new PFrame();
