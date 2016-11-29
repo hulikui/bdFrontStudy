@@ -29,6 +29,139 @@ function getWHdiff(contain, img) {
    }
     return styles;
 }
+
+function getFrameStyle(frameObj, nums) {
+    var width = frameObj.width;
+    var height = frameObj.height;
+    var innerFrameStyles = []; //套在图片外层的div样式
+    var outterFrameStyle = [];//关乎图像布局的div样式
+    var frameStyle = { //相册的style
+        width: width,
+        height: height,
+        display: 'flex'
+    };
+    var left_width = width/2;
+    var right_width = height/2;
+    var min_height = height/3;
+    if(nums == 1){
+        frameStyle.overflow = 'hidden';
+    }else if (nums == 2) {
+        frameStyle.display = '';
+        frameStyle.position = 'relative';
+
+    }else if(nums == 3) {
+        left_width = width - height/2;
+        innerFrameStyles = [{
+            width:left_width,
+            height: height,
+            overflow: 'hidden'
+        }, {
+            width: right_width,
+            height: right_width,
+            overflow: 'hidden'
+        },{
+            width: right_width,
+            height: right_width,
+            overflow: 'hidden'
+        }];
+    }else if(nums == 4){
+        frameStyle.flexWrap='wrap';
+        innerFrameStyles = {
+            width: left_width,
+            height: right_width,
+            overflow: 'hidden'
+        };
+    }else if(nums == 5){
+        left_width = width*2/3;
+        right_width = width/3;
+        innerFrameStyles=[{
+            width: left_width,
+            height: min_height*2,
+            overflow: 'hidden'
+        },{
+            width: left_width/2,
+            height: min_height,
+            overflow: 'hidden'
+        },{
+            width: left_width/2,
+            height: min_height,
+            overflow: 'hidden'
+        },{
+            width: right_width,
+            height: width/3,
+            overflow: 'hidden'
+        },{
+            width: right_width,
+            height: height-right_width,
+            overflow: 'hidden'
+        }];
+        outterFrameStyle = {
+            width: left_width,
+            height: min_height,
+            display: 'flex'
+        };
+    }else if(nums == 6){
+        left_width = width*2/3;
+        right_width = width/3;
+        innerFrameStyles = [{
+            width: left_width,
+            height: min_height*2,
+            overflow: 'hidden'
+        },{
+            width: left_width/2,
+            height: min_height,
+            overflow: 'hidden'
+        },{
+            width: left_width/2,
+            height: min_height,
+            overflow: 'hidden'
+        },{
+            width: right_width,
+            height: min_height,
+            overflow: 'hidden'
+        },{
+            width: right_width,
+            height: min_height,
+            overflow: 'hidden'
+        },{
+            width: right_width,
+            height: min_height,
+            overflow: 'hidden'
+        }];
+        outterFrameStyle = {
+            width: left_width,
+            height: min_height,
+            display: 'flex'
+        };
+    }
+
+    return {
+        innerFrameStyles: innerFrameStyles, //套在图片外层的div样式
+        outterFrameStyle: outterFrameStyle, //关乎图像布局的div样式
+        frameStyle: frameStyle              //相册最外层样式
+    };
+
+}
+// 获取图片样式
+function getImgStyles(imgs, contain) {
+
+    return Array.prototype.map.call(imgs, function(img, index){
+        var container = contain;
+        if(imgs.length>2 && imgs.length!=4){
+            container = contain[index];
+        }
+        var imgStyle = getWHdiff(container, {
+            width: img.naturalWidth,
+            height: img.naturalHeight
+        });
+        if(imgs.length == 2){
+            imgStyle.position = 'absolute';
+        }
+
+        return imgStyle;
+    });
+}
+
 function PFrame() {//定义高度和宽度
     this.setStyles = function (obj, styles) {
         for (var style in styles) {
@@ -59,10 +192,14 @@ function PFrame() {//定义高度和宽度
         if (innerObjs.sameNums) {
             for (var i = 0; i < innerObjs.sameNums.length; i++) {
                 var box = document.createElement('DIV');
-                this.setStyles(box, innerObjs.obj.styles);
+                this.setStyles(box, innerObjs.obj.innerFrameStyle);
                 if (innerObjs.obj.attr) {
                     this.setAttr(box, innerObjs.obj.attr);
                 }
+                if(innerObjs.obj.imgStyle){
+                    this.setStyles(innerObjs.sameNums[i], innerObjs.obj.imgStyle);
+                }
+
                 box.appendChild(innerObjs.sameNums[i]);
 
                 frame.appendChild(box);
@@ -70,14 +207,20 @@ function PFrame() {//定义高度和宽度
         } else {
             for (var obj in innerObjs) {
                 if (innerObjs[obj].innerObj) {//若有子模块递归生成
-                    var box = this.createChildFrame(innerObjs[obj].styles, innerObjs[obj].innerObj);
+                    var box = this.createChildFrame(innerObjs[obj].innerFrameStyle, innerObjs[obj].innerObj);
                 } else {
                     var box = document.createElement('DIV');
-                    this.setStyles(box, innerObjs[obj].styles);//相框属性
+                    this.setStyles(box, innerObjs[obj].innerFrameStyle);//相框属性
                     if (innerObjs[obj].attr) {
                         this.setAttr(box, innerObjs[obj].attr);
                     }
                     if (innerObjs[obj].img) {
+                        if(innerObjs[obj].imgAttr){
+                            this.setAttr(innerObjs[obj].img, innerObjs[obj].imgAttr);
+                        }
+                        if(innerObjs[obj].imgStyle){
+                            this.setStyles(innerObjs[obj].img, innerObjs[obj].imgStyle);
+                        }
                         box.appendChild(innerObjs[obj].img);
                     }
                 }
@@ -90,97 +233,87 @@ function PFrame() {//定义高度和宽度
 }
 
 PFrame.prototype.convertOne = function(obj_1){
-    var img = obj_1.children[0];
-    var contain_wh = {
+    var img = obj_1.children;
+    var contain = {
         width: obj_1.offsetWidth,
-        height: obj_1.offsetHeight
+        height: obj_1.offsetHeight,
     };
-    var img_wh ={
-        width: img.naturalWidth,
-        height: img.naturalHeight
+    var imgStyles = getImgStyles(img, contain);
+    var frameStyles = getFrameStyle(contain, 1);
+    var innerObjs = {
+        obj: {
+            innerFrameStyle: '',
+            imgStyle: imgStyles[0],
+            img: img[0]
+        }
     };
-    var styles = getWHdiff(contain_wh, img_wh);
-    this.setStyles(img, styles);
+    var father_frame = this.createChildFrame(frameStyles.frameStyle, innerObjs);
+    obj_1.innerHTML="";
+    obj_1.appendChild(father_frame);
 
 };
 PFrame.prototype.convertTwo = function(obj_2){
     var imgs = obj_2.children;
-    obj_2.style.position ="relative";
-    var contain_wh = {
+    var contain = {
         width: obj_2.offsetWidth,
-        height: obj_2.offsetHeight
+        height: obj_2.offsetHeight,
     };
-    var img0_wh ={
-        width: imgs[0].naturalWidth,
-        height: imgs[0].naturalHeight
+    var imgAttrs = ['left_tx', 'right_tx'];//img 属性
+    var imgStyles = getImgStyles(imgs, contain);
+    var innerObjs = {
+        obj1: {
+            img: imgs[0],
+            imgAttr: {
+                className: imgAttrs[0]
+            },
+            imgStyle: imgStyles[0]
+        },
+        obj2: {
+            img: imgs[1],
+            imgAttr: {
+                className: imgAttrs[1]
+            },
+            imgStyle: imgStyles[0]
+        }
     };
-    var img1_wh ={
-        width: imgs[1].naturalWidth,
-        height: imgs[1].naturalHeight
-    };
-    var img0Styles = getWHdiff(contain_wh, img0_wh);
-    var img1Styles = getWHdiff(contain_wh, img1_wh);
-    img0Styles.position = 'absolute';
-    img1Styles.position = 'absolute';
-    var attr1 = {
-        className: "left_tx"
-    };
-    var attr2 = {
-        className: "right_tx"
-    };
-    this.setStyles(imgs[0], img0Styles);
-    this.setAttr(imgs[0], attr1);
-    this.setStyles(imgs[1], img1Styles);
-    this.setAttr(imgs[1], attr2);
+    var father_frame = this.createChildFrame(getFrameStyle(contain, 2).frameStyle, innerObjs);
+    obj_2.innerHTML="";
+    obj_2.appendChild(father_frame);
 
 };
 PFrame.prototype.convertThree = function(obj_3){
     var imgs = obj_3.children;
     var width = obj_3.offsetWidth;
     var height = obj_3.offsetHeight;
-    var left_width = width - height/2;
-    var right_width = height/2;
-    var imgStyles = [{
-        width:left_width,
-        height: height,
-        overflow: 'hidden'
-    }, {
-        width: right_width,
-        height: height/2,
-        overflow: 'hidden'
-    },{
-        width: right_width,
-        height: height/2,
-        overflow: 'hidden'
-    }];
-
-    var imgObjs = this.setImg(imgs, imgStyles);
-
-    var styles = {
+    var frameStyles = getFrameStyle({
         width: width,
-        height: height,
-        display: 'flex'
-    };
+        height: height
+    }, 3);
+    var innerFrameStyles = frameStyles.innerFrameStyles;
+
+    var imgObjs = Array.prototype.map.call(imgs, function(img){
+        return img;
+    });
+    var imgStyles = getImgStyles(imgs, innerFrameStyles);
     var innerObjs = {
         obj1: {
-            styles: imgStyles[0],
-            img: imgs[0]
+            innerFrameStyle: innerFrameStyles[0],
+            img: imgs[0],
+            imgStyle: imgStyles[0]
         },
         obj2: {
-            styles: {
-                width: right_width,
-                height: height,
-            },
+            innerFrameStyle: '',
             innerObj: {
-                sameNums: imgObjs.splice(1,3),
+                sameNums: Array.prototype.slice.apply(imgs,[1,3]),
                 obj: {
-                    styles: imgStyles[1]
+                    innerFrameStyle: innerFrameStyles[1],
+                    imgStyle: imgStyles[1]
                 }
 
             }
         }
     };
-    var father_frame = this.createChildFrame(styles, innerObjs);
+    var father_frame = this.createChildFrame(frameStyles.frameStyle, innerObjs);
     obj_3.innerHTML="";
     obj_3.appendChild(father_frame);
 
@@ -191,32 +324,20 @@ PFrame.prototype.convertFour = function(obj_4){
 
     var width = obj_4.offsetWidth;
     var height = obj_4.offsetHeight;
-    var box_width = width/2 ;
-    var box_height = height/2;
-    var imgStyles = [];
-    for(var i=0;i<4;i++){
-        var style = {
-            width: box_width,
-            height: box_height,
-            overflow: 'hidden'
-        };
-        imgStyles.push(style);
-    }
-    var imgObjs = this.setImg(imgs, imgStyles);
-    var styles = {
+    var frameStyles = getFrameStyle({
         width: width,
-        height: height,
-        display: 'flex',
-        flexWrap: 'wrap'
-    };
-
+        height: height
+    }, 4);
+    var innerFrameStyle = frameStyles.innerFrameStyles;
+    var imgStyles = getImgStyles(imgs, innerFrameStyle);
     var innerObjs = {
-        sameNums: imgObjs,
+        sameNums: Array.prototype.slice.apply(imgs,[0,4]),
         obj: {
-            styles: imgStyles[0]
+            innerFrameStyle: innerFrameStyle,
+            imgStyle: imgStyles[0]
         }
     };
-    var frame = this.createChildFrame(styles, innerObjs);
+    var frame = this.createChildFrame(frameStyles.frameStyle, innerObjs);
     obj_4.innerHTML="";
     obj_4.appendChild(frame);
 };
@@ -225,82 +346,51 @@ PFrame.prototype.convertFive = function(obj_5){
     var imgs = obj_5.children;
     var width = obj_5.offsetWidth;
     var height = obj_5.offsetHeight;
-    var left_width = width*2/3;
-    var right_width = width/3;
-    var min_height = height/3;
-    var imgStyles=[{
-        width: left_width,
-        height: min_height*2,
-        overflow: 'hidden'
-    },{
-        width: left_width/2,
-        height: min_height,
-        overflow: 'hidden'
-    },{
-        width: left_width/2,
-        height: min_height,
-        overflow: 'hidden'
-    },{
-        width: right_width,
-        height: width/3,
-        overflow: 'hidden'
-    },{
-        width: right_width,
-        height: height-right_width,
-        overflow: 'hidden'
-    }];
-    var imgObjs = this.setImg(imgs, imgStyles);
-    var styles = {
+    var frameStyles = getFrameStyle({
         width: width,
-        height: height,
-        display: 'flex'
-    };
+        height: height
+    }, 5);
+    var innerFrameStyles = frameStyles.innerFrameStyles;
+    var imgStyles = getImgStyles(imgs, innerFrameStyles);
     var innerObjs = {
         obj1: {
-            styles: {
-                width: left_width,
-                height: height,
-                float: 'left'
-            },
+            innerFrameStyle: '',
             innerObj: {
                 obj1: {
-                    styles: imgStyles[0],
-                    img: imgObjs[0]
+                    innerFrameStyle: innerFrameStyles[0],
+                    img: imgs[0],
+                    imgStyle: imgStyles[0]
                 },
                 obj2: {
-                    styles: {
-                        width: left_width,
-                        height: min_height,
-                        display: 'flex'
-                    },
+                    innerFrameStyle: frameStyles.outterFrameStyle,
                     innerObj: {
-                        sameNums: [imgObjs[1], imgObjs[2]],
+                        sameNums: Array.prototype.slice.apply(imgs,[1,3]),
                         obj: {
-                            styles: imgStyles[1]
+                            innerFrameStyle: innerFrameStyles[1],
+                            imgStyle: imgStyles[1]
                         }
                     }
                 }
             }
         },
         obj2: {
-            styles: {
-                width: right_width,
-                height: height
-            },
+            innerFrameStyle: '',
             innerObj: {
                 obj1: {
-                    styles: imgStyles[3],
-                    img: imgs[3]
+                    innerFrameStyle: innerFrameStyles[3],
+                    img: imgs[3],
+                    imgStyle: imgStyles[3]
                 },
                 obj2: {
-                    styles: imgStyles[4],
-                    img: imgs[4]
+                    innerFrameStyle: innerFrameStyles[4],
+                    img: imgs[4],
+                    imgStyle: imgStyles[4]
                 }
             }
         }
     };
 
-    var frame = this.createChildFrame(styles, innerObjs);
+    var frame = this.createChildFrame(frameStyles.frameStyle, innerObjs);
     obj_5.innerHTML="";
     obj_5.appendChild(frame);
 };
@@ -310,81 +400,46 @@ PFrame.prototype.convertSix = function(obj_6){
 
     var width = obj_6.offsetWidth;
     var height = obj_6.offsetHeight;
-    var left_width = width*2/3;
-    var right_width = width/3;
-    var min_height = height/3;
-    var imgStyles = [{
-        width: left_width,
-        height: min_height*2,
-        overflow: 'hidden'
-    },{
-        width: left_width/2,
-        height: min_height,
-        overflow: 'hidden'
-    },{
-        width: left_width/2,
-        height: min_height,
-        overflow: 'hidden'
-    },{
-        width: right_width,
-        height: min_height,
-        overflow: 'hidden'
-    },{
-        width: right_width,
-        height: min_height,
-        overflow: 'hidden'
-    },{
-        width: right_width,
-        height: min_height,
-        overflow: 'hidden'
-    }];
-    var imgObjs = this.setImg(imgs, imgStyles);
-    var styles = {
+    var frameStyles = getFrameStyle({
         width: width,
-        height: height,
-        display: 'flex'
-    };
+        height: height
+    }, 6);
+    var innerFrameStyles = frameStyles.innerFrameStyles;
+    var imgStyles = getImgStyles(imgs, innerFrameStyles);
     var innerObjs = {
         obj1: {
-            styles: {
-                width: left_width,
-                height: height
-            },
+            innerFrameStyle: '',
             innerObj: {
                 obj1: {
-                    styles: imgStyles[0],
-                    img: imgObjs[0]
+                    innerFrameStyle: innerFrameStyles[0],
+                    img: imgs[0],
+                    imgStyle: imgStyles[0]
                 },
                 obj2: {
-                    styles: {
-                        width: left_width,
-                        height: min_height,
-                        display: 'flex'
-                    },
+                    innerFrameStyle: frameStyles.outterFrameStyle,
                     innerObj: {
-                        sameNums: [imgObjs[1], imgObjs[2]],
+                        sameNums: Array.prototype.slice.apply(imgs,[1,3]),
                         obj: {
-                            styles: imgStyles[1]
+                            innerFrameStyle: innerFrameStyles[1],
+                            imgStyle: imgStyles[1]
                         }
                     }
                 }
             }
         },
         obj2: {
-            styles: {
-                width: right_width,
-                height: height
-            },
+            innerFrameStyle: '',
             innerObj: {
-                sameNums: imgObjs.splice(3,6),
+                sameNums: Array.prototype.slice.apply(imgs,[3,6]),
                 obj: {
-                    styles: imgStyles[3]
+                    innerFrameStyle: innerFrameStyles[3],
+                    imgStyle: imgStyles[3]
                 }
             }
         }
     };
 
-    var frame = this.createChildFrame(styles, innerObjs);
+    var frame = this.createChildFrame(frameStyles.frameStyle, innerObjs);
     obj_6.innerHTML="";
     obj_6.appendChild(frame);
 };
