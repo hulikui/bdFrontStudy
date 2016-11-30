@@ -15,12 +15,42 @@
         };
 
         // 公有变量可以写在这里
-        // this.xxx = ...
+        this.padding = {
+            PUZZLE: {
+                x: '',
+                y: ''
+            },
+            WATERFALL: {
+                x: '',
+                y: ''
+            }, // 瀑布布局
+            BARREL: {
+                x: '',
+                y: ''
+            }
+        }
+
 
     }
 
     // 私有变量可以写在这里
     // var xxx = ...
+    var padding = {
+        PUZZLE: {
+            x: 0,
+            y: 0
+        },
+        WATERFALL: {
+            x: 0,
+            y: 0
+        }, // 瀑布布局
+        BARREL: {
+            x: 0,
+            y: 0
+        }
+    };
+    //临时缓冲区
+    var temp;
     //获取需要裁剪图片的样式
     function getClipImgStyle(contain, img) {
         var wdiff = img.width-contain.width*img.height/contain.height;
@@ -89,6 +119,8 @@
             height: height,
             display: 'flex'
         };
+        //计算遮罩效果 相对位置
+        var paddingStyles = {};
         var left_width = width/2;
         var right_width = height/2;
         var min_height = height/3;
@@ -100,6 +132,20 @@
 
         }else if(nums == 3) {
             left_width = width - height/2;
+            paddingStyles = {
+                obj1: {
+                    left: left_width-padding.PUZZLE.y,
+                    top: 0,
+                    width: padding.PUZZLE.x*2,
+                    height: height
+                },
+                obj2: {
+                    top: height/2 - padding.PUZZLE.x,
+                    right: 0,
+                    width: height/2,
+                    height: padding.PUZZLE.x*2
+                }
+            };
             innerFrameStyles = [{
                 width:left_width,
                 height: height,
@@ -115,6 +161,20 @@
             }];
         }else if(nums == 4){
             frameStyle.flexWrap='wrap';
+            paddingStyles = {
+                obj1: {
+                    left: left_width-padding.PUZZLE.y,
+                    top: 0,
+                    width: padding.PUZZLE.x*2,
+                    height: height
+                },
+                obj2: {
+                    left: 0,
+                    top: height/2-padding.PUZZLE.x,
+                    width: width,
+                    height: padding.PUZZLE.x*2
+                }
+            };
             innerFrameStyles = {
                 width: left_width,
                 height: right_width,
@@ -123,6 +183,32 @@
         }else if(nums == 5){
             left_width = width*2/3;
             right_width = width/3;
+            paddingStyles = {
+                obj1: {
+                    left: 0,
+                    top: min_height*2 - padding.PUZZLE.x,
+                    width: left_width,
+                    height: padding.PUZZLE.x*2
+                },
+                obj2: {
+                    left: left_width-padding.PUZZLE.y,
+                    top: 0,
+                    width: padding.PUZZLE.y*2,
+                    height: height
+                },
+                obj3: {
+                    left: right_width-padding.PUZZLE.y,
+                    top: min_height*2,
+                    width: padding.PUZZLE.y*2,
+                    height: min_height
+                },
+                obj4: {
+                    top: right_width - padding.PUZZLE.x,
+                    right: 0,
+                    width: right_width,
+                    height: padding.PUZZLE.x*2
+                }
+            };
             innerFrameStyles=[{
                 width: left_width,
                 height: min_height*2,
@@ -152,6 +238,38 @@
         }else if(nums == 6){
             left_width = width*2/3;
             right_width = width/3;
+            paddingStyles = {
+                obj1: {
+                    left: 0,
+                    top: min_height*2 - padding.PUZZLE.x,
+                    width: left_width,
+                    height: padding.PUZZLE.x*2
+                },
+                obj2: {
+                    left: left_width-padding.PUZZLE.y,
+                    top: 0,
+                    width: padding.PUZZLE.y*2,
+                    height: height
+                },
+                obj3: {
+                    left: right_width-padding.PUZZLE.y,
+                    top: min_height*2,
+                    width: padding.PUZZLE.y*2,
+                    height: min_height
+                },
+                obj4: {
+                    left: left_width,
+                    top: min_height - padding.PUZZLE.x,
+                    width: right_width,
+                    height: padding.PUZZLE.x*2
+                },
+                obj5: {
+                    left: left_width,
+                    top: min_height*2 - padding.PUZZLE.x,
+                    width: right_width,
+                    height: padding.PUZZLE.x*2
+                }
+            };
             innerFrameStyles = [{
                 width: left_width,
                 height: min_height*2,
@@ -187,7 +305,8 @@
         return {
             innerFrameStyles: innerFrameStyles, //套在图片外层的div样式
             outterFrameStyle: outterFrameStyle, //关乎图像布局的div样式
-            frameStyle: frameStyle              //相册最外层样式
+            frameStyle: frameStyle,              //相册最外层样式
+            paddingStyles: paddingStyles        //padding的遮罩效果
         };
 
     }
@@ -223,6 +342,7 @@
         var frameStyle;
         var innerObjs;
         var innerFrameStyles;
+        var imgPaddings = {};
         if(imgs.length == 1){
             imgStyles = getPuzzleImgStyles(imgs, contain);
             frameStyles = getPuzzleFrameStyle(contain, 1);
@@ -257,13 +377,11 @@
             };
 
         }else if(imgs.length ==3){
-            frameStyles = getPuzzleFrameStyle({
-                width: width,
-                height: height
-            }, 3);
+            frameStyles = getPuzzleFrameStyle(contain, 3);
             innerFrameStyles = frameStyles.innerFrameStyles;
             frameStyle = frameStyles.frameStyle;
             imgStyles = getPuzzleImgStyles(imgs, innerFrameStyles);
+            imgPaddings = frameStyles.paddingStyles;
             innerObjs = {
                 obj1: {
                     innerFrameStyle: innerFrameStyles[0],
@@ -284,13 +402,11 @@
             };
 
         }else if(imgs.length == 4){
-            frameStyles = getPuzzleFrameStyle({
-                width: width,
-                height: height
-            }, 4);
+            frameStyles = getPuzzleFrameStyle(contain, 4);
             frameStyle = frameStyles.frameStyle;
             innerFrameStyles = frameStyles.innerFrameStyles;
             imgStyles = getPuzzleImgStyles(imgs, innerFrameStyles);
+            imgPaddings = frameStyles.paddingStyles;
             innerObjs = {
                 sameNums: Array.prototype.slice.apply(imgs,[0,4]),
                 obj: {
@@ -299,13 +415,11 @@
                 }
             };
         }else if(imgs.length == 5){
-            frameStyles = getPuzzleFrameStyle({
-                width: width,
-                height: height
-            }, 5);
+            frameStyles = getPuzzleFrameStyle(contain, 5);
             frameStyle = frameStyles.frameStyle;
             innerFrameStyles = frameStyles.innerFrameStyles;
             imgStyles = getPuzzleImgStyles(imgs, innerFrameStyles);
+            imgPaddings = frameStyles.paddingStyles;
             innerObjs = {
                 obj1: {
                     innerFrameStyle: '',
@@ -346,13 +460,11 @@
 
 
         }else if(imgs.length == 6) {
-            frameStyles = getPuzzleFrameStyle({
-                width: width,
-                height: height
-            }, 6);
+            frameStyles = getPuzzleFrameStyle(contain, 6);
             innerFrameStyles = frameStyles.innerFrameStyles;
             frameStyle = frameStyles.frameStyle;
             imgStyles = getPuzzleImgStyles(imgs, innerFrameStyles);
+            imgPaddings = frameStyles.paddingStyles;
             innerObjs = {
                 obj1: {
                     innerFrameStyle: '',
@@ -388,7 +500,8 @@
         }
         return {
             innerObjs: innerObjs,   //相册内部所有对象
-            frameStyle: frameStyle  //相框
+            frameStyle: frameStyle,  //相框
+            imgPaddings: imgPaddings // 相片间距
         };
 
     }
@@ -396,16 +509,16 @@
     // 拼图布局下重塑相册 拼图布局比较复杂
     function puzzleReSet(albumStyles, innerObjs) {
         var frame = document.createElement('DIV');
-        this.setStyles(frame, albumStyles);
+        setStyles(frame, albumStyles);
         if (innerObjs.sameNums) {
             for (var i = 0; i < innerObjs.sameNums.length; i++) {
                 var box = document.createElement('DIV');
-                this.setStyles(box, innerObjs.obj.innerFrameStyle);
+                setStyles(box, innerObjs.obj.innerFrameStyle);
                 if (innerObjs.obj.attr) {
-                    this.setAttr(box, innerObjs.obj.attr);
+                    setAttr(box, innerObjs.obj.attr);
                 }
                 if(innerObjs.obj.imgStyle){
-                    this.setStyles(innerObjs.sameNums[i], innerObjs.obj.imgStyle);
+                    setStyles(innerObjs.sameNums[i], innerObjs.obj.imgStyle);
                 }
 
                 box.appendChild(innerObjs.sameNums[i]);
@@ -415,19 +528,19 @@
         } else {
             for (var obj in innerObjs) {
                 if (innerObjs[obj].innerObj) {//若有子模块递归生成
-                    var box = this.createChildFrame(innerObjs[obj].innerFrameStyle, innerObjs[obj].innerObj);
+                    var box = puzzleReSet(innerObjs[obj].innerFrameStyle, innerObjs[obj].innerObj);
                 } else {
                     var box = document.createElement('DIV');
-                    this.setStyles(box, innerObjs[obj].innerFrameStyle);//相框属性
+                    setStyles(box, innerObjs[obj].innerFrameStyle);//相框属性
                     if (innerObjs[obj].attr) {
-                        this.setAttr(box, innerObjs[obj].attr);
+                        setAttr(box, innerObjs[obj].attr);
                     }
                     if (innerObjs[obj].img) {
                         if(innerObjs[obj].imgAttr){
-                            this.setAttr(innerObjs[obj].img, innerObjs[obj].imgAttr);
+                            setAttr(innerObjs[obj].img, innerObjs[obj].imgAttr);
                         }
                         if(innerObjs[obj].imgStyle){
-                            this.setStyles(innerObjs[obj].img, innerObjs[obj].imgStyle);
+                            setStyles(innerObjs[obj].img, innerObjs[obj].imgStyle);
                         }
                         box.appendChild(innerObjs[obj].img);
                     }
@@ -438,7 +551,111 @@
         return frame;
     }
 
+    function setPaddings(frame, paddings) {
+        for(var style in paddings) {
+            var label = document.createElement('LABEL');
+            label.className = 'label_imgPadding';
+            setStyles(label, paddings[style]);
+            frame.appendChild(label);
+        }
+    }
 
+    function getFrames(divs){
+        return Array.prototype.map.call(divs, function(div){
+            return div;
+        });
+    }
+    function createFallFrame(fallFarme, index) { //生成框架,默认四列
+        var cols = parseInt(fallFarme.className.split('_')[1]) || 4;
+        var col_width = (fallFarme.offsetWidth - padding.WATERFALL.y*(cols + 1)) / cols;
+        var frame = document.createElement('DIV');// 最外层
+        var styles = {
+            width: fallFarme.offsetWidth,
+            minHeight: fallFarme.offsetHeight,
+            display: 'flex'
+        };
+        setStyles(frame, styles);
+        for(var i=0;i<cols;i++) {//子列
+            var item = document.createElement('DIV');
+            item.className = 'fall_cols_'+ index;//用于标记 选择放入目标
+            var itemStyle = {
+                width: col_width,
+                minHeight: styles.minHeight,
+                marginLeft: padding.WATERFALL.y,
+                marginTop: padding.WATERFALL.y
+            };
+            if(i === (cols-1)){
+                itemStyle.marginRight = padding.WATERFALL.y;
+            }
+            setStyles(item, itemStyle);
+            frame.appendChild(item);
+        }
+        return {
+            frame: frame,
+            col_width: col_width
+        };
+    }
+
+    function getPhotoStyles(frame, width) {//style , src
+        return Array.prototype.map.call(frame.children, function(img){
+            var contain = {
+                width: width,
+                height: width + Math.random()*100
+            };
+            var imgWh = {
+                width:img.naturalWidth,
+                height: img.naturalHeight
+            };
+
+            var imgStyles = getClipImgStyle(contain, imgWh);
+            return {
+                src: img.src,
+                style: imgStyles
+            };
+        });
+
+    }
+    function getHight(obj){
+        console.log(obj);
+        var sum = 0;
+        var items = obj.children;
+        for(var i=0;i<items.length;i++){
+            sum += parseInt(items[i].style.height.split('px')[0]);
+        }
+        Array.prototype.forEach.call(items, function(item){
+            sum += item.offsetHeight;
+        });
+        console.log('height');
+        return sum;
+    }
+
+     function getFallTarget(frame) {
+        var cols = frame.children;
+        var res = getHight(cols[0]);
+        var node=cols[0];
+        for(var i=1;i<cols.length;i++){
+            var height = getHight(cols[i]);
+            if(res > height){
+                res = height;
+                node=cols[i];
+            }
+        }
+         console.log('target--------------',  node);
+        return node;
+    }
+
+        function createChildFrame(frameObj, img) {
+            var div = document.createElement('DIV');
+            if(frameObj.attr){
+                setAttr(div, frameObj.attr);
+            }
+            if(frameObj.styles){
+                setStyles(div, frameObj.styles);
+            }
+            div.appendChild(img);
+
+            return div;
+        }
     /************* 以下是本库提供的公有方法 *************/
 
 
@@ -459,8 +676,19 @@
 
         // 实现拼图布局
         if(option.type == 'puzzle'){
-            var puzzleNewLayouts = puzzleLayout(images);
-            puzzleReSet(puzzleNewLayouts.frameStyle, puzzleNewLayouts.innerObjs);
+            var puzzleNewLayouts = puzzleLayout(images);//根据img_frame生成布局
+            var newFrame = puzzleReSet(puzzleNewLayouts.frameStyle, puzzleNewLayouts.innerObjs);//根据布局重新生成frame_dom
+            images.innerHTML = '';
+            images.appendChild(newFrame);
+            setPaddings(images, puzzleNewLayouts.imgPaddings);//设置遮罩-图片padding
+        }else if(option.type == 'falls'){
+            var imgObjs = images.map(function(img){
+                var imgDom = document.createElement('IMG');
+                imgDom.src = img.src;
+                setStyles(imgDom, img.style);
+                return imgDom;
+            });
+            this.LAYOUT.WATERFALL[option.index] = imgObjs;//根据相册index替换原有的img
         }
 
     };
@@ -468,12 +696,31 @@
     IfeAlbum.prototype.run = function () {//每次执行设置一次相册
 
         // 实现拼图布局
+        var _this = this;
         this.setLayout('puzzle');
+        this.setLayout('falls');
         var layouts = this.getLayout();
         var puzzles = layouts.PUZZLE;//所有相册
-        puzzles.forEach(function(frame, index){
-
+        var falls = layouts.WATERFALL;
+        puzzles.forEach(function(frame){
+            _this.setImage(frame, {type: 'puzzle'});
         });
+        falls.forEach(function(frame, index){
+            //创建瀑布基本布局
+            var newFallFrame = createFallFrame(frame, index);
+            //计算每张图片的样式
+            temp = newFallFrame.frame;
+            var imgObjs = getPhotoStyles(frame, newFallFrame.col_width);
+            //生成和添加图片
+            _this.addImage(imgObjs, {
+                type: 'falls',
+                index: index
+            });
+            //替换原有相册的子元素
+            frame.innerHTML = '';
+            frame.appendChild(temp);
+
+        })
 
 
     };
@@ -483,9 +730,9 @@
      * 可以不是 ，而是更外层的元素
      * @return {HTMLElement[]} 相册所有图像对应的 DOM 元素组成的数组
      */
-    IfeAlbum.prototype.getImageDomElements = function(key, index) {
+    IfeAlbum.prototype.getImageDomElements = function(frame) {
         //拼图布局处理
-        var imgs = this.LAYOUT[key][index].children;
+        var imgs = frame.children;
         return Array.prototype.map.call(imgs, function(img){//返回相冊數組
             return img;
         });
@@ -499,9 +746,24 @@
      * 在拼图布局下，根据图片数量重新计算布局方式；其他布局下向尾部追加图片
      * @param {(string|string[])} image 一张图片的 URL 或多张图片 URL 组成的数组
      */
-    IfeAlbum.prototype.addImage = function (image) {
-        //根据img的长度确定拼图布局
-
+    IfeAlbum.prototype.addImage = function (image, option) {
+        //根据imgs计算样式
+        if(option.type=='falls'){
+            this.setImage(image, {
+                type: option.type,
+                index: option.index
+            });
+            var imgs = this.LAYOUT.WATERFALL[option.index];
+            imgs.forEach(function(img){
+                var childFrame = createChildFrame({
+                    styles:{
+                        marginBottom: padding.WATERFALL.x
+                    }
+                }, img);
+                var target = getFallTarget(temp);
+                target.appendChild(childFrame);
+            });
+        }
 
     };
 
@@ -523,14 +785,14 @@
      * @param {number} layout 布局值，IfeAlbum.LAYOUT 中的值
      */
     IfeAlbum.prototype.setLayout = function (className) {//存储相册所有信息
-        var divs = document.getElementsByClassName(className);
-        var frames =  Array.prototype.map.call(divs, function(div){
-            return div;
-        });
+
+
         if(className == 'puzzle'){
-            this.LAYOUT.PUZZLE = frames;
-        }else if(className.indexOf('falls')>0){
-            this.LAYOUT.WATERFALL = frames;
+            var divs = document.getElementsByClassName(className);
+            this.LAYOUT.PUZZLE = getFrames(divs);
+
+        }else if(className.indexOf('falls')>=0){
+            this.LAYOUT.WATERFALL = getFrames(document.querySelectorAll('div[class^="falls"]'));
 
         }else if(className.indexOf('bucket')>0){
             this.LAYOUT.BARREL = frames;
@@ -557,8 +819,17 @@
      * @param {number}  x  图片之间的横向间距
      * @param {number} [y] 图片之间的纵向间距，如果是 undefined 则等同于 x
      */
-    IfeAlbum.prototype.setGutter = function (x, y) {
-
+    IfeAlbum.prototype.setGutter = function (type, x, y) {
+        if(typeof x != 'number'){
+            return;
+        }
+        if(!y || typeof y!='number'){
+            y = x;
+        }
+        if(type == 'PUZZLE' || type == 'WATERFALL' || type == 'BARREL'){
+            padding[type].x = x;
+            padding[type].y = y;
+        }
     };
 
 
@@ -672,6 +943,8 @@
     if (typeof window.ifeAlbum === 'undefined') {
         // 只有当未初始化时才实例化
         window.ifeAlbum = new IfeAlbum();
+        window.ifeAlbum.setGutter('PUZZLE', 2);
+        window.ifeAlbum.run();
     }
 
 }(window));

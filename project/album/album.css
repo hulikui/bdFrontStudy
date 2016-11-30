@@ -1,0 +1,22 @@
+.left_tx {
+    -webkit-clip-path: polygon(0 0, 70% 0, 30% 100%, 0% 100%);
+    clip-path: polygon(0 0, 70% 0, 30% 100%, 0% 100%);
+}
+.right_tx {
+    -webkit-clip-path: polygon(70% 0, 100% 0, 100% 100%, 30% 100%);
+    clip-path: polygon(70% 0, 100% 0, 100% 100%, 30% 100%);
+}
+.puzzle {
+    width: 400px;
+    height: 300px;
+    overflow: hidden;
+    position: relative;
+}
+.label_imgPadding {
+    background-color: white;
+    position: absolute;
+}
+.falls {
+    width: 500px;
+    height: 500px;
+}
