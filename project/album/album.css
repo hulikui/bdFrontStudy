@@ -26,3 +26,9 @@
 .fall_cols {
     overflow: hidden;
 }
+.buckets {
+    width: 800px;
+    min-height: 700px;
+    display: flex;
+    flex-flow: wrap;
+}

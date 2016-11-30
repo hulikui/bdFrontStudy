@@ -3,9 +3,9 @@ function Buckets() {
         var imgs = contain.children;
         return Array.prototype.map.call(imgs, function(img){
             return {
-                width: img.offsetWidth,
-                height: img.offsetHeight,
-                ratio: img.offsetWidth/img.offsetHeight,
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+                ratio: img.naturalWidth/img.naturalHeight,
                 src: img.src
             }
         });
@@ -13,13 +13,13 @@ function Buckets() {
 
 }
 
-Buckets.prototype.group = function(photos){
+Buckets.prototype.group = function(photos, contain){
     //½«Í¼Æ¬·ÖÐÐ
     var raws=[];
     var rawWidth=0;
     var rawStart=0;
     var rawEnd=0;
-
+    console.log(contain.clientWidth);
     for(var j=0;j<photos.length;j++){
         photos[j].height=200;
         photos[j].width=200*photos[j].ratio;
@@ -66,7 +66,8 @@ Buckets.prototype.init = function() {
     var context = this;
     Array.prototype.forEach.call(buckets, function(bucket){
         var imgs = context.getImgs(bucket);
-        var groups = context.group(imgs);
+        var groups = context.group(imgs, bucket);
+        console.log(groups);
         bucket.innerHTML = '';
         context.convertBuckets(groups, bucket, imgs);
     });

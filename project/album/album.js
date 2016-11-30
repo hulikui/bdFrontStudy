@@ -652,6 +652,38 @@
 
             return div;
         }
+
+    function group(images, option) {
+        //将图片分行
+        var raws=[];
+        var rawWidth=0;
+        var rawStart=0;
+        var rawEnd=0;
+        for(var j=0;j<images.length;j++){
+            images[j].height= option.rowHeight;
+            images[j].width= option.rowHeight*images[j].ratio;
+            rawWidth+=images[j].width;
+            rawEnd=j;
+            if(rawWidth>option.clientWidth){
+                var lastWidth=rawWidth-images[j].width;
+                var rawRatio=option.rowHeight/lastWidth;
+                var lastHeight=rawRatio*(option.clientWidth);//(rawEnd-rawStart-1)*8
+                raws.push({
+                    start:rawStart,
+                    end:rawEnd-1,
+                    height:lastHeight
+                });
+                rawWidth=images[j].width;
+                rawStart=j;
+            }
+        }
+        raws.push({
+            start: rawStart,
+            end: images.length-1,
+            height: option.rowHeight
+        });
+        return raws;
+    }
     /************* 以下是本库提供的公有方法 *************/
 
 
@@ -690,6 +722,8 @@
                 return childFrame;
             });
             this.LAYOUT.WATERFALL[option.index] = imgObjs;//根据相册index替换原有的img
+        }else if (option.type == 'buckets'){
+
         }
 
     };
@@ -700,9 +734,11 @@
         var _this = this;
         this.setLayout('puzzle');
         this.setLayout('falls');
+        this.setLayout('buckets');
         var layouts = this.getLayout();
         var puzzles = layouts.PUZZLE;//所有相册
         var falls = layouts.WATERFALL;
+        var buckets = layouts.BARREL;
         puzzles.forEach(function(frame){
             _this.setImage(frame, {type: 'puzzle'});
         });
@@ -721,8 +757,22 @@
             frame.innerHTML = '';
             frame.appendChild(temp);
 
-        })
-
+        });
+        buckets.forEach(function(bucket){
+            var images = _this.getImageDomElements(bucket);
+            temp = bucket;
+            console.log('imgs', images);
+            var groups = group(images, {
+                clientWidth: bucket.clientWidth,
+                rowHeight: 200
+            });
+            console.log(groups);
+            bucket.innerHTML = '';
+            _this.addImage(images, {
+                groups: groups,
+                type: 'buckets'
+            });
+        });
 
     };
 
@@ -734,8 +784,13 @@
     IfeAlbum.prototype.getImageDomElements = function(frame) {
         //拼图布局处理
         var imgs = frame.children;
-        return Array.prototype.map.call(imgs, function(img){//返回相冊數組
-            return img;
+        return Array.prototype.map.call(imgs, function(img){
+            return {
+                width: img.naturalWidth,
+                height: img.naturalHeight,
+                ratio: img.naturalWidth/img.naturalHeight,
+                src: img.src
+            }
         });
 
     };
@@ -758,6 +813,18 @@
             imgs.forEach(function(img){
                 var target = getFallTarget(temp);
                 target.appendChild(img);
+            });
+        }else if(option.type = 'buckets'){
+            option.groups.forEach(function(group){
+                for(var i=group.start;i<=group.end;i++){
+                    var img = document.createElement('IMG');
+                    var width = image[i].ratio*group.height;
+                    img.style.width = width;
+                    img.style.height = Math.floor(group.height);
+                    img.style.margin = '0px';
+                    img.src = image[i].src;
+                    temp.appendChild(img);
+                }
             });
         }
 
@@ -790,8 +857,9 @@
         }else if(className.indexOf('falls')>=0){
             this.LAYOUT.WATERFALL = getFrames(document.querySelectorAll('div[class^="falls"]'));
 
-        }else if(className.indexOf('bucket')>0){
-            this.LAYOUT.BARREL = frames;
+        }else if(className.indexOf('buckets')>=0){
+            var buckets = document.getElementsByClassName('buckets');
+            this.LAYOUT.BARREL = getFrames(buckets);
         }
 
     };
