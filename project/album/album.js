@@ -565,19 +565,19 @@
             return div;
         });
     }
-    function createFallFrame(fallFarme, index) { //生成框架,默认四列
-        var cols = parseInt(fallFarme.className.split('_')[1]) || 4;
+    function createFallFrame(fallFarme) { //生成框架,默认四列
+        var cols = parseInt(fallFarme.className.split(' ')[0].split('_')[1]) || 4;
         var col_width = (fallFarme.offsetWidth - padding.WATERFALL.y*(cols + 1)) / cols;
         var frame = document.createElement('DIV');// 最外层
         var styles = {
             width: fallFarme.offsetWidth,
-            minHeight: fallFarme.offsetHeight,
-            display: 'flex'
+            minHeight: fallFarme.offsetHeight
         };
+        frame.className = 'fall_cols_parent';
         setStyles(frame, styles);
         for(var i=0;i<cols;i++) {//子列
             var item = document.createElement('DIV');
-            item.className = 'fall_cols_'+ index;//用于标记 选择放入目标
+            item.className = 'fall_cols';
             var itemStyle = {
                 width: col_width,
                 minHeight: styles.minHeight,
@@ -610,22 +610,19 @@
             var imgStyles = getClipImgStyle(contain, imgWh);
             return {
                 src: img.src,
-                style: imgStyles
+                style: imgStyles,
+                contain: contain
             };
         });
 
     }
     function getHight(obj){
-        console.log(obj);
         var sum = 0;
         var items = obj.children;
-        for(var i=0;i<items.length;i++){
-            sum += parseInt(items[i].style.height.split('px')[0]);
-        }
         Array.prototype.forEach.call(items, function(item){
-            sum += item.offsetHeight;
+            var height = parseInt(item.style.height.split('px')[0]);
+            sum += height;
         });
-        console.log('height');
         return sum;
     }
 
@@ -640,7 +637,6 @@
                 node=cols[i];
             }
         }
-         console.log('target--------------',  node);
         return node;
     }
 
@@ -686,7 +682,12 @@
                 var imgDom = document.createElement('IMG');
                 imgDom.src = img.src;
                 setStyles(imgDom, img.style);
-                return imgDom;
+                img.contain.marginBottom = padding.WATERFALL.x;
+                var childFrame = createChildFrame({
+                    styles: img.contain
+                }, imgDom);
+
+                return childFrame;
             });
             this.LAYOUT.WATERFALL[option.index] = imgObjs;//根据相册index替换原有的img
         }
@@ -707,7 +708,7 @@
         });
         falls.forEach(function(frame, index){
             //创建瀑布基本布局
-            var newFallFrame = createFallFrame(frame, index);
+            var newFallFrame = createFallFrame(frame);
             //计算每张图片的样式
             temp = newFallFrame.frame;
             var imgObjs = getPhotoStyles(frame, newFallFrame.col_width);
@@ -755,13 +756,8 @@
             });
             var imgs = this.LAYOUT.WATERFALL[option.index];
             imgs.forEach(function(img){
-                var childFrame = createChildFrame({
-                    styles:{
-                        marginBottom: padding.WATERFALL.x
-                    }
-                }, img);
                 var target = getFallTarget(temp);
-                target.appendChild(childFrame);
+                target.appendChild(img);
             });
         }
 
@@ -944,6 +940,7 @@
         // 只有当未初始化时才实例化
         window.ifeAlbum = new IfeAlbum();
         window.ifeAlbum.setGutter('PUZZLE', 2);
+        window.ifeAlbum.setGutter('WATERFALL', 2);
         window.ifeAlbum.run();
     }
 

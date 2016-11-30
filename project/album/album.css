@@ -20,3 +20,9 @@
     width: 500px;
     height: 500px;
 }
+.fall_cols_parent {
+    display: flex;
+}
+.fall_cols {
+    overflow: hidden;
+}
