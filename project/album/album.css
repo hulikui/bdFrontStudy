@@ -7,8 +7,6 @@
     clip-path: polygon(70% 0, 100% 0, 100% 100%, 30% 100%);
 }
 .puzzle {
-    width: 400px;
-    height: 300px;
     overflow: hidden;
     position: relative;
 }
@@ -16,10 +14,7 @@
     background-color: white;
     position: absolute;
 }
-.falls {
-    width: 500px;
-    height: 500px;
-}
+
 .fall_cols_parent {
     display: flex;
 }
@@ -27,8 +22,6 @@
     overflow: hidden;
 }
 .barrel {
-    width: 800px;
-    min-height: 700px;
     display: flex;
     flex-flow: wrap;
     /*justify-content: space-around;*/
