@@ -12,7 +12,7 @@
      根据div内img的个数（1-6）自动布局
 ``` 
 * 瀑布布局
-``` 
+``` stylus
     <div classname="waterfalls_x">
             <img>
             <img>
@@ -23,7 +23,7 @@
      内部img数量不限 div高度设置最小高度
 ``` 
 *  木桶布局
-``` 
+``` stylus
     <div classname="barrel">
        <img>
        <img>
