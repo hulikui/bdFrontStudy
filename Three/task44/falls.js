@@ -32,9 +32,7 @@ function getWHdiff(contain, img) {
     return styles;
 }
 
-var orginImgStyle = {
 
-};
 function showPhoto(img) {
     var light = document.getElementsByClassName('white_content')[0];
     var fade = document.getElementsByClassName('black_overlay')[0];
@@ -58,7 +56,6 @@ function showPhoto(img) {
         light.style.display = 'block';
     } else {
         isShowed = false;
-        setStyles(img, orginImgStyle);
         light.innerHTML = '';
         fade.style.display = 'none';
         light.style.display = 'none';

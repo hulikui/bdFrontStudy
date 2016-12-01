@@ -3,8 +3,6 @@
     // 由于是第三方库，我们使用严格模式，尽可能发现潜在问题
     'use strict';
 
-
-
     function IfeAlbum() {
 
         // 布局的枚举类型
@@ -17,24 +15,28 @@
         // 公有变量可以写在这里
         this.padding = {
             PUZZLE: {
-                x: '',
-                y: ''
+                x: 0,
+                y: 0
             },
             WATERFALL: {
-                x: '',
-                y: ''
+                x: 0,
+                y: 0
             }, // 瀑布布局
             BARREL: {
-                x: '',
-                y: ''
+                x: 0,
+                y: 0
             }
-        }
+        };
+        this.isFullScreen = true;
 
 
     }
 
     // 私有变量可以写在这里
-    // var xxx = ...
+    /**
+    * 公共变量，以便获取
+    * */
+    // 用户设置相册图片间距的变量
     var padding = {
         PUZZLE: {
             x: 0,
@@ -51,6 +53,8 @@
     };
     //临时缓冲区
     var temp;
+    //是否已经全屏
+    var isShowed = false;
     //获取需要裁剪图片的样式
     function getClipImgStyle(contain, img) {
         var wdiff = img.width-contain.width*img.height/contain.height;
@@ -95,20 +99,24 @@
             obj[attr] = attrs[attr];
         }
     };
-    //重塑图片
-    var setImg = function(imgs, contains) {
-        var imgObjs = [];
-        for(var i=0;i<imgs.length;i++){
-            var img_wh ={
-                width: imgs[i].naturalWidth,
-                height: imgs[i].naturalHeight
-            };
-            var imgStyles = getClipImgStyle(contains[i], img_wh);
-            this.setStyles(imgs[i],imgStyles);
-            imgObjs.push(imgs[i]);
-        }
-        return imgObjs;
-    };
+    //获取每一个相册
+    function getFrames(divs, isFullscreenEnabled){
+        return Array.prototype.map.call(divs, function(div){
+            if(isFullscreenEnabled){
+                div.addEventListener("click", function(e){
+                    if(e.target.tagName == 'IMG'){
+                        showPhoto(e.target);
+                    }
+                });
+            }
+
+            return div;
+        });
+    }
+    /**
+     * 拼图布局的私有方法
+     * */
+    //获取拼图布局的相册样式
     function getPuzzleFrameStyle(frameObj, nums) {
         var width = frameObj.width;
         var height = frameObj.height;
@@ -310,7 +318,7 @@
         };
 
     }
-
+    //获取拼图布局照片样式
     function getPuzzleImgStyles(imgs, contain) {
 
         return Array.prototype.map.call(imgs, function(img, index){
@@ -550,7 +558,7 @@
         }
         return frame;
     }
-
+    //设置遮罩效果达到padding
     function setPaddings(frame, paddings) {
         for(var style in paddings) {
             var label = document.createElement('LABEL');
@@ -560,11 +568,9 @@
         }
     }
 
-    function getFrames(divs){
-        return Array.prototype.map.call(divs, function(div){
-            return div;
-        });
-    }
+    /**
+     * 瀑布布局的私有方法
+     * */
     function createFallFrame(fallFarme) { //生成框架,默认四列
         var cols = parseInt(fallFarme.className.split(' ')[0].split('_')[1]) || 4;
         var col_width = (fallFarme.offsetWidth - padding.WATERFALL.y*(cols + 1)) / cols;
@@ -595,7 +601,7 @@
             col_width: col_width
         };
     }
-
+    //获取相册内部对象的样式
     function getPhotoStyles(frame, width) {//style , src
         return Array.prototype.map.call(frame.children, function(img){
             var contain = {
@@ -616,6 +622,10 @@
         });
 
     }
+
+
+
+    //得到每一列col内部图片对象的总高度
     function getHight(obj){
         var sum = 0;
         var items = obj.children;
@@ -625,7 +635,7 @@
         });
         return sum;
     }
-
+    //得出即将放入图片的目标区域DOM
      function getFallTarget(frame) {
         var cols = frame.children;
         var res = getHight(cols[0]);
@@ -639,20 +649,25 @@
         }
         return node;
     }
-
-        function createChildFrame(frameObj, img) {
-            var div = document.createElement('DIV');
-            if(frameObj.attr){
-                setAttr(div, frameObj.attr);
-            }
-            if(frameObj.styles){
-                setStyles(div, frameObj.styles);
-            }
-            div.appendChild(img);
-
-            return div;
+    //为img包装一个div以便计算 最小高度
+    function createChildFrame(frameObj, img) {
+        var div = document.createElement('DIV');
+        if(frameObj.attr){
+            setAttr(div, frameObj.attr);
         }
+        if(frameObj.styles){
+            setStyles(div, frameObj.styles);
+        }
+        div.appendChild(img);
 
+        return div;
+    }
+
+    /**
+     * 木桶布局的私有方法
+     * */
+
+    //根据宽高比提前分组
     function group(images, option) {
         //将图片分行
         var raws=[];
@@ -661,13 +676,13 @@
         var rawEnd=0;
         for(var j=0;j<images.length;j++){
             images[j].height= option.rowHeight;
-            images[j].width= option.rowHeight*images[j].ratio;
+            images[j].width= option.rowHeight*images[j].ratio-padding.BARREL.y;
             rawWidth+=images[j].width;
             rawEnd=j;
             if(rawWidth>option.clientWidth){
-                var lastWidth=rawWidth-images[j].width;
+                var lastWidth=rawWidth-images[j].width-padding.BARREL.y;
                 var rawRatio=option.rowHeight/lastWidth;
-                var lastHeight=rawRatio*(option.clientWidth);//(rawEnd-rawStart-1)*8
+                var lastHeight=rawRatio*(option.clientWidth)-(rawEnd-rawStart-1)*8;//(rawEnd-rawStart-1)*8
                 raws.push({
                     start:rawStart,
                     end:rawEnd-1,
@@ -684,6 +699,59 @@
         });
         return raws;
     }
+
+
+    /**
+     * 实现全屏浏览功能
+     * */
+    //全屏浏览的显示
+    function showPhoto(img) {
+
+        var light = document.getElementsByClassName('white_content')[0];
+        var fade = document.getElementsByClassName('black_overlay')[0];
+        var focusStyle = {
+            width: '100%',
+            height: '100%',
+        };
+
+        if(!isShowed){
+            isShowed = true;
+            var lightImg = document.createElement('IMG');
+            lightImg.src = img.src;
+            setStyles(lightImg, focusStyle);
+            fade.style.display = 'block';
+            light.appendChild(lightImg);
+            light.style.display = 'block';
+        } else {
+            isShowed = false;
+            light.innerHTML = '';
+            fade.style.display = 'none';
+            light.style.display = 'none';
+        }
+
+
+    }
+
+    //增加全屏浏览遮罩DOM
+    function addPhotoShade() {
+        var light = document.createElement('DIV');
+        var fade = document.createElement('DIV');
+        light.className="white_content";
+        light.id = 'light';
+        fade.className = 'black_overlay';
+        fade.id = 'fade';
+        light.addEventListener("click", function(e){
+            if(e.target.tagName == 'IMG'){
+                showPhoto(e.target);
+            }
+        });
+        //light.setAttribute('onclick', "showPhoto(this)");
+        document.body.appendChild(light);
+        document.body.appendChild(fade);
+
+    }
+
+
     /************* 以下是本库提供的公有方法 *************/
 
 
@@ -704,13 +772,19 @@
 
         // 实现拼图布局
         if(option.type == 'puzzle'){
-            var puzzleNewLayouts = puzzleLayout(images);//根据img_frame生成布局
-            var newFrame = puzzleReSet(puzzleNewLayouts.frameStyle, puzzleNewLayouts.innerObjs);//根据布局重新生成frame_dom
-            images.innerHTML = '';
-            images.appendChild(newFrame);
-            setPaddings(images, puzzleNewLayouts.imgPaddings);//设置遮罩-图片padding
-        }else if(option.type == 'falls'){
-            var imgObjs = images.map(function(img){
+            //var puzzleNewLayouts = puzzleLayout(images);//根据img_frame生成布局
+            var newFrame = puzzleReSet(images.frameStyle, images.innerObjs);//根据布局重新生成frame_dom
+            temp.innerHTML = '';
+            temp.appendChild(newFrame);
+            setPaddings(temp, images.imgPaddings);//设置遮罩-图片padding
+        }else if(option.type == 'waterfall'){
+            //创建瀑布基本布局
+            var newFallFrame = createFallFrame(images);
+            //计算每张图片的样式
+            temp = newFallFrame.frame;
+            var imgStyles = getPhotoStyles(images, newFallFrame.col_width);
+
+            var imgObjs = imgStyles.map(function(img){
                 var imgDom = document.createElement('IMG');
                 imgDom.src = img.src;
                 setStyles(imgDom, img.style);
@@ -722,37 +796,40 @@
                 return childFrame;
             });
             this.LAYOUT.WATERFALL[option.index] = imgObjs;//根据相册index替换原有的img
-        }else if (option.type == 'buckets'){
+            return imgObjs;
+        }else if (option.type == 'barrel'){
 
         }
 
     };
 
+    /**
+     * 初始化并设置所有含有指定className的相册
+     * 当相册原本包含图片时，该方法会替换原有图片
+     */
     IfeAlbum.prototype.run = function () {//每次执行设置一次相册
-
+        addPhotoShade();//添加事件
         // 实现拼图布局
         var _this = this;
-        this.setLayout('puzzle');
-        this.setLayout('falls');
-        this.setLayout('buckets');
+        this.setLayout();
         var layouts = this.getLayout();
         var puzzles = layouts.PUZZLE;//所有相册
         var falls = layouts.WATERFALL;
         var buckets = layouts.BARREL;
+
         puzzles.forEach(function(frame){
-            _this.setImage(frame, {type: 'puzzle'});
+            temp = frame;//把frame放入临时区
+            var puzzleNewLayouts = _this.addImage(frame, {type: 'puzzle'});//生成布局
+            _this.setImage(puzzleNewLayouts, {type: 'puzzle'});//重新设置照片
         });
         falls.forEach(function(frame, index){
-            //创建瀑布基本布局
-            var newFallFrame = createFallFrame(frame);
-            //计算每张图片的样式
-            temp = newFallFrame.frame;
-            var imgObjs = getPhotoStyles(frame, newFallFrame.col_width);
-            //生成和添加图片
-            _this.addImage(imgObjs, {
-                type: 'falls',
+            var option = {
+                type: 'waterfall',
                 index: index
-            });
+            };
+            var imgObjs = _this.setImage(frame, option);
+            //生成和添加图片
+            _this.addImage(imgObjs, option);
             //替换原有相册的子元素
             frame.innerHTML = '';
             frame.appendChild(temp);
@@ -761,18 +838,17 @@
         buckets.forEach(function(bucket){
             var images = _this.getImageDomElements(bucket);
             temp = bucket;
-            console.log('imgs', images);
             var groups = group(images, {
                 clientWidth: bucket.clientWidth,
                 rowHeight: 200
             });
-            console.log(groups);
             bucket.innerHTML = '';
             _this.addImage(images, {
                 groups: groups,
-                type: 'buckets'
+                type: 'barrel'
             });
         });
+
 
     };
 
@@ -804,24 +880,24 @@
      */
     IfeAlbum.prototype.addImage = function (image, option) {
         //根据imgs计算样式
-        if(option.type=='falls'){
-            this.setImage(image, {
-                type: option.type,
-                index: option.index
-            });
-            var imgs = this.LAYOUT.WATERFALL[option.index];
-            imgs.forEach(function(img){
+        if(option.type == 'puzzle'){
+            var puzzleNewLayouts = puzzleLayout(image);//根据img_frame生成布局
+            return puzzleNewLayouts;
+        }else if(option.type=='waterfall'){
+            image.forEach(function(img){
                 var target = getFallTarget(temp);
                 target.appendChild(img);
             });
-        }else if(option.type = 'buckets'){
+        }else if(option.type = 'barrel'){
             option.groups.forEach(function(group){
                 for(var i=group.start;i<=group.end;i++){
                     var img = document.createElement('IMG');
-                    var width = image[i].ratio*group.height;
-                    img.style.width = width;
-                    img.style.height = Math.floor(group.height);
-                    img.style.margin = '0px';
+                    var style = {
+                        width: image[i].ratio*group.height,
+                        height: Math.floor(group.height),
+                        paddingLeft: padding.BARREL.y
+                    };
+                    setStyles(img, style);
                     img.src = image[i].src;
                     temp.appendChild(img);
                 }
@@ -847,20 +923,22 @@
      * 设置相册的布局
      * @param {number} layout 布局值，IfeAlbum.LAYOUT 中的值
      */
-    IfeAlbum.prototype.setLayout = function (className) {//存储相册所有信息
+    IfeAlbum.prototype.setLayout = function () {//存储相册所有信息
+    //type == 'PUZZLE' || type == 'WATERFALL' || type == 'BARREL'
+        for(var key in this.LAYOUT){
+            if(key == 'PUZZLE'){
+                var divs = document.getElementsByClassName('puzzle');
+                this.LAYOUT[key] = getFrames(divs, this.isFullscreenEnabled);
 
+            }else if(key == 'WATERFALL'){
+                this.LAYOUT[key] = getFrames(document.querySelectorAll('div[class^="waterfall"]'), this.isFullscreenEnabled);
 
-        if(className == 'puzzle'){
-            var divs = document.getElementsByClassName(className);
-            this.LAYOUT.PUZZLE = getFrames(divs);
-
-        }else if(className.indexOf('falls')>=0){
-            this.LAYOUT.WATERFALL = getFrames(document.querySelectorAll('div[class^="falls"]'));
-
-        }else if(className.indexOf('buckets')>=0){
-            var buckets = document.getElementsByClassName('buckets');
-            this.LAYOUT.BARREL = getFrames(buckets);
+            }else if(key == 'BARREL'){
+                var buckets = document.getElementsByClassName('barrel');
+                this.LAYOUT[key] = getFrames(buckets, this.isFullscreenEnabled);
+            }
         }
+
 
     };
 
@@ -902,7 +980,7 @@
      * 允许点击图片时全屏浏览图片
      */
     IfeAlbum.prototype.enableFullscreen = function () {
-
+        this.isFullScreen = true;
     };
 
 
@@ -911,7 +989,7 @@
      * 禁止点击图片时全屏浏览图片
      */
     IfeAlbum.prototype.disableFullscreen = function () {
-
+        this.isFullScreen = false;
     };
 
 
@@ -921,7 +999,7 @@
      * @return {boolean} 是否允许全屏浏览
      */
     IfeAlbum.prototype.isFullscreenEnabled = function () {
-
+        return this.isFullScreen;
     };
 
 
@@ -1009,6 +1087,7 @@
         window.ifeAlbum = new IfeAlbum();
         window.ifeAlbum.setGutter('PUZZLE', 2);
         window.ifeAlbum.setGutter('WATERFALL', 2);
+        window.ifeAlbum.setGutter('BARREL', 2);
         window.ifeAlbum.run();
     }
 
