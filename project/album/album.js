@@ -706,19 +706,29 @@
      * */
     //È«ÆÁä¯ÀÀµÄÏÔÊ¾
     function showPhoto(img) {
-
         var light = document.getElementsByClassName('white_content')[0];
         var fade = document.getElementsByClassName('black_overlay')[0];
+        var width = 0.8*document.body.clientWidth;
+        var height =  0.8*document.body.clientHeight;
         var focusStyle = {
-            width: '100%',
-            height: '100%',
+            width: width,
+            height: height
         };
 
         if(!isShowed){
             isShowed = true;
             var lightImg = document.createElement('IMG');
+            var imgWidth = img.naturalWidth;
+            var imgHeight = img.naturalHeight;
+            var radio = imgWidth/imgHeight;
+            if(radio >1){
+                focusStyle.height = 1/radio*0.8*width;
+            }else{
+                focusStyle.width = radio*0.8*height;
+            }
             lightImg.src = img.src;
             setStyles(lightImg, focusStyle);
+            setStyles(light, focusStyle);
             fade.style.display = 'block';
             light.appendChild(lightImg);
             light.style.display = 'block';
@@ -728,6 +738,7 @@
             fade.style.display = 'none';
             light.style.display = 'none';
         }
+
 
 
     }
