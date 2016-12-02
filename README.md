@@ -1,11 +1,15 @@
 # bdFrontStudy
-### [CSS3重点](http://www.w3school.com.cn/cssref/index.asp)
+### 学习地址[百度前端学院](http://ife.baidu.com/task/all)
+### 感谢百度ife提供学习机会
+### [CSS3](http://www.w3school.com.cn/cssref/index.asp)
 1. flexbox 布局
 2. css3选择器
-3. 轮播动画
+3. 动画
 
-### html5 新语义标签
-* [html5标签查询](http://www.w3school.com.cn/tags/index.asp)
+### [html5 新语义标签](http://www.w3school.com.cn/tags/index.asp)
 
-### 移动开发标记
+### [javascript](http://www.w3school.com.cn/js/index.asp)
+
+
+
 
