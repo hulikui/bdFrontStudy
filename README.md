@@ -6,9 +6,9 @@
 2. css3选择器
 3. 动画
 
-### [html5 新语义标签](http://www.w3school.com.cn/tags/index.asp)
+### [HTML5 新语义标签](http://www.w3school.com.cn/tags/index.asp)
 
-### [javascript](http://www.w3school.com.cn/js/index.asp)
+### [JavaScript](http://www.w3school.com.cn/js/index.asp)
 
 
 
