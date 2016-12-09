@@ -2,20 +2,23 @@
   .title {
     text-align: center;
   }
+  table td{
+    vertical-align: middle;
+  }
 </style>
 <form name="form">
 <div class="leader">
   <h2 class="sub-header title">{{detail.content.title}}</h2>
   <div class="table-responsive">
-    <table class="table width_his table-striped">
+    <table class="table width_his">
       <tbody ng-repeat='item in detail.content.questions'>
         <tr>
           <td colspan="4">
-            题号{{item.id + 1}}：{{item.type| filterQuestionType}}
+            <label class="{{item.type| getQuestTypeStyle}}">第{{item.id + 1}}题</label>  {{item.type| filterQuestionType}}
           </td>
         </tr>
         <tr>
-          <td colspan="4">题目{{item.question}}</td>
+          <td colspan="4" class="suv_title">题目：{{item.question}}</td>
         </tr>
           <tr >
             <tr ng-if="item.type==0" ng-repeat='i in item.content track by $index'>

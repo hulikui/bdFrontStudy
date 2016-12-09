@@ -1,20 +1,32 @@
 var surveys = [];
-
+function geneVotes(nums) {
+  let count = 0;
+  const votes = [];
+  for(let i=0;i<nums;i++){
+    const a = Math.floor(Math.random()*50);
+    count+=a;
+    votes.push(a);
+  }
+  return {
+    count,
+    votes
+  }
+}
 function getQuestions() {
   const questions = [];
   for(let i=0;i<10;i++){
     const type = parseInt(Math.random()*3);
-    let voteNums = [1,1,1,5];
+    const voteObj = geneVotes(4);
     if(type == 2){
-      voteNums=['选项一'];
+      voteObj.votes=['选项一', '22222'];
     }
     const item = {
       id: i,
       question: '问题' + i,
       type,
       content: ['选项一', '选项二', '选项三', '选项四'],
-      voteNums,  //投票数
-      totalVotes: 8
+      voteNums: voteObj.votes,  //投票数
+      totalVotes: voteObj.count
     };
     questions.push(item);
   }

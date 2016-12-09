@@ -17,6 +17,13 @@ export class ShowVotesController {
         content = item;
       }
     });
+
+    content.questions.forEach((item) => {
+      item.labels= [];
+      item.voteNums.forEach((i, index)=>{
+        item.labels.push(`选项${index+1}支持人数：`);
+      });
+    });
     return content;
   }
 }

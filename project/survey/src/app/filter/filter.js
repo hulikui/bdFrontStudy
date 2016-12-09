@@ -109,5 +109,17 @@ function getProbarName() {
     }
   }
 }
-
-export { filterQuestionType, filterSurveyType, filterSurveyOperation, getFormatTime, getTagName, getInputName, getProbarName }
+function getQuestTypeStyle() {
+  return function(index){
+    if( index == 0){//单选题
+      return 'glyphicon glyphicon-record btn btn-default';
+    }else if(index == 1){
+      return 'glyphicon glyphicon-check btn btn-default';
+    }else if(index==2){
+      return 'glyphicon glyphicon-list-alt btn btn-default';
+    }else {
+      return 'glyphicon glyphicon-record btn btn-default';
+    }
+  }
+}
+export { filterQuestionType, filterSurveyType, filterSurveyOperation, getFormatTime, getTagName, getInputName, getProbarName, getQuestTypeStyle }

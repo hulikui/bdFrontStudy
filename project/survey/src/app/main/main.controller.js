@@ -26,7 +26,7 @@ export class MainController {
   }
 
   showToastr() {
-    this.toastr.info('Fork Me<a href="https://github.com/hulikui/bdFrontStudy/tree/master/project/survey"><b>我的问卷</b></a>');
+    this.toastr.info('<a href="https://github.com/hulikui/bdFrontStudy/tree/master/project"><b>Follow my project, to be continue……</b></a>');
     this.classAnimation = '';
   }
 }
