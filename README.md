@@ -1,6 +1,6 @@
 # bdFrontStudy
 ### [百度前端学院2016](http://ife.baidu.com/task/all)
-### 感谢百度ife提供学习机会
+### 感谢百度IFE提供学习机会
 ### [CSS3](http://www.w3school.com.cn/cssref/index.asp)
 1.  Flexbox 布局
 2.  CSS3选择器
