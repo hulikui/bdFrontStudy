@@ -1,14 +1,19 @@
 # bdFrontStudy
-### 学习地址[百度前端学院](http://ife.baidu.com/task/all)
+### [百度前端学院2016](http://ife.baidu.com/task/all)
 ### 感谢百度ife提供学习机会
 ### [CSS3](http://www.w3school.com.cn/cssref/index.asp)
-1. flexbox 布局
-2. css3选择器
-3. 动画
+1.  Flexbox 布局
+2.  CSS3选择器
+3.  动画
+4.  LESS等CSS预编译
 
-### [HTML5 新语义标签](http://www.w3school.com.cn/tags/index.asp)
+### [HTML5 标签](http://www.w3school.com.cn/tags/index.asp)
+1.  Canvas等新标签
+2.  SEO
 
 ### [JavaScript](http://www.w3school.com.cn/js/index.asp)
+1.  数组对象操作
+2.  [ECMAScript 6 入门](http://es6.ruanyifeng.com/)
 
 
 
