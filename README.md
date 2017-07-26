@@ -15,6 +15,8 @@
 1.  数组对象操作
 2.  [ECMAScript 6 入门](http://es6.ruanyifeng.com/)
 
+### [frontend study map](http://naotu.baidu.com/file/b8cc05ee0860a70a27be929f2fe9aaa7)
+
 
 
 
